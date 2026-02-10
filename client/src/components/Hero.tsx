@@ -46,9 +46,9 @@ export function Hero() {
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading text-slate-900 leading-[1.1] mb-4 tracking-tight">
-                Click Less. <br />
+                Practice the way <br />
                 <span className="text-primary">
-                  Care More.
+                  you want.
                 </span>
               </h1>
               
