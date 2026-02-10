@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, TrendingUp, ShieldCheck, Award } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award } from "lucide-react";
 import { Link } from "wouter";
 import heroImage from "@assets/generated_images/futuristic_glass_medical_interface_abstract_3d.png";
 import oncSeal from "@assets/generated_images/onc_certified_health_it_seal_3d_gold_and_blue.png";
@@ -130,22 +130,6 @@ export function Hero() {
               </motion.div>
             </div>
 
-            {/* Floating Revenue Growth Card */}
-            <motion.div 
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-xl border border-slate-100 z-40 hidden md:block"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <TrendingUp className="h-5 w-5 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase">Revenue Growth</p>
-                  <p className="text-lg font-bold text-slate-900">+127%</p>
-                </div>
-              </div>
-            </motion.div>
 
           </div>
 
