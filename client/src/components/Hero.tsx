@@ -137,9 +137,9 @@ export function Hero() {
       </div>
 
       {/* Value Propositions Banner */}
-      <div className="bg-slate-800 mt-16">
+      <div className="bg-[#2da0c7] mt-16">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-700">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/20">
             {[
               { icon: FileText, title: "EHR", subtitle: "Electronic Health Records" },
               { icon: DollarSign, title: "RCM", subtitle: "Revenue Cycle Management" },
@@ -147,12 +147,12 @@ export function Hero() {
               { icon: UserCircle, title: "Portal", subtitle: "Patient Engagement" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 py-5 px-4 md:px-6 justify-center" data-testid={`banner-solution-${i}`}>
-                <div className="h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
-                  <item.icon className="h-5 w-5 text-cyan-400" />
+                <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                  <item.icon className="h-5 w-5 text-white" />
                 </div>
                 <div>
                   <p className="text-white font-bold text-sm leading-tight">{item.title}</p>
-                  <p className="text-slate-400 text-xs">{item.subtitle}</p>
+                  <p className="text-white/70 text-xs">{item.subtitle}</p>
                 </div>
               </div>
             ))}
