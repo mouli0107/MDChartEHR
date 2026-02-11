@@ -31,9 +31,9 @@ const teamMembers = [
   },
   {
     name: "Daniel Sticca",
-    title: "Digital Marketing Director",
+    title: "Sales Director",
     image: danielImage,
-    bio: "Daniel brings extensive digital experience in the health and aesthetics sector. His unique expertise has enabled him to assist clients in developing and implementing winning strategies that continually enhance results across the USA and abroad."
+    bio: "Daniel brings extensive experience in healthcare sales and business development. His strategic approach to client relationships and deep understanding of EHR solutions has enabled him to drive growth and build lasting partnerships with medical practices across the USA."
   },
   {
     name: "Mago Saldana",
