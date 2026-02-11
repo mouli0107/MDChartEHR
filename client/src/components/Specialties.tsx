@@ -28,7 +28,7 @@ export function Specialties() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-heading text-slate-900 mb-4">
-            40+ Specialties Supported
+            Popular Specialties
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Purpose-built templates and workflows for every medical specialty

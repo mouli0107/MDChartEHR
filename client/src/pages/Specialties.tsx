@@ -52,7 +52,7 @@ export default function SpecialtiesPage() {
               </h1>
               
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                40+ specialty-specific templates and workflows designed by practicing physicians 
+                Specialty-specific templates and workflows designed by practicing physicians 
                 to match how you actually work.
               </p>
               
@@ -88,7 +88,7 @@ export default function SpecialtiesPage() {
                     <Stethoscope className="h-5 w-5 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-900 text-sm">40+ Templates</p>
+                    <p className="font-bold text-slate-900 text-sm">Popular Templates</p>
                     <p className="text-xs text-slate-500">Specialty-Specific</p>
                   </div>
                 </div>

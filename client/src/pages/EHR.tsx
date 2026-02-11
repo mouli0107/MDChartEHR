@@ -17,7 +17,7 @@ const features = [
   {
     icon: Layers,
     title: "Specialty Templates",
-    description: "40+ specialty-specific templates that adapt to your unique workflow and documentation needs."
+    description: "Specialty-specific templates that adapt to your unique workflow and documentation needs."
   },
   {
     icon: Shield,

@@ -261,7 +261,7 @@ export function Navbar() {
                         <div className="col-span-4 p-6 bg-slate-50/50 flex flex-col justify-center">
                           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">More Specialties</h3>
                           <div className="bg-white rounded-xl border border-slate-200 p-5">
-                            <p className="text-slate-700 font-medium mb-2">40+ Specialties Supported</p>
+                            <p className="text-slate-700 font-medium mb-2">More Specialties Available</p>
                             <p className="text-sm text-slate-500 leading-relaxed">
                               Our software can be configured for any medical specialty. Contact us to discuss your specific practice needs.
                             </p>
