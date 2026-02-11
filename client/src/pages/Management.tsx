@@ -126,12 +126,15 @@ export default function Management() {
               >
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="flex-shrink-0">
-                    <div className="w-32 h-32 rounded-2xl overflow-hidden shadow-lg bg-slate-100">
+                    <div className={`w-32 h-32 rounded-2xl overflow-hidden shadow-lg ${member.name === "Daniel Sticca" ? "bg-[#d5dde0] relative" : ""}`}>
+                      {member.name === "Daniel Sticca" && (
+                        <div className="absolute inset-0 bg-[#d5dde0] z-0" />
+                      )}
                       <img 
                         src={member.image} 
                         alt={member.name}
-                        className={`w-full h-full object-cover ${member.name === "Daniel Sticca" ? "brightness-125 contrast-110 grayscale-0" : ""}`}
-                        style={member.name === "Daniel Sticca" ? { filter: "brightness(1.3) contrast(1.1) saturate(0.2)" } : undefined}
+                        className="w-full h-full object-cover"
+                        style={member.name === "Daniel Sticca" ? { mixBlendMode: "multiply", position: "relative", zIndex: 1, filter: "contrast(1.1) brightness(1.15)" } : undefined}
                       />
                     </div>
                   </div>
