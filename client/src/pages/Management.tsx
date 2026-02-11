@@ -7,7 +7,7 @@ import { Users, ArrowRight } from "lucide-react";
 import heroImage from "@assets/generated_images/corporate_leadership_team_meeting.png";
 import aaronImage from "@assets/generated_images/aaron_wachspress_cto_headshot.png";
 import maitryImage from "@assets/generated_images/maitry_shah_it_manager_headshot.png";
-import danielImage from "@assets/image_1770826702613.png";
+import danielImage from "@assets/Gemini_Generated_Image_60hu5060hu5060hu_1770827363357.png";
 import magoImage from "@assets/generated_images/mago_saldana_business_analyst_headshot.png";
 import jackieImage from "@assets/image_1770826311845.png";
 
