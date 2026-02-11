@@ -150,7 +150,7 @@ export function Hero() {
                 <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center shrink-0">
                   <item.icon className="h-5 w-5 text-white" />
                 </div>
-                <div>
+                <div className="whitespace-nowrap">
                   <p className="text-white font-bold text-sm leading-tight">{item.title}</p>
                   <p className="text-white font-semibold text-xs">{item.subtitle}</p>
                 </div>
