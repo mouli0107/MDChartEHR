@@ -64,14 +64,6 @@ const specialtiesCol1 = [
   { title: "Family Medicine", href: "/specialties/family-medicine" },
 ];
 
-const specialtiesCol2 = [
-  { title: "Orthopedics", href: "/specialties/orthopedics" },
-  { title: "Ophthalmology", href: "/specialties/ophthalmology" },
-  { title: "ENT", href: "/specialties/ent" },
-  { title: "Gastroenterology", href: "/specialties/gastroenterology" },
-  { title: "Neurology", href: "/specialties/neurology" },
-  { title: "Psychiatry", href: "/specialties/psychiatry" },
-];
 
 const resourcesLeft = [
   { title: "Blog", href: "/blog", description: "Healthcare insights & EHR tips", icon: BookOpen },
@@ -265,20 +257,17 @@ export function Navbar() {
                           </div>
                         </div>
 
-                        {/* Specialties Column 2 */}
-                        <div className="col-span-4 p-6 bg-slate-50/50">
+                        {/* More Specialties Info */}
+                        <div className="col-span-4 p-6 bg-slate-50/50 flex flex-col justify-center">
                           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">More Specialties</h3>
-                          <div className="space-y-1">
-                            {specialtiesCol2.map((item) => (
-                              <NavLink
-                                key={item.title}
-                                href={item.href}
-                                className="flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-700 hover:bg-white hover:text-primary transition-all group"
-                              >
-                                <span className="font-medium">{item.title}</span>
-                                <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                              </NavLink>
-                            ))}
+                          <div className="bg-white rounded-xl border border-slate-200 p-5">
+                            <p className="text-slate-700 font-medium mb-2">40+ Specialties Supported</p>
+                            <p className="text-sm text-slate-500 leading-relaxed">
+                              Our software can be configured for any medical specialty. Contact us to discuss your specific practice needs.
+                            </p>
+                            <NavLink href="/specialties" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline mt-3">
+                              View All Specialties <ArrowRight className="h-3 w-3" />
+                            </NavLink>
                           </div>
                         </div>
 
@@ -467,9 +456,7 @@ export function Navbar() {
                 {specialtiesCol1.map(c => (
                   <Link key={c.title} href={c.href} className="block py-2 text-slate-600 hover:text-primary" onClick={() => setMobileMenuOpen(false)}>{c.title}</Link>
                 ))}
-                {specialtiesCol2.map(c => (
-                  <Link key={c.title} href={c.href} className="block py-2 text-slate-600 hover:text-primary" onClick={() => setMobileMenuOpen(false)}>{c.title}</Link>
-                ))}
+                <Link href="/specialties" className="block py-2 text-primary font-medium hover:underline" onClick={() => setMobileMenuOpen(false)}>View All Specialties →</Link>
               </div>
               
               <div className="space-y-2">
