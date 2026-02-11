@@ -134,7 +134,7 @@ export default function Management() {
                         src={member.image} 
                         alt={member.name}
                         className="w-full h-full object-cover"
-                        style={member.name === "Daniel Sticca" ? { mixBlendMode: "multiply", position: "relative", zIndex: 1, filter: "contrast(1.1) brightness(1.15)" } : undefined}
+                        style={member.name === "Daniel Sticca" ? { mixBlendMode: "lighten", position: "relative", zIndex: 1 } : undefined}
                       />
                     </div>
                   </div>
