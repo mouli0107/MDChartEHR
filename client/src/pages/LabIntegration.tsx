@@ -32,8 +32,8 @@ const features = [
   },
   {
     icon: TrendingUp,
-    title: "Result Comparison",
-    description: "Compare current results with prior values for better clinical decisions"
+    title: "Result Review & Sign-Off",
+    description: "Review incoming lab results within the patient chart and sign off with provider notes"
   },
   {
     icon: Clock,
