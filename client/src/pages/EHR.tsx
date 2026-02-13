@@ -37,11 +37,13 @@ const modules = [
   "Medication Management",
   "Allergy Documentation",
   "Lab Results Integration",
+  "Imaging Orders",
   "E-Prescribing (EPCS)",
   "Clinical Decision Support",
   "Progress Notes",
   "Visit Summaries",
-  "Immunization Records"
+  "Immunization Records",
+  "Growth Charts"
 ];
 
 export default function EHRPage() {
@@ -259,7 +261,7 @@ export default function EHRPage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {modules.map((module, i) => (
               <motion.div
                 key={i}
