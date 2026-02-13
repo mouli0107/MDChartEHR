@@ -43,7 +43,6 @@ const features = [
 ];
 
 const benefits = [
-  "Electronic prior authorizations",
   "Medication history access",
   "Pharmacy network connectivity",
   "Automatic generic substitution suggestions",
