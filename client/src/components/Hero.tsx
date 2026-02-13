@@ -73,7 +73,7 @@ export function Hero() {
                 {[
                   { label: "Trusted Providers", value: "Growing" },
                   { label: "Claim Success", value: "High" },
-                  { label: "Quality Focus", value: "MIPS Ready" },
+                  { label: "Quality Focus", value: "ONC Certified" },
                 ].map((stat, i) => (
                   <div key={i} className="flex flex-col">
                     <span className="text-2xl font-bold text-slate-900 leading-none">{stat.value}</span>

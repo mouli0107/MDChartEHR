@@ -30,7 +30,7 @@ const keyFeatures = [
   { 
     icon: MessageSquare, 
     title: "Patient Portal", 
-    items: ["Online scheduling", "Mobile check-in via text", "Rx refill requests", "Health info access"]
+    items: ["Online scheduling", "Mobile check-in via text", "Secure messaging", "Health info access"]
   },
   { 
     icon: CreditCard, 
@@ -60,13 +60,13 @@ const keyFeatures = [
   { 
     icon: BarChart3, 
     title: "Analytics", 
-    items: ["Custom reporting", "KPI tracking", "Revenue analytics", "MIPS score monitoring"]
+    items: ["Custom reporting", "KPI tracking", "Revenue analytics", "Quality measures"]
   },
 ];
 
 const benefits = [
   { stat: "Less", label: "Documentation Time", desc: "More time for patients, less time charting" },
-  { stat: "High", label: "MIPS Performance", desc: "Maximizing quality payment incentives" },
+  { stat: "High", label: "Quality Standards", desc: "Meeting regulatory compliance requirements" },
   { stat: "Fast", label: "Go-Live Timeline", desc: "Quick implementation with full training" },
   { stat: "Always", label: "AI-Powered Support", desc: "Never miss a patient call again" },
 ];
@@ -79,7 +79,7 @@ const impactItems = [
   { title: "Improved Safety", desc: "Alerts, reminders, elimination of handwriting errors" },
   { title: "Cost Savings", desc: "Paperless operations and efficient billing for faster revenue" },
   { title: "Reduced Burnout", desc: "Automated intake and AI assistant offload repetitive tasks" },
-  { title: "Financial Growth", desc: "Optimized billing and MIPS scoring for maximum reimbursement" },
+  { title: "Financial Growth", desc: "Optimized billing and revenue cycle for maximum reimbursement" },
 ];
 
 export default function WhyMDChartsPage() {

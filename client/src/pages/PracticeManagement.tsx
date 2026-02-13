@@ -104,8 +104,8 @@ export default function PracticeManagementPage() {
                     <Calendar className="h-5 w-5 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-900 text-sm">50% Less</p>
-                    <p className="text-xs text-slate-500">No-Show Rate</p>
+                    <p className="font-bold text-slate-900 text-sm">Fewer</p>
+                    <p className="text-xs text-slate-500">No-Shows</p>
                   </div>
                 </div>
               </div>
