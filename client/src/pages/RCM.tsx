@@ -134,10 +134,6 @@ export default function RCMPage() {
               </h2>
               <p className="text-sm text-slate-500 font-medium">End-to-end financial management suite</p>
             </div>
-            <div className="hidden md:flex gap-2">
-              <Button variant="outline" size="sm" className="h-8 text-xs">Download Specs</Button>
-              <Button size="sm" className="h-8 text-xs">View API Docs</Button>
-            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
