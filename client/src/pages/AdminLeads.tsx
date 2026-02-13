@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { 
   Users, FileText, ArrowLeft, Search, Download, Mail, MapPin, Calendar, LogIn, Loader2,
-  BarChart3, Eye, Monitor, Globe, Clock, Smartphone, Laptop, Tablet, RefreshCw
+  BarChart3, Eye, Monitor, Globe, Clock, Smartphone, Laptop, Tablet, RefreshCw, Settings, Plus, Trash2
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -75,11 +75,54 @@ export default function AdminLeads() {
   const [downloads, setDownloads] = useState<WhitePaperDownload[]>([]);
   const [contacts, setContacts] = useState<ContactRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics">("downloads");
+  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings">("downloads");
   const [isLoading, setIsLoading] = useState(true);
   const [pageStats, setPageStats] = useState<PageViewStats | null>(null);
   const [recentViews, setRecentViews] = useState<RecentPageView[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [notifEmails, setNotifEmails] = useState<{id: number; email: string; name: string | null; createdAt: string}[]>([]);
+  const [newEmail, setNewEmail] = useState("");
+  const [newName, setNewName] = useState("");
+  const [settingsLoading, setSettingsLoading] = useState(false);
+
+  const fetchNotifEmails = async () => {
+    try {
+      const res = await fetch("/api/notification-emails");
+      if (res.ok) setNotifEmails(await res.json());
+    } catch (err) {
+      console.error("Error fetching notification emails:", err);
+    }
+  };
+
+  const addNotifEmail = async () => {
+    if (!newEmail.trim()) return;
+    setSettingsLoading(true);
+    try {
+      const res = await fetch("/api/notification-emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newEmail.trim(), name: newName.trim() || null }),
+      });
+      if (res.ok) {
+        setNewEmail("");
+        setNewName("");
+        await fetchNotifEmails();
+      }
+    } catch (err) {
+      console.error("Error adding notification email:", err);
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+
+  const removeNotifEmail = async (id: number) => {
+    try {
+      await fetch(`/api/notification-emails/${id}`, { method: "DELETE" });
+      await fetchNotifEmails();
+    } catch (err) {
+      console.error("Error removing notification email:", err);
+    }
+  };
 
   const fetchAnalytics = async () => {
     setAnalyticsLoading(true);
@@ -129,6 +172,7 @@ export default function AdminLeads() {
 
     fetchData();
     fetchAnalytics();
+    fetchNotifEmails();
   }, [isAuthenticated]);
 
   if (authLoading) {
@@ -280,6 +324,14 @@ export default function AdminLeads() {
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 Site Analytics
+              </Button>
+              <Button 
+                variant={activeTab === "settings" ? "default" : "outline"}
+                onClick={() => { setActiveTab("settings"); fetchNotifEmails(); }}
+                data-testid="tab-settings"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
               </Button>
             </div>
             
@@ -501,6 +553,70 @@ export default function AdminLeads() {
                   <p className="text-slate-500">Page view data will appear here as visitors browse your site</p>
                 </div>
               )}
+            </div>
+          ) : activeTab === "settings" ? (
+            <div className="max-w-2xl">
+              <div className="bg-white rounded-xl border p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Mail className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900">Notification Email Recipients</h3>
+                    <p className="text-sm text-slate-500">All form submissions and leads will be emailed to these addresses</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mb-6">
+                  <Input
+                    placeholder="Name (optional)"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="w-40"
+                    data-testid="input-notif-name"
+                  />
+                  <Input
+                    placeholder="Email address"
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="flex-1"
+                    data-testid="input-notif-email"
+                    onKeyDown={(e) => e.key === "Enter" && addNotifEmail()}
+                  />
+                  <Button onClick={addNotifEmail} disabled={settingsLoading || !newEmail.trim()} data-testid="button-add-email">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add
+                  </Button>
+                </div>
+
+                {notifEmails.length === 0 ? (
+                  <div className="text-center py-8 text-slate-400 border border-dashed rounded-lg">
+                    <Mail className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">No notification emails configured yet.</p>
+                    <p className="text-xs mt-1">Emails will fall back to the default recipient (awachspress@mdcharts.net).</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {notifEmails.map((entry) => (
+                      <div key={entry.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border" data-testid={`notif-email-${entry.id}`}>
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Mail className="h-4 w-4 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-slate-900">{entry.email}</p>
+                            {entry.name && <p className="text-xs text-slate-500">{entry.name}</p>}
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => removeNotifEmail(entry.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50" data-testid={`button-remove-email-${entry.id}`}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           ) : activeTab === "downloads" ? (
             filteredDownloads.length === 0 ? (

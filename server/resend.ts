@@ -49,7 +49,16 @@ export interface ContactFormData {
   requestType?: string;
 }
 
-function getNotificationRecipients(): string[] {
+async function getNotificationRecipients(): Promise<string[]> {
+  try {
+    const { storage } = await import("./storage");
+    const dbEmails = await storage.getNotificationEmails();
+    if (dbEmails.length > 0) {
+      return dbEmails.map(e => e.email);
+    }
+  } catch (err) {
+    console.error("Error fetching notification emails from DB:", err);
+  }
   const envRecipients = process.env.NOTIFICATION_EMAIL;
   if (envRecipients) {
     return envRecipients.split(',').map(e => e.trim()).filter(Boolean);
@@ -80,7 +89,7 @@ export async function sendContactEmail(data: ContactFormData): Promise<{ success
 
     const result = await client.emails.send({
       from: fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>',
-      to: getNotificationRecipients(),
+      to: await getNotificationRecipients(),
       subject: `MDcharts Contact: ${data.requestType || 'General Inquiry'} from ${data.firstName} ${data.lastName}`,
       html: htmlContent,
       replyTo: data.email,
@@ -140,7 +149,7 @@ export async function sendWhitePaperDownloadEmail(data: WhitePaperDownloadData):
 
     const result = await client.emails.send({
       from: fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>',
-      to: getNotificationRecipients(),
+      to: await getNotificationRecipients(),
       subject: `New Lead: ${data.firstName} ${data.lastName} downloaded "${whitePaperTitle}"`,
       html: htmlContent,
       replyTo: data.email,

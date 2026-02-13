@@ -42,6 +42,21 @@ export const insertWhitePaperDownloadSchema = createInsertSchema(whitePaperDownl
 export type InsertWhitePaperDownload = z.infer<typeof insertWhitePaperDownloadSchema>;
 export type WhitePaperDownload = typeof whitePaperDownloads.$inferSelect;
 
+export const notificationEmails = pgTable("notification_emails", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  name: text("name"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertNotificationEmailSchema = createInsertSchema(notificationEmails).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertNotificationEmail = z.infer<typeof insertNotificationEmailSchema>;
+export type NotificationEmail = typeof notificationEmails.$inferSelect;
+
 export const pageViews = pgTable("page_views", {
   id: serial("id").primaryKey(),
   path: text("path").notNull(),

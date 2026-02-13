@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageViewSchema } from "@shared/schema";
+import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageViewSchema, insertNotificationEmailSchema } from "@shared/schema";
 import { z } from "zod";
 import { sendContactEmail, sendWhitePaperDownloadEmail } from "./resend";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
@@ -171,6 +171,43 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error fetching page view stats:", error);
       res.status(500).json({ error: "Failed to fetch stats" });
+    }
+  });
+
+  app.get("/api/notification-emails", isAuthenticated, async (req, res) => {
+    try {
+      const emails = await storage.getNotificationEmails();
+      res.json(emails);
+    } catch (error) {
+      console.error("Error fetching notification emails:", error);
+      res.status(500).json({ error: "Failed to fetch notification emails" });
+    }
+  });
+
+  app.post("/api/notification-emails", isAuthenticated, async (req, res) => {
+    try {
+      const validated = insertNotificationEmailSchema.parse(req.body);
+      const email = await storage.addNotificationEmail(validated);
+      res.status(201).json(email);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid email data", details: error.errors });
+      } else {
+        console.error("Error adding notification email:", error);
+        res.status(500).json({ error: "Failed to add notification email" });
+      }
+    }
+  });
+
+  app.delete("/api/notification-emails/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      await storage.deleteNotificationEmail(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting notification email:", error);
+      res.status(500).json({ error: "Failed to delete notification email" });
     }
   });
 

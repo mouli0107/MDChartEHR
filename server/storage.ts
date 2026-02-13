@@ -1,6 +1,6 @@
-import { contactRequests, whitePaperDownloads, pageViews, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView } from "@shared/schema";
+import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail } from "@shared/schema";
 import { db } from "./db";
-import { desc, sql, gte, count } from "drizzle-orm";
+import { desc, sql, gte, count, eq } from "drizzle-orm";
 
 export interface IStorage {
   createContactRequest(insertRequest: InsertContactRequest): Promise<ContactRequest>;
@@ -9,6 +9,9 @@ export interface IStorage {
   getAllWhitePaperDownloads(): Promise<WhitePaperDownload[]>;
   createPageView(insertView: InsertPageView): Promise<PageView>;
   getRecentPageViews(limit: number): Promise<PageView[]>;
+  getNotificationEmails(): Promise<NotificationEmail[]>;
+  addNotificationEmail(data: InsertNotificationEmail): Promise<NotificationEmail>;
+  deleteNotificationEmail(id: number): Promise<void>;
   getPageViewStats(): Promise<{
     totalViews: number;
     todayViews: number;
@@ -55,6 +58,19 @@ export class DatabaseStorage implements IStorage {
 
   async getRecentPageViews(limit: number): Promise<PageView[]> {
     return await db.select().from(pageViews).orderBy(desc(pageViews.createdAt)).limit(limit);
+  }
+
+  async getNotificationEmails(): Promise<NotificationEmail[]> {
+    return await db.select().from(notificationEmails).orderBy(desc(notificationEmails.createdAt));
+  }
+
+  async addNotificationEmail(data: InsertNotificationEmail): Promise<NotificationEmail> {
+    const [email] = await db.insert(notificationEmails).values(data).returning();
+    return email;
+  }
+
+  async deleteNotificationEmail(id: number): Promise<void> {
+    await db.delete(notificationEmails).where(eq(notificationEmails.id, id));
   }
 
   async getPageViewStats() {
