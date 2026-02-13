@@ -1,40 +1,14 @@
 import { Resend } from 'resend';
 
-let connectionSettings: any;
-
-async function getCredentials() {
-  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-  const xReplitToken = process.env.REPL_IDENTITY 
-    ? 'repl ' + process.env.REPL_IDENTITY 
-    : process.env.WEB_REPL_RENEWAL 
-    ? 'depl ' + process.env.WEB_REPL_RENEWAL 
-    : null;
-
-  if (!xReplitToken) {
-    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
+function getResendClient(): { client: Resend; fromEmail: string } {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY environment variable is not set');
   }
-
-  connectionSettings = await fetch(
-    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-    {
-      headers: {
-        'Accept': 'application/json',
-        'X_REPLIT_TOKEN': xReplitToken
-      }
-    }
-  ).then(res => res.json()).then(data => data.items?.[0]);
-
-  if (!connectionSettings || (!connectionSettings.settings.api_key)) {
-    throw new Error('Resend not connected');
-  }
-  return { apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email };
-}
-
-export async function getUncachableResendClient() {
-  const credentials = await getCredentials();
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'MDcharts EHR <onboarding@resend.dev>';
   return {
-    client: new Resend(credentials.apiKey),
-    fromEmail: connectionSettings.settings.from_email
+    client: new Resend(apiKey),
+    fromEmail,
   };
 }
 
@@ -68,7 +42,7 @@ async function getNotificationRecipients(): Promise<string[]> {
 
 export async function sendContactEmail(data: ContactFormData): Promise<{ success: boolean; error?: string }> {
   try {
-    const { client, fromEmail } = await getUncachableResendClient();
+    const { client, fromEmail } = getResendClient();
     const recipients = await getNotificationRecipients();
     console.log("[Email] Sending contact notification to:", recipients, "from:", fromEmail);
     
@@ -89,26 +63,13 @@ export async function sendContactEmail(data: ContactFormData): Promise<{ success
       <p style="color: #666; font-size: 12px;">This email was sent from the MDcharts EHR website contact form.</p>
     `;
 
-    let senderEmail = fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>';
-    
-    let result = await client.emails.send({
-      from: senderEmail,
+    const result = await client.emails.send({
+      from: fromEmail,
       to: recipients,
       subject: `MDcharts Contact: ${data.requestType || 'General Inquiry'} from ${data.firstName} ${data.lastName}`,
       html: htmlContent,
       replyTo: data.email,
     });
-
-    if (result.error && result.error.message?.includes('not verified')) {
-      console.log("[Email] Domain not verified, falling back to onboarding@resend.dev");
-      result = await client.emails.send({
-        from: 'MDcharts EHR <onboarding@resend.dev>',
-        to: recipients,
-        subject: `MDcharts Contact: ${data.requestType || 'General Inquiry'} from ${data.firstName} ${data.lastName}`,
-        html: htmlContent,
-        replyTo: data.email,
-      });
-    }
 
     console.log("[Email] Resend response:", JSON.stringify(result));
 
@@ -144,7 +105,7 @@ export interface WhitePaperDownloadData {
 
 export async function sendWhitePaperDownloadEmail(data: WhitePaperDownloadData): Promise<{ success: boolean; error?: string }> {
   try {
-    const { client, fromEmail } = await getUncachableResendClient();
+    const { client, fromEmail } = getResendClient();
     const recipients = await getNotificationRecipients();
     console.log("[Email] Sending white paper notification to:", recipients, "from:", fromEmail);
     
@@ -166,26 +127,13 @@ export async function sendWhitePaperDownloadEmail(data: WhitePaperDownloadData):
       <p style="color: #666; font-size: 12px;">You can view all leads at: <a href="https://mdchartsehr.com/admin/leads">Lead Management Dashboard</a></p>
     `;
 
-    let senderEmail = fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>';
-
-    let result = await client.emails.send({
-      from: senderEmail,
+    const result = await client.emails.send({
+      from: fromEmail,
       to: recipients,
       subject: `New Lead: ${data.firstName} ${data.lastName} downloaded "${whitePaperTitle}"`,
       html: htmlContent,
       replyTo: data.email,
     });
-
-    if (result.error && result.error.message?.includes('not verified')) {
-      console.log("[Email] Domain not verified, falling back to onboarding@resend.dev");
-      result = await client.emails.send({
-        from: 'MDcharts EHR <onboarding@resend.dev>',
-        to: recipients,
-        subject: `New Lead: ${data.firstName} ${data.lastName} downloaded "${whitePaperTitle}"`,
-        html: htmlContent,
-        replyTo: data.email,
-      });
-    }
 
     console.log("[Email] Resend response:", JSON.stringify(result));
 
