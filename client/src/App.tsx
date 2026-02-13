@@ -136,6 +136,7 @@ function Router() {
         <Route path="/hipaa-compliance" component={HIPAACompliancePage} />
         <Route path="/security" component={SecurityPage} />
         
+        <Route path="/admin" component={() => { window.location.href = "/admin/leads"; return null; }} />
         <Route path="/admin/leads" component={AdminLeadsPage} />
         
         <Route component={NotFound} />
