@@ -69,6 +69,8 @@ async function getNotificationRecipients(): Promise<string[]> {
 export async function sendContactEmail(data: ContactFormData): Promise<{ success: boolean; error?: string }> {
   try {
     const { client, fromEmail } = await getUncachableResendClient();
+    const recipients = await getNotificationRecipients();
+    console.log("[Email] Sending contact notification to:", recipients, "from:", fromEmail);
     
     const htmlContent = `
       <h2>New Contact Form Submission</h2>
@@ -87,22 +89,37 @@ export async function sendContactEmail(data: ContactFormData): Promise<{ success
       <p style="color: #666; font-size: 12px;">This email was sent from the MDcharts EHR website contact form.</p>
     `;
 
-    const result = await client.emails.send({
-      from: fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>',
-      to: await getNotificationRecipients(),
+    let senderEmail = fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>';
+    
+    let result = await client.emails.send({
+      from: senderEmail,
+      to: recipients,
       subject: `MDcharts Contact: ${data.requestType || 'General Inquiry'} from ${data.firstName} ${data.lastName}`,
       html: htmlContent,
       replyTo: data.email,
     });
 
+    if (result.error && result.error.message?.includes('not verified')) {
+      console.log("[Email] Domain not verified, falling back to onboarding@resend.dev");
+      result = await client.emails.send({
+        from: 'MDcharts EHR <onboarding@resend.dev>',
+        to: recipients,
+        subject: `MDcharts Contact: ${data.requestType || 'General Inquiry'} from ${data.firstName} ${data.lastName}`,
+        html: htmlContent,
+        replyTo: data.email,
+      });
+    }
+
+    console.log("[Email] Resend response:", JSON.stringify(result));
+
     if (result.error) {
-      console.error('Resend error:', result.error);
+      console.error('[Email] Resend error:', result.error);
       return { success: false, error: result.error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('[Email] Sending error:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to send email' };
   }
 }
@@ -128,6 +145,8 @@ export interface WhitePaperDownloadData {
 export async function sendWhitePaperDownloadEmail(data: WhitePaperDownloadData): Promise<{ success: boolean; error?: string }> {
   try {
     const { client, fromEmail } = await getUncachableResendClient();
+    const recipients = await getNotificationRecipients();
+    console.log("[Email] Sending white paper notification to:", recipients, "from:", fromEmail);
     
     const whitePaperTitle = whitePaperTitles[data.whitePaperId] || data.whitePaperId;
     
@@ -147,22 +166,37 @@ export async function sendWhitePaperDownloadEmail(data: WhitePaperDownloadData):
       <p style="color: #666; font-size: 12px;">You can view all leads at: <a href="https://mdchartsehr.com/admin/leads">Lead Management Dashboard</a></p>
     `;
 
-    const result = await client.emails.send({
-      from: fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>',
-      to: await getNotificationRecipients(),
+    let senderEmail = fromEmail || 'MDcharts EHR <noreply@mdchartsehr.com>';
+
+    let result = await client.emails.send({
+      from: senderEmail,
+      to: recipients,
       subject: `New Lead: ${data.firstName} ${data.lastName} downloaded "${whitePaperTitle}"`,
       html: htmlContent,
       replyTo: data.email,
     });
 
+    if (result.error && result.error.message?.includes('not verified')) {
+      console.log("[Email] Domain not verified, falling back to onboarding@resend.dev");
+      result = await client.emails.send({
+        from: 'MDcharts EHR <onboarding@resend.dev>',
+        to: recipients,
+        subject: `New Lead: ${data.firstName} ${data.lastName} downloaded "${whitePaperTitle}"`,
+        html: htmlContent,
+        replyTo: data.email,
+      });
+    }
+
+    console.log("[Email] Resend response:", JSON.stringify(result));
+
     if (result.error) {
-      console.error('Resend error:', result.error);
+      console.error('[Email] Resend error:', result.error);
       return { success: false, error: result.error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('[Email] Sending error:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to send email' };
   }
 }
