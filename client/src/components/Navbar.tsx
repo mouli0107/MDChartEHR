@@ -144,15 +144,15 @@ export function Navbar() {
       <nav
         className={cn(
           "w-full transition-all duration-300 bg-white border-b border-slate-200 shadow-sm",
-          isScrolled ? "py-2" : "py-3"
+          isScrolled ? "py-1" : "py-2"
         )}
       >
         <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-          <Link href="/" className="flex items-center group relative z-50">
+          <Link href="/" className="flex items-center shrink-0 group relative z-50">
             <img 
               src={mdchartsLogo} 
               alt="MDcharts EHR" 
-              className="h-12 w-auto max-w-[200px]"
+              className="h-16 md:h-20 w-auto object-contain"
             />
           </Link>
 
