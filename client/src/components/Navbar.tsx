@@ -8,7 +8,7 @@ import {
   Smartphone, BarChart3, FlaskConical, Briefcase, Newspaper,
   HelpCircle, Star, Handshake
 } from "lucide-react";
-import mdchartsLogo from "@assets/logo_1767448797855.png";
+import mdchartsLogo from "@assets/logo_v2_option4.png";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {

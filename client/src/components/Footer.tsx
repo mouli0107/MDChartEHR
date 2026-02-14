@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
-import mdchartsLogo from "@assets/logo_1767448797855.png";
+import mdchartsLogo from "@assets/logo_v2_option4.png";
 
 export function Footer() {
   return (
