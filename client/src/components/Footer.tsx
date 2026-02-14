@@ -12,7 +12,7 @@ export function Footer() {
               <img 
                 src={mdchartsLogo} 
                 alt="MD Charts EHR" 
-                className="h-8 w-auto object-contain"
+                className="h-10 w-auto object-contain"
                 loading="lazy"
               />
             </Link>
