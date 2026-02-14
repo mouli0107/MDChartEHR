@@ -22,7 +22,9 @@ import {
   UserCircle,
   BarChart3,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Lock,
+  HelpCircle
 } from "lucide-react";
 
 export default function Home() {
@@ -60,6 +62,8 @@ export default function Home() {
               { icon: BarChart3, title: "Analytics & Reporting", desc: "Real-time dashboards, financial analytics, and custom report builder.", href: "/features/analytics", color: "bg-teal-50 text-teal-600 border-teal-100" },
               { icon: Sparkles, title: "AI-Powered Insights", desc: "Intelligent clinical assistance with smart documentation suggestions, coding recommendations, and predictive analytics.", href: "/ehr", color: "bg-violet-50 text-violet-600 border-violet-100" },
               { icon: ShieldCheck, title: "Compliance & Security", desc: "ONC 2015 Edition certified, HIPAA compliant, with audit trails, role-based access, and data encryption.", href: "/compliance", color: "bg-slate-50 text-slate-600 border-slate-200" },
+              { icon: Lock, title: "HIPAA & Data Security", desc: "Enterprise-grade encryption, secure cloud hosting, automatic backups, and comprehensive access controls to protect patient data.", href: "/compliance", color: "bg-orange-50 text-orange-600 border-orange-100" },
+              { icon: HelpCircle, title: "Dedicated Support", desc: "Personal account manager, 24/7 technical support, free training, and guided onboarding for a seamless transition.", href: "/support", color: "bg-pink-50 text-pink-600 border-pink-100" },
             ].map((solution, i) => (
               <motion.div
                 key={i}
