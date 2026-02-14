@@ -152,7 +152,7 @@ export function Navbar() {
             <img 
               src={mdchartsLogo} 
               alt="MDcharts EHR" 
-              className="h-16 md:h-20 w-auto object-contain"
+              className="h-8 md:h-10 w-auto object-contain"
             />
           </Link>
 
