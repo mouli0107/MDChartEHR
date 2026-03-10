@@ -71,9 +71,9 @@ export function Hero() {
               {/* Clean Stats Row - Integrated */}
               <div className="flex items-center gap-8 border-t border-slate-200 pt-6">
                 {[
-                  { label: "Trusted Providers", value: "Growing" },
-                  { label: "Claim Success", value: "High" },
-                  { label: "Quality Focus", value: "ONC Certified" },
+                  { label: "Platform Uptime", value: "99.9%" },
+                  { label: "Revenue Cycle", value: "Built-In" },
+                  { label: "Intelligence", value: "AI Powered" },
                 ].map((stat, i) => (
                   <div key={i} className="flex flex-col">
                     <span className="text-2xl font-bold text-slate-900 leading-none">{stat.value}</span>
