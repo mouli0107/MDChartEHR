@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { 
   FileText, 
   Activity, 
@@ -16,18 +17,18 @@ import {
 } from "lucide-react";
 
 const features = [
-  { icon: FileText, title: "Smart Templates", desc: "Highly configurable engine", color: "bg-primary/10 text-primary" },
-  { icon: Activity, title: "Clinical Workflows", desc: "Streamlined care delivery", color: "bg-emerald-100 text-emerald-600" },
-  { icon: CreditCard, title: "RCM & Billing", desc: "High first-pass rate", color: "bg-amber-100 text-amber-600" },
-  { icon: Users, title: "Patient Portal", desc: "Self-service scheduling", color: "bg-purple-100 text-purple-600" },
-  { icon: Sparkles, title: "AI-Powered Insights", desc: "Smart clinical assistance", color: "bg-violet-100 text-violet-600" },
-  { icon: Smartphone, title: "Mobile Access", desc: "Responsive web access", color: "bg-primary/10 text-primary" },
-  { icon: ShieldCheck, title: "ONC Certified", desc: "2015 Cures Update", color: "bg-emerald-100 text-emerald-600" },
-  { icon: Calendar, title: "Smart Schedule", desc: "Reduce no-shows", color: "bg-amber-100 text-amber-600" },
-  { icon: MessageSquare, title: "Secure Text", desc: "Direct patient SMS", color: "bg-purple-100 text-purple-600" },
-  { icon: Stethoscope, title: "Telehealth", desc: "HD Video integrated", color: "bg-emerald-100 text-emerald-600" },
-  { icon: Pill, title: "e-Prescribing", desc: "EPCS Certified", color: "bg-amber-100 text-amber-600" },
-  { icon: ClipboardCheck, title: "Intake Forms", desc: "Digital paperless", color: "bg-purple-100 text-purple-600" }
+  { icon: FileText, title: "Smart Templates", desc: "Highly configurable engine", color: "bg-primary/10 text-primary", href: "/ehr" },
+  { icon: Activity, title: "Clinical Workflows", desc: "Streamlined care delivery", color: "bg-emerald-100 text-emerald-600", href: "/ehr" },
+  { icon: CreditCard, title: "RCM & Billing", desc: "High first-pass rate", color: "bg-amber-100 text-amber-600", href: "/rcm" },
+  { icon: Users, title: "Patient Portal", desc: "Self-service scheduling", color: "bg-purple-100 text-purple-600", href: "/features/patient-portal" },
+  { icon: Sparkles, title: "AI-Powered Insights", desc: "Smart clinical assistance", color: "bg-violet-100 text-violet-600", href: "/ehr" },
+  { icon: Smartphone, title: "Mobile Access", desc: "Responsive web access", color: "bg-primary/10 text-primary", href: "/features/mobile-app" },
+  { icon: ShieldCheck, title: "ONC Certified", desc: "2015 Cures Update", color: "bg-emerald-100 text-emerald-600", href: "/compliance" },
+  { icon: Calendar, title: "Smart Schedule", desc: "Reduce no-shows", color: "bg-amber-100 text-amber-600", href: "/practice-management" },
+  { icon: MessageSquare, title: "Secure Text", desc: "Direct patient SMS", color: "bg-purple-100 text-purple-600", href: "/patient-engagement" },
+  { icon: Stethoscope, title: "Telehealth", desc: "HD Video integrated", color: "bg-emerald-100 text-emerald-600", href: "/features/telehealth" },
+  { icon: Pill, title: "e-Prescribing", desc: "EPCS Certified", color: "bg-amber-100 text-amber-600", href: "/features/e-prescribing" },
+  { icon: ClipboardCheck, title: "Intake Forms", desc: "Digital paperless", color: "bg-purple-100 text-purple-600", href: "/patient-engagement" }
 ];
 
 export function Features() {
@@ -50,24 +51,25 @@ export function Features() {
         {/* Dense Grid Layout */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-slate-200 border border-slate-200 rounded-lg overflow-hidden shadow-sm">
           {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.02 }}
-              className="bg-white p-6 hover:bg-slate-50 transition-colors group"
-            >
-              <div className="flex items-start gap-3 mb-3">
-                <div className={`h-9 w-9 rounded-lg ${feature.color} flex items-center justify-center shrink-0`}>
-                  <feature.icon className="h-4.5 w-4.5" />
+            <Link key={index} href={feature.href}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.02 }}
+                className="bg-white p-6 hover:bg-slate-50 transition-colors group cursor-pointer h-full"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <div className={`h-9 w-9 rounded-lg ${feature.color} flex items-center justify-center shrink-0`}>
+                    <feature.icon className="h-4.5 w-4.5" />
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-900 leading-tight pt-1.5 group-hover:text-primary transition-colors">{feature.title}</h3>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900 leading-tight pt-1.5">{feature.title}</h3>
-              </div>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed pl-12">
-                {feature.desc}
-              </p>
-            </motion.div>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed pl-12">
+                  {feature.desc}
+                </p>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>
