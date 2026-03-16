@@ -44,8 +44,8 @@ export default function Home() {
       <Hero />
 
       {/* Popular Specialties Scroll */}
-      <section className="py-6 bg-slate-50 border-b border-slate-100 overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6 mb-4">
+      <section className="py-1.5 bg-slate-50 border-b border-slate-100 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6 mb-1.5">
           <p className="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest">Popular Specialties</p>
         </div>
         <div className="relative">
