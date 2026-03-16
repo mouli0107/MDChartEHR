@@ -24,7 +24,12 @@ import {
   ArrowRight,
   Sparkles,
   Lock,
-  HelpCircle
+  HelpCircle,
+  Heart,
+  Stethoscope,
+  Baby,
+  SmilePlus,
+  Activity
 } from "lucide-react";
 
 export default function Home() {
@@ -37,6 +42,38 @@ export default function Home() {
     <div className="min-h-screen bg-background font-sans selection:bg-primary/20">
       <Navbar />
       <Hero />
+
+      {/* Popular Specialties Scroll */}
+      <section className="py-6 bg-slate-50 border-b border-slate-100 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6 mb-4">
+          <p className="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest">Popular Specialties</p>
+        </div>
+        <div className="relative">
+          <div className="flex animate-scroll gap-6 whitespace-nowrap">
+            {[...Array(3)].map((_, setIndex) => (
+              <div key={setIndex} className="flex gap-6 shrink-0">
+                {[
+                  { name: "Cardiology", href: "/specialties/cardiology", Icon: Heart },
+                  { name: "Dermatology", href: "/specialties/dermatology", Icon: Stethoscope },
+                  { name: "Family Medicine", href: "/specialties/family-medicine", Icon: Users },
+                  { name: "OB/GYN", href: "/specialties/obgyn", Icon: Baby },
+                  { name: "Pediatrics", href: "/specialties/pediatrics", Icon: SmilePlus },
+                  { name: "Urology", href: "/specialties/urology", Icon: Activity },
+                ].map((specialty, i) => (
+                  <Link key={i} href={specialty.href}>
+                    <div className="inline-flex items-center gap-2.5 px-5 py-3 bg-white border border-slate-200 rounded-lg hover:border-primary hover:shadow-md transition-all cursor-pointer group" data-testid={`scroll-specialty-${specialty.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                      <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                        <specialty.Icon className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="text-sm font-semibold text-slate-700 group-hover:text-primary transition-colors">{specialty.name}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Category Navigation Bar */}
       <section className="bg-[#2da0c7]">
@@ -59,40 +96,6 @@ export default function Home() {
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Popular Specialties Scroll */}
-      <section className="py-6 bg-slate-50 border-b border-slate-100 overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6 mb-4">
-          <p className="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest">Popular Specialties</p>
-        </div>
-        <div className="relative">
-          <div className="flex animate-scroll gap-6 whitespace-nowrap">
-            {[...Array(2)].map((_, setIndex) => (
-              <div key={setIndex} className="flex gap-6 shrink-0">
-                {[
-                  { name: "Cardiology", href: "/specialties/cardiology", icon: "❤️" },
-                  { name: "Dermatology", href: "/specialties/dermatology", icon: "🔬" },
-                  { name: "Family Medicine", href: "/specialties/family-medicine", icon: "👨‍👩‍👧‍👦" },
-                  { name: "OB/GYN", href: "/specialties/obgyn", icon: "🤱" },
-                  { name: "Pediatrics", href: "/specialties/pediatrics", icon: "👶" },
-                  { name: "Urology", href: "/specialties/urology", icon: "🏥" },
-                  { name: "Gastroenterology", href: "/specialties/gastroenterology", icon: "🩺" },
-                  { name: "Neurology", href: "/specialties/neurology", icon: "🧠" },
-                  { name: "Ophthalmology", href: "/specialties/ophthalmology", icon: "👁️" },
-                  { name: "Psychiatry", href: "/specialties/psychiatry", icon: "🧘" },
-                ].map((specialty, i) => (
-                  <Link key={i} href={specialty.href}>
-                    <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-lg hover:border-primary hover:shadow-md transition-all cursor-pointer group" data-testid={`scroll-specialty-${specialty.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                      <span className="text-lg">{specialty.icon}</span>
-                      <span className="text-sm font-semibold text-slate-700 group-hover:text-primary transition-colors">{specialty.name}</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
             ))}
           </div>
         </div>
