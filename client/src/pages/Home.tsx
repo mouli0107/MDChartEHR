@@ -117,6 +117,22 @@ export default function Home() {
               <span className="text-xl font-bold text-slate-700">DrFirst</span>
               <span className="text-[10px] text-slate-500 ml-1">Unite the Healthiverse<sup>®</sup></span>
             </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-5 h-5 rounded bg-[#00857c] flex items-center justify-center">
+                <span className="text-white text-[10px] font-bold">Q</span>
+              </div>
+              <span className="text-xl font-bold text-slate-700">Quest</span>
+              <span className="text-[10px] text-slate-500 ml-0.5">Diagnostics<sup>®</sup></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-5 h-5 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
+                  <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="#0072CE" opacity="0.9"/>
+                  <path d="M12 4L4 8v8l8 4 8-4V8l-8-4z" fill="#fff" opacity="0.3"/>
+                </svg>
+              </div>
+              <span className="text-xl font-bold text-slate-700">Labcorp</span>
+            </div>
           </div>
         </div>
       </section>
