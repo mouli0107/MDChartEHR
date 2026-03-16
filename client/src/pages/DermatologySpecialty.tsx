@@ -310,7 +310,7 @@ export default function DermatologySpecialty() {
       <section className="py-8 bg-slate-50 border-y border-slate-200">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-            <p className="text-slate-600 font-medium">Trusted by 500+ dermatology practices nationwide</p>
+            <p className="text-slate-600 font-medium">Trusted by dermatology practices nationwide</p>
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2 text-sm">
                 <Shield className="h-5 w-5 text-primary" />
