@@ -11,7 +11,7 @@ import medicalTeam from "@assets/generated_images/medical_team_collaboration.png
 
 export function Hero() {
   return (
-    <section className="relative pt-[84px] pb-2 md:pt-[108px] md:pb-3 overflow-hidden bg-slate-50/50">
+    <section className="relative pt-[92px] pb-2 md:pt-[119px] md:pb-3 overflow-hidden bg-slate-50/50">
       {/* Dense Professional Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       
