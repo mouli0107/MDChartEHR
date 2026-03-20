@@ -334,10 +334,10 @@ export default function Home() {
                 badge: "Coding Intelligence"
               },
               {
-                icon: Bot,
-                title: "AI Call Assistant",
-                desc: "Handles routine patient inquiries, appointment reminders, and follow-up calls — 24/7 without staff involvement.",
-                badge: "Always Available"
+                icon: Zap,
+                title: "Smart Clinical Workflows",
+                desc: "AI surfaces the right information at the right time — flagging documentation gaps, suggesting next steps, and keeping your practice running efficiently.",
+                badge: "Workflow Intelligence"
               },
             ].map((item, i) => (
               <motion.div
