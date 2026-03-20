@@ -1,0 +1,26 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "JMlxAPacLWz7KIDLwmR7w"
+uri = "file://attached_assets/stock_images/indian_doctor_lab_results.jpg"
+type = "image"
+title = "Option 1 — Indian male doctor reviewing lab results on screen"
+
+[[outputs]]
+id = "HAN63xK-1Mqaqmq-mehkD"
+uri = "file://attached_assets/stock_images/african_patient_portal_tablet.jpg"
+type = "image"
+title = "Option 2 — African American woman patient reviewing health records on tablet"
+
+[[outputs]]
+id = "aIqxZr6i3QbiUmsmCORqv"
+uri = "file://attached_assets/stock_images/diverse_medical_team_lab_screen.jpg"
+type = "image"
+title = "Option 3 — Diverse medical team reviewing lab results on monitor"
+
+[[outputs]]
+id = "4rqZ-68ZmsBzsV0Zr6Rgs"
+uri = "file://attached_assets/stock_images/african_patient_laptop_results.jpg"
+type = "image"
+title = "Option 4 — African man reviewing medical results on laptop"
