@@ -43,11 +43,11 @@ export function BlogSection() {
               data-testid={`card-blog-home-${post.id}`}
             >
               <div className="h-48 relative overflow-hidden">
-                {getBlogImage(post.slug) ? (
-                  <img 
-                    src={getBlogImage(post.slug)} 
-                    alt={post.title} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                {(getBlogImage(post.slug) || post.image) ? (
+                  <img
+                    src={getBlogImage(post.slug) || post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
                 ) : (

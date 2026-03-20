@@ -112,9 +112,9 @@ export default function Blog() {
             >
               <div className="grid lg:grid-cols-2 gap-0">
                 <div className="h-72 lg:h-[420px] relative overflow-hidden">
-                  {getBlogImage(featuredPost.slug) ? (
-                    <img 
-                      src={getBlogImage(featuredPost.slug)} 
+                  {(getBlogImage(featuredPost.slug) || featuredPost.image) ? (
+                    <img
+                      src={getBlogImage(featuredPost.slug) || featuredPost.image}
                       alt={featuredPost.title}
                       className="w-full h-full object-cover"
                       loading="lazy"
@@ -201,9 +201,9 @@ export default function Blog() {
                 >
                   {/* Card Image */}
                   <div className="h-52 relative overflow-hidden">
-                    {getBlogImage(post.slug) ? (
-                      <img 
-                        src={getBlogImage(post.slug)} 
+                    {(getBlogImage(post.slug) || post.image) ? (
+                      <img
+                        src={getBlogImage(post.slug) || post.image}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"

@@ -101,7 +101,7 @@ export default function BlogPost() {
       </section>
 
       {/* Featured Image */}
-      {getBlogImage(post.slug) && (
+      {(getBlogImage(post.slug) || post.image) && (
         <section className="relative py-8">
           <div className="container mx-auto px-4">
             <motion.div
@@ -111,8 +111,8 @@ export default function BlogPost() {
               className="max-w-4xl mx-auto"
             >
               <div className="rounded-2xl overflow-hidden shadow-lg border border-slate-200">
-                <img 
-                  src={getBlogImage(post.slug)} 
+                <img
+                  src={getBlogImage(post.slug) || post.image}
                   alt={post.title}
                   className="w-full h-64 md:h-96 object-cover"
                   loading="lazy"
@@ -313,7 +313,7 @@ export default function BlogPost() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {blogPosts.filter(p => p.id !== post.id).slice(0, 3).map((article) => {
-              const articleImage = getBlogImage(article.slug);
+              const articleImage = getBlogImage(article.slug) || article.image;
               return (
               <motion.article
                 key={article.id}
@@ -324,8 +324,8 @@ export default function BlogPost() {
               >
                 <div className="h-40 bg-gradient-to-br from-slate-100 to-slate-50 overflow-hidden">
                   {articleImage ? (
-                    <img 
-                      src={articleImage} 
+                    <img
+                      src={articleImage}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
