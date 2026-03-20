@@ -228,7 +228,7 @@ export default function DermatologySpecialty() {
               </motion.div>
               
               <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-                DermCharts™ - EHR Built Specifically for{" "}
+                DermCharts℠ - EHR Built Specifically for{" "}
                 <span className="text-primary">Dermatology Practices</span>
               </motion.h1>
               
