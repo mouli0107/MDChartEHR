@@ -261,15 +261,6 @@ export default function DermatologySpecialty() {
                     Book a Demo <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="/contact">
-                  <Button 
-                    size="lg" 
-                    variant="outline"
-                    className="h-14 px-8 border-2 border-slate-300 hover:border-primary hover:text-primary font-semibold"
-                  >
-                    Request Documentation
-                  </Button>
-                </Link>
               </motion.div>
             </motion.div>
             
@@ -593,14 +584,6 @@ export default function DermatologySpecialty() {
                 data-testid="button-pricing-demo"
               >
                 Schedule Your DermCharts Demo
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button 
-                size="lg"
-                className="h-14 px-8 bg-transparent border-2 border-white/30 text-white hover:bg-white/10 font-semibold"
-              >
-                Request Feature Guide
               </Button>
             </Link>
           </div>
