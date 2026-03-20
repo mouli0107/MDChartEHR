@@ -181,7 +181,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Brain, title: "AI-Powered Platform", desc: "MD Charts embeds AI throughout your workflow — from Ambient Scribe charting to AI Medical Coding — so your team spends less time on admin and more time on care." },
+              { icon: Brain, title: "AI-Powered Platform", desc: "MD Charts brings AI to key areas of your workflow — from Ambient Scribe charting to AI Medical Coding — so your team spends less time on admin and more time on care." },
               { icon: MonitorSmartphone, title: "User-Friendly Interface", desc: "Quick and easy to use, so you can see more patients and spend less time on documentation. Click Less, Care More\u2122." },
               { icon: ClipboardList, title: "Highly Customizable", desc: "Tailor the system to fit your practice perfectly, with fully customizable template objects and workflow configurations." },
               { icon: Headphones, title: "World-Class Support", desc: "Training and troubleshooting are always available\u2014just a message or call away. Customer-focused, friendly and professional." },
@@ -316,7 +316,7 @@ export default function Home() {
               Smarter Care Starts with Smarter Tools
             </h2>
             <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-              MD Charts integrates AI at every step — reducing administrative burden so your team can focus on what matters most.
+              MD Charts applies AI where it counts most — reducing administrative burden so your team can focus on what matters most.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
