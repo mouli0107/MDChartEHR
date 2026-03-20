@@ -168,3 +168,27 @@ id = "R6CJyyHtpqutDGxt2j5K1"
 uri = "file://attached_assets/generated_images/patients_portal_mobile_4.png"
 type = "image"
 title = "Option 4 — Three diverse patients (Indian, African, Latino) on patient portal in clinic"
+
+[[outputs]]
+id = "hthu1BTTYg_byfWGnfKZK"
+uri = "file://attached_assets/generated_images/pm_front_desk_scheduling.png"
+type = "image"
+title = "Option 1 — Receptionist managing patient scheduling at front desk"
+
+[[outputs]]
+id = "-Vl5sYvuG9cJmv1-PsP7Q"
+uri = "file://attached_assets/generated_images/pm_office_manager_dashboard.png"
+type = "image"
+title = "Option 2 — Office manager with scheduling & billing dashboard on laptop"
+
+[[outputs]]
+id = "FYPwhAimJ0btzsjUW5TIE"
+uri = "file://attached_assets/generated_images/pm_practice_reception_team.png"
+type = "image"
+title = "Option 3 — Diverse staff checking in patients, digital appointment board"
+
+[[outputs]]
+id = "Jtjr8NkKQMYEAx1lw25-l"
+uri = "file://attached_assets/generated_images/pm_administrator_billing.png"
+type = "image"
+title = "Option 4 — Practice administrator reviewing billing & scheduling on dual monitors"
