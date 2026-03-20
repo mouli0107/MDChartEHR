@@ -73,7 +73,7 @@ const workflows = [
 ];
 
 const stats = [
-  { value: "Comprehensive", label: "Cardiology Templates" },
+  { value: "20+", label: "Cardiology Templates" },
   { value: "Fast", label: "Average Documentation" },
   { value: "High", label: "Clean Claim Rate" },
   { value: "Growing", label: "Practices Trust Us" }
