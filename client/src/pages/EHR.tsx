@@ -156,7 +156,7 @@ export default function EHRPage() {
               initial={{ opacity: 1, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative lg:scale-125 lg:origin-left"
+              className="relative"
             >
               <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-white">
                 <img 
