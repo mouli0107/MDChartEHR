@@ -72,3 +72,27 @@ id = "geZqrqzyfe6u5YvXlHOXZ"
 uri = "file://attached_assets/stock_images/black_woman_patient_lab_screen.jpg"
 type = "image"
 title = "Option 4 — Black woman patient reviewing lab results on screen"
+
+[[outputs]]
+id = "9q42KcohsF8pZveI1_OJd"
+uri = "file://attached_assets/stock_images/indian_woman_waiting_room_phone.jpg"
+type = "image"
+title = "Option 1 — Indian woman in waiting room checking phone"
+
+[[outputs]]
+id = "Kqt3nnA0N99rz9AojNCbG"
+uri = "file://attached_assets/stock_images/african_man_waiting_room_mobile.jpg"
+type = "image"
+title = "Option 2 — African American man in clinic waiting room on mobile"
+
+[[outputs]]
+id = "-v0zTH33Pr-ZMXagA8SBU"
+uri = "file://attached_assets/stock_images/south_asian_patient_phone_results.jpg"
+type = "image"
+title = "Option 3 — South Asian patient checking results on phone in waiting area"
+
+[[outputs]]
+id = "nWy7aPl5GmGta3bO-K-zn"
+uri = "file://attached_assets/stock_images/black_woman_waiting_room_health_app.jpg"
+type = "image"
+title = "Option 4 — Black woman in waiting room using health app on phone"
