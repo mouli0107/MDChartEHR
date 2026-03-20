@@ -7,7 +7,7 @@ import oncSeal from "@assets/generated_images/onc_certified_health_it_seal_3d_go
 import doctorPortrait from "@assets/generated_images/friendly_doctor_portrait.png";
 import clinicInterior from "@assets/generated_images/modern_clinic_interior.png";
 import doctorTablet from "@assets/generated_images/doctor_using_tablet.png";
-import medicalTeam from "@assets/generated_images/diverse_doctors_hallway_patient_2.png";
+import medicalTeam from "@assets/generated_images/medical_team_collaboration.png";
 
 export function Hero() {
   return (
