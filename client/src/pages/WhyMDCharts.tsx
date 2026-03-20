@@ -153,7 +153,7 @@ export default function WhyMDChartsPage() {
                     <TrendingUp className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-900 text-sm">9+ Years</p>
+                    <p className="font-bold text-slate-900 text-sm">21 Years</p>
                     <p className="text-xs text-slate-500">Trusted by Providers</p>
                   </div>
                 </div>
