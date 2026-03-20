@@ -27,9 +27,9 @@ const features = [
     description: "Fully certified and compliant with Meaningful Use, MIPS, and 21st Century Cures Act requirements."
   },
   {
-    icon: Clock,
-    title: "Real-Time Sync",
-    description: "Access patient records instantly across all devices with seamless cloud synchronization."
+    icon: Sparkles,
+    title: "AI Medical Coding",
+    description: "AI extracts ICD and CPT codes directly from patient conversations and passes them to the RCM module automatically."
   }
 ];
 
@@ -40,6 +40,7 @@ const modules = [
   "Allergy Documentation",
   "Lab Results Integration",
   "Ambient Scribe",
+  "AI Medical Coding",
   "e-Prescribing (EPCS)",
   "Clinical Decision Support",
   "Progress Notes",
@@ -282,7 +283,7 @@ export default function EHRPage() {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {modules.map((module, i) => {
-              const isAI = module === "Ambient Scribe";
+              const isAI = module === "Ambient Scribe" || module === "AI Medical Coding";
               return (
                 <motion.div
                   key={i}
