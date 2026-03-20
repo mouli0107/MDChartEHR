@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Link } from "wouter";
-import ehrDashboardImage from "@assets/image_1773985985422.png";
+import ehrDashboardImage from "@assets/image_1773986265412.png";
 import patientChartImage from "@assets/image_1767434643508.png";
 import dermchartsSlide from "@assets/mdcharts_dermcharts_slide.png";
 
@@ -162,11 +162,12 @@ export default function EHRPage() {
                 <img 
                   src={ehrDashboardImage} 
                   alt="MD Charts EHR Dashboard showing unsigned items management" 
-                  className="w-full h-auto"
+                  className="w-full object-cover object-top"
+                  style={{ minHeight: '520px' }}
                   loading="lazy"
                 />
                 {/* Overlay to hide IP address, date and time */}
-                <div className="absolute bottom-0 left-[5%] w-[20%] h-[24%] bg-white"></div>
+                <div className="absolute bottom-0 left-[5%] w-[20%] h-[12%] bg-white"></div>
               </div>
             </motion.div>
           </div>
