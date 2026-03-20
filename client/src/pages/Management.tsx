@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Users, ArrowRight } from "lucide-react";
-import heroImage from "@assets/generated_images/corporate_leadership_team_meeting.png";
+import heroImage from "@assets/pm_doctors_wall_schedule.png";
 import aaronImage from "@assets/Gemini_Generated_Image_7ejgbg7ejgbg7ejg_1770827867393.png";
 import maitryImage from "@assets/Gemini_Generated_Image_4s1te44s1te44s1t_1770827529031.png";
 import danielImage from "@assets/Gemini_Generated_Image_60hu5060hu5060hu_1770827363357.png";
