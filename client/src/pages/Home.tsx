@@ -262,10 +262,6 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <p className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">Trusted Integrations & Partners</p>
           <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-70">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-slate-700">ACOG</span>
-              <span className="text-[10px] text-slate-500 leading-tight">The American College of<br/>Obstetricians and Gynecologists</span>
-            </div>
             <div className="flex items-center gap-1">
               <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
                 <div className="w-3 h-3 rounded-full bg-white flex items-center justify-center">
