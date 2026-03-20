@@ -240,3 +240,9 @@ id = "Ck6LuFO5HuLWZ5y6HTRLA"
 uri = "file://attached_assets/generated_videos/telehealth_doctor_patient_call.mp4"
 type = "video"
 title = "Telehealth video — 60-year-old female doctor & 35-year-old male patient"
+
+[[outputs]]
+id = "E5fhR13tnT85Aq_Sv1hDi"
+uri = "file://attached_assets/generated_videos/telehealth_patient_pip.mp4"
+type = "video"
+title = "Telehealth — Patient full screen, doctor PIP lower right, no audio"
