@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FileText, Zap, Shield, Clock, Layers, CheckCircle2, ArrowRight } from "lucide-react";
+import { FileText, Zap, Shield, Clock, Layers, CheckCircle2, ArrowRight, Sparkles, Mic, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -7,12 +7,14 @@ import { Link } from "wouter";
 import ehrDashboardImage from "@assets/image_1773987891246.png";
 import patientChartImage from "@assets/image_1773988273994.png";
 import dermchartsSlide from "@assets/mdcharts_dermcharts_slide.png";
+import aiMedicalIcon from "@assets/generated_images/ai_medical_charting_icon.png";
+import aiScribeIcon from "@assets/generated_images/ai_ambient_scribe_icon.png";
 
 const features = [
   {
-    icon: Zap,
-    title: "Lightning-Fast Charting",
-    description: "Complete notes quickly with intelligent auto-population and voice dictation."
+    icon: Brain,
+    title: "AI-Powered Charting",
+    description: "Ambient Scribe listens and auto-generates clinical notes, cutting charting time dramatically."
   },
   {
     icon: Layers,
@@ -76,10 +78,14 @@ export default function EHRPage() {
                 <span className="text-primary">Care More</span>
               </h1>
               
-              <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+              <p className="text-xl text-slate-600 mb-4 leading-relaxed">
                 A highly configurable, template-based EHR engine that adapts to your workflow. 
                 Create detailed clinical notes quickly and efficiently.
               </p>
+              <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 mb-6">
+                <Sparkles className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-sm text-slate-700">AI-powered Ambient Scribe automatically documents your patient encounters in real time</span>
+              </div>
               
               <div className="flex flex-wrap gap-4">
                 <Link href="/book-demo">
@@ -143,6 +149,18 @@ export default function EHRPage() {
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                 From one central dashboard, manage all pending tasks efficiently, so you can focus on what matters most — treating patients.
               </p>
+
+              {/* AI Callout */}
+              <div className="flex items-start gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+                <img src={aiScribeIcon} alt="AI Ambient Scribe" className="h-14 w-14 rounded-lg object-cover flex-shrink-0" />
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Sparkles className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-xs font-bold uppercase tracking-wide text-primary">AI Powered</span>
+                  </div>
+                  <p className="text-sm text-slate-600">Our <strong className="text-slate-800">Ambient Scribe</strong> listens to your patient conversations and auto-generates structured SOAP notes — so you can stay focused on care, not documentation.</p>
+                </div>
+              </div>
               
               <Link href="/book-demo">
                 <Button variant="outline" size="lg" className="rounded-full px-8 h-12 text-primary border-primary hover:bg-primary/5">
@@ -263,19 +281,26 @@ export default function EHRPage() {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {modules.map((module, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 1, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.03 }}
-                className="flex items-center gap-3 bg-white rounded-lg p-4 border border-slate-200"
-              >
-                <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
-                <span className="text-sm font-medium text-slate-700">{module}</span>
-              </motion.div>
-            ))}
+            {modules.map((module, i) => {
+              const isAI = module === "Ambient Scribe";
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 1, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.03 }}
+                  className={`flex items-center gap-3 rounded-lg p-4 border ${isAI ? "bg-primary/5 border-primary/30" : "bg-white border-slate-200"}`}
+                >
+                  {isAI
+                    ? <Sparkles className="h-5 w-5 text-primary shrink-0" />
+                    : <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+                  }
+                  <span className={`text-sm font-medium ${isAI ? "text-primary" : "text-slate-700"}`}>{module}</span>
+                  {isAI && <span className="ml-auto text-[10px] font-bold bg-primary text-white px-1.5 py-0.5 rounded">AI</span>}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
