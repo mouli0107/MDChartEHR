@@ -399,12 +399,7 @@ export default function PediatricsSpecialty() {
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/book-demo">
                 <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  Start Free 30-Day Trial <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/book-demo">
-                <Button size="lg" variant="outline">
-                  Schedule Demo
+                  Schedule Demo <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>

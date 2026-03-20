@@ -306,12 +306,7 @@ export default function UrologySpecialty() {
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/book-demo">
                 <Button size="lg" className="bg-white text-primary hover:bg-slate-100">
-                  Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/book-demo">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                  Schedule Demo
+                  Schedule Demo <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>

@@ -168,7 +168,7 @@ export default function CardiologySpecialty() {
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 to-transparent lg:from-slate-900/30"></div>
             
             {/* Floating Badge */}
-            <div className="absolute bottom-8 left-8 bg-white rounded-2xl p-6 shadow-2xl max-w-xs">
+            <div className="hidden lg:block absolute bottom-8 left-8 bg-white rounded-2xl p-6 shadow-2xl max-w-xs">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
                   <Check className="h-6 w-6 text-green-600" />
@@ -368,28 +368,15 @@ export default function CardiologySpecialty() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/book-demo">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-primary hover:bg-primary/90 text-white px-8"
                   data-testid="button-cta-trial"
                 >
-                  Start Free 30-Day Trial <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/book-demo">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-slate-600 text-white hover:bg-slate-700 px-8"
-                  data-testid="button-cta-demo"
-                >
-                  <Play className="mr-2 h-4 w-4" /> Watch Demo
+                  Book Demo <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
-            <p className="text-sm text-slate-400 mt-6">
-              No credit card required. Cancel anytime.
-            </p>
           </motion.div>
         </div>
       </section>
