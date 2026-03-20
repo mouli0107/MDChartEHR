@@ -14,7 +14,7 @@ const features = [
   {
     icon: Brain,
     title: "AI-Powered Charting",
-    description: "Ambient Scribe listens and auto-generates clinical notes, cutting charting time dramatically."
+    description: "Voice-to-note AI generates structured clinical notes from patient conversations, cutting charting time dramatically."
   },
   {
     icon: Layers,
@@ -84,7 +84,7 @@ export default function EHRPage() {
               </p>
               <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 mb-6">
                 <Sparkles className="h-4 w-4 text-primary flex-shrink-0" />
-                <span className="text-sm text-slate-700">AI-powered Ambient Scribe automatically documents your patient encounters in real time</span>
+                <span className="text-sm text-slate-700">AI listens to your patient encounters and auto-generates clinical notes in real time — no manual charting needed</span>
               </div>
               
               <div className="flex flex-wrap gap-4">
@@ -158,7 +158,7 @@ export default function EHRPage() {
                     <Sparkles className="h-3.5 w-3.5 text-primary" />
                     <span className="text-xs font-bold uppercase tracking-wide text-primary">AI Powered</span>
                   </div>
-                  <p className="text-sm text-slate-600">Our <strong className="text-slate-800">Ambient Scribe</strong> listens to your patient conversations and auto-generates structured SOAP notes — so you can stay focused on care, not documentation.</p>
+                  <p className="text-sm text-slate-600">Our AI documentation tool converts real-time patient conversations into structured SOAP notes automatically — so you can stay focused on care, not documentation.</p>
                 </div>
               </div>
               
