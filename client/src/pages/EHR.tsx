@@ -41,7 +41,7 @@ const modules = [
   "Lab Results Integration",
   "Ambient Scribe",
   "AI Medical Coding",
-  "e-Prescribing (EPCS)",
+  "e-Prescribing",
   "Clinical Decision Support",
   "Progress Notes",
   "Visit Summaries",
