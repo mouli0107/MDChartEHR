@@ -899,8 +899,6 @@ Practices that leverage technology during downturns often emerge stronger, with:
     readTime: "7 min read",
     image: "/assets/generated_images/dermatology_skin_care_illustration.png",
   },
-];
-
   {
     id: "13",
     slug: "efficient-ehr-implementation-strategies",
