@@ -246,3 +246,9 @@ id = "E5fhR13tnT85Aq_Sv1hDi"
 uri = "file://attached_assets/generated_videos/telehealth_patient_pip.mp4"
 type = "video"
 title = "Telehealth — Patient full screen, doctor PIP lower right, no audio"
+
+[[outputs]]
+id = "Xgjc9xV82ja6dRqgGHElu"
+uri = "file://attached_assets/generated_videos/telehealth_desk_monitor.mp4"
+type = "video"
+title = "Doctor at desk watching 60-year-old male patient on monitor — no text, no audio"
