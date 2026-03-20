@@ -84,6 +84,44 @@ export default function AdminLeads() {
   const [newEmail, setNewEmail] = useState("");
   const [newName, setNewName] = useState("");
   const [settingsLoading, setSettingsLoading] = useState(false);
+  const [calendlyUrl, setCalendlyUrl] = useState("");
+  const [calendlyInput, setCalendlyInput] = useState("");
+  const [calendlySaving, setCalendlySaving] = useState(false);
+  const [calendlySaved, setCalendlySaved] = useState(false);
+
+  const fetchCalendlyUrl = async () => {
+    try {
+      const res = await fetch("/api/settings/calendly");
+      if (res.ok) {
+        const data = await res.json();
+        setCalendlyUrl(data.url);
+        setCalendlyInput(data.url);
+      }
+    } catch (err) {
+      console.error("Error fetching Calendly URL:", err);
+    }
+  };
+
+  const saveCalendlyUrl = async () => {
+    if (!calendlyInput.trim()) return;
+    setCalendlySaving(true);
+    try {
+      const res = await fetch("/api/settings/calendly", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: calendlyInput.trim() }),
+      });
+      if (res.ok) {
+        setCalendlyUrl(calendlyInput.trim());
+        setCalendlySaved(true);
+        setTimeout(() => setCalendlySaved(false), 3000);
+      }
+    } catch (err) {
+      console.error("Error saving Calendly URL:", err);
+    } finally {
+      setCalendlySaving(false);
+    }
+  };
 
   const fetchNotifEmails = async () => {
     try {
@@ -173,6 +211,7 @@ export default function AdminLeads() {
     fetchData();
     fetchAnalytics();
     fetchNotifEmails();
+    fetchCalendlyUrl();
   }, [isAuthenticated]);
 
   if (authLoading) {
@@ -555,7 +594,37 @@ export default function AdminLeads() {
               )}
             </div>
           ) : activeTab === "settings" ? (
-            <div className="max-w-2xl">
+            <div className="max-w-2xl space-y-6">
+              {/* Calendly Configuration */}
+              <div className="bg-white rounded-xl border p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Calendar className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900">Calendly Booking URL</h3>
+                    <p className="text-sm text-slate-500">The Calendly link shown on the Book a Demo page</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 mb-2">
+                  <Input
+                    placeholder="https://calendly.com/your-account/30min"
+                    value={calendlyInput}
+                    onChange={(e) => setCalendlyInput(e.target.value)}
+                    className="flex-1 font-mono text-sm"
+                    data-testid="input-calendly-url"
+                  />
+                  <Button onClick={saveCalendlyUrl} disabled={calendlySaving || !calendlyInput.trim()} data-testid="button-save-calendly">
+                    {calendlySaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                    {calendlySaved ? "Saved!" : "Save"}
+                  </Button>
+                </div>
+                {calendlyUrl && (
+                  <p className="text-xs text-slate-400 mt-1">Current: <span className="font-mono text-slate-600">{calendlyUrl}</span></p>
+                )}
+              </div>
+
+              {/* Notification Emails */}
               <div className="bg-white rounded-xl border p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">

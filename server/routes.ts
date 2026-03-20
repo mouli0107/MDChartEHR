@@ -211,6 +211,26 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/settings/calendly", async (_req, res) => {
+    try {
+      const value = await storage.getSetting("calendly_url");
+      res.json({ url: value || "https://calendly.com/testmouli4/30min" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch setting" });
+    }
+  });
+
+  app.post("/api/settings/calendly", isAuthenticated, async (req, res) => {
+    try {
+      const { url } = req.body;
+      if (!url || typeof url !== "string") return res.status(400).json({ error: "Invalid URL" });
+      await storage.setSetting("calendly_url", url);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to save setting" });
+    }
+  });
+
   app.get("/api/config/ga", (_req, res) => {
     const gaId = process.env.GA_MEASUREMENT_ID || "";
     res.json({ gaId });

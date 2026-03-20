@@ -57,6 +57,12 @@ export const insertNotificationEmailSchema = createInsertSchema(notificationEmai
 export type InsertNotificationEmail = z.infer<typeof insertNotificationEmailSchema>;
 export type NotificationEmail = typeof notificationEmails.$inferSelect;
 
+export const siteSettings = pgTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const pageViews = pgTable("page_views", {
   id: serial("id").primaryKey(),
   path: text("path").notNull(),

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -18,7 +19,21 @@ const benefits = [
   { icon: Shield, text: "No commitment required" }
 ];
 
+const DEFAULT_CALENDLY_URL = "https://calendly.com/testmouli4/30min?hide_gdpr_banner=1";
+
 export default function BookDemo() {
+  const [calendlyUrl, setCalendlyUrl] = useState(DEFAULT_CALENDLY_URL);
+
+  useEffect(() => {
+    fetch("/api/settings/calendly")
+      .then(r => r.json())
+      .then(data => {
+        const url = data.url || DEFAULT_CALENDLY_URL;
+        setCalendlyUrl(url.includes("hide_gdpr_banner") ? url : url + "?hide_gdpr_banner=1");
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-background font-sans">
       <Navbar />
@@ -91,7 +106,7 @@ export default function BookDemo() {
                   <h2 className="font-bold text-lg">Select a Time That Works for You</h2>
                 </div>
                 <InlineWidget 
-                  url="https://calendly.com/testmouli4/30min?hide_gdpr_banner=1"
+                  url={calendlyUrl}
                   styles={{
                     height: '700px',
                     width: '100%'

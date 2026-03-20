@@ -1,4 +1,4 @@
-import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail } from "@shared/schema";
+import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail } from "@shared/schema";
 import { db } from "./db";
 import { desc, sql, gte, count, eq } from "drizzle-orm";
 
@@ -12,6 +12,8 @@ export interface IStorage {
   getNotificationEmails(): Promise<NotificationEmail[]>;
   addNotificationEmail(data: InsertNotificationEmail): Promise<NotificationEmail>;
   deleteNotificationEmail(id: number): Promise<void>;
+  getSetting(key: string): Promise<string | null>;
+  setSetting(key: string, value: string): Promise<void>;
   getPageViewStats(): Promise<{
     totalViews: number;
     todayViews: number;
@@ -71,6 +73,16 @@ export class DatabaseStorage implements IStorage {
 
   async deleteNotificationEmail(id: number): Promise<void> {
     await db.delete(notificationEmails).where(eq(notificationEmails.id, id));
+  }
+
+  async getSetting(key: string): Promise<string | null> {
+    const [row] = await db.select().from(siteSettings).where(eq(siteSettings.key, key));
+    return row?.value ?? null;
+  }
+
+  async setSetting(key: string, value: string): Promise<void> {
+    await db.insert(siteSettings).values({ key, value })
+      .onConflictDoUpdate({ target: siteSettings.key, set: { value, updatedAt: new Date() } });
   }
 
   async getPageViewStats() {
