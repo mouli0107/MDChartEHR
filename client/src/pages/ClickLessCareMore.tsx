@@ -68,11 +68,6 @@ const features = [
   }
 ];
 
-const stats = [
-  { icon: Clock, value: "50%", label: "Less Documentation Time" },
-  { icon: MousePointer, value: "75%", label: "Fewer Clicks Per Visit" },
-  { icon: Zap, value: "3x", label: "Faster Chart Completion" }
-];
 
 export default function ClickLessCareMore() {
   return (
@@ -144,29 +139,6 @@ export default function ClickLessCareMore() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-16 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-12 md:gap-20">
-            {stats.map((stat, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0.9, y: 5 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="h-8 w-8 text-primary" />
-                </div>
-                <div className="text-4xl font-bold text-slate-900 mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-600 font-medium">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Philosophy with Image */}
       <section className="py-20 bg-slate-50">
