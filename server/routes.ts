@@ -12,6 +12,32 @@ export async function registerRoutes(
 ): Promise<Server> {
   await setupAuth(app);
   registerAuthRoutes(app);
+
+  // ── Legacy URL 301 Redirects ──────────────────────────────────────────────
+  // Old URLs from email campaigns and social media → new URLs
+  const LEGACY_REDIRECTS: Record<string, string> = {
+    '/dermcharts':       '/specialties/dermatology',
+    '/cardiocharts':     '/specialties/cardiology',
+    '/obgyncharts':      '/specialties/obgyn',
+    '/kidscharts':       '/specialties/pediatrics',
+    '/urologycharts':    '/specialties/urology',
+    '/familycharts':     '/specialties/family-medicine',
+    '/orthocharts':      '/specialties/orthopedics',
+    '/ophthalmocharts':  '/specialties/ophthalmology',
+    '/entcharts':        '/specialties/ent',
+    '/gastrocharts':     '/specialties/gastroenterology',
+    '/neurologycharts':  '/specialties/neurology',
+    '/psychiatrycharts': '/specialties/psychiatry',
+  };
+
+  app.use((req, res, next) => {
+    const newPath = LEGACY_REDIRECTS[req.path.toLowerCase()];
+    if (newPath) {
+      return res.redirect(301, newPath);
+    }
+    next();
+  });
+  // ─────────────────────────────────────────────────────────────────────────
   // Contact Request API
   app.post("/api/contact", async (req, res) => {
     try {
