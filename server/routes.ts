@@ -140,12 +140,22 @@ export async function registerRoutes(
 
   app.post("/api/page-view", async (req, res) => {
     try {
-      // Check CF-Connecting-IP first (set by Cloudflare with real visitor IP)
+      // Azure App Service puts the real client IP in X-Forwarded-For.
+      // req.ip respects trust proxy and extracts it correctly.
+      // Fall back to manual header parsing as a safety net.
+      const rawXFF = req.headers["x-forwarded-for"] as string | undefined;
       const ip =
-        (req.headers["cf-connecting-ip"] as string) ||
-        (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
+        (req.headers["cf-connecting-ip"] as string | undefined) ||
+        rawXFF?.split(",")[0]?.trim() ||
+        req.ip ||
         req.socket.remoteAddress ||
         "";
+
+      // DIAGNOSTIC: log raw headers and extracted IP so we can verify in Azure Log Stream
+      console.log("[geo-debug] x-forwarded-for:", rawXFF);
+      console.log("[geo-debug] cf-connecting-ip:", req.headers["cf-connecting-ip"]);
+      console.log("[geo-debug] req.ip:", req.ip);
+      console.log("[geo-debug] extracted ip:", ip);
 
       const now = Date.now();
       const hits = pageViewLimiter.get(ip) || [];
@@ -188,11 +198,14 @@ export async function registerRoutes(
       if (!country) {
         const cleanIp = ip.replace(/^::ffff:/, "");
         const isPrivate = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|100\.|169\.254\.|::1$|localhost$)/.test(cleanIp);
+        console.log("[geo-debug] cleanIp:", cleanIp, "| isPrivate:", isPrivate);
         if (cleanIp && !isPrivate) {
           if (geoCache.has(cleanIp)) {
             ({ country, city, region } = geoCache.get(cleanIp)!);
+            console.log("[geo-debug] cache hit → country:", country);
           } else {
             const geo = geoip.lookup(cleanIp);
+            console.log("[geo-debug] geoip.lookup result:", geo);
             if (geo) {
               country = geo.country ? (COUNTRY_NAMES[geo.country] || geo.country) : null;
               region = geo.region || null;
@@ -200,8 +213,12 @@ export async function registerRoutes(
             }
             geoCache.set(cleanIp, { country, city, region });
           }
+        } else {
+          console.log("[geo-debug] skipped lookup — ip is empty or private");
         }
       }
+
+      console.log("[geo-debug] final location before DB insert → country:", country, "| city:", city, "| region:", region);
 
       const viewData = {
         path: req.body.path || "/",
