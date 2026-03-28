@@ -13,7 +13,14 @@ if (!process.env.DATABASE_URL) {
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool, { schema });
 
-// Run lightweight startup migrations for additive schema changes
-pool.query(`
-  ALTER TABLE page_views ADD COLUMN IF NOT EXISTS ip_address text;
-`).catch(err => console.error("[db] startup migration error:", err));
+// Run additive schema migrations synchronously before server starts
+export async function runMigrations() {
+  try {
+    await pool.query(`
+      ALTER TABLE page_views ADD COLUMN IF NOT EXISTS ip_address text;
+    `);
+    console.log("[db] migrations completed successfully");
+  } catch (err) {
+    console.error("[db] migration error:", err);
+  }
+}
