@@ -176,27 +176,38 @@ export async function registerRoutes(
       let country = null;
       let city = null;
       let region = null;
-      // Strip IPv4-mapped IPv6 prefix (e.g. "::ffff:1.2.3.4" → "1.2.3.4")
-      const cleanIp = ip.replace(/^::ffff:/, "");
-      const isPrivate = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1$|localhost$)/.test(cleanIp);
 
-      if (cleanIp && !isPrivate) {
-        if (geoCache.has(cleanIp)) {
-          ({ country, city, region } = geoCache.get(cleanIp)!);
-        } else {
-          try {
-            const geoRes = await fetch(`https://ipinfo.io/${cleanIp}/json`);
-            if (geoRes.ok) {
-              const geoData = await geoRes.json();
-              if (!geoData.bogon) {
-                const code = geoData.country || null;
-                country = code ? (COUNTRY_NAMES[code] || code) : null;
-                city = geoData.city || null;
-                region = geoData.region || null;
+      // Method 1: Cloudflare injects CF-IPCountry on every request — no API call needed
+      const cfCountryCode = (req.headers["cf-ipcountry"] as string || "").toUpperCase();
+      if (cfCountryCode && cfCountryCode !== "XX" && cfCountryCode !== "T1") {
+        country = COUNTRY_NAMES[cfCountryCode] || cfCountryCode;
+      }
+
+      // Method 2: Fall back to ipinfo.io for non-Cloudflare traffic
+      if (!country) {
+        const cleanIp = ip.replace(/^::ffff:/, "");
+        const isPrivate = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|100\.|169\.254\.|::1$|localhost$)/.test(cleanIp);
+        if (cleanIp && !isPrivate) {
+          if (geoCache.has(cleanIp)) {
+            ({ country, city, region } = geoCache.get(cleanIp)!);
+          } else {
+            try {
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), 3000);
+              const geoRes = await fetch(`https://ipinfo.io/${cleanIp}/json`, { signal: controller.signal });
+              clearTimeout(timeout);
+              if (geoRes.ok) {
+                const geoData = await geoRes.json();
+                if (!geoData.bogon) {
+                  const code = geoData.country || null;
+                  country = code ? (COUNTRY_NAMES[code] || code) : null;
+                  city = geoData.city || null;
+                  region = geoData.region || null;
+                }
               }
-            }
-            geoCache.set(cleanIp, { country, city, region });
-          } catch {}
+              geoCache.set(cleanIp, { country, city, region });
+            } catch {}
+          }
         }
       }
 
