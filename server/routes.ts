@@ -196,7 +196,12 @@ export async function registerRoutes(
 
       // Method 2: Local geoip-lite database lookup (offline, works on any host)
       if (!country) {
-        const cleanIp = ip.replace(/^::ffff:/, "");
+        // Azure App Service appends port to IP in X-Forwarded-For (e.g. "122.172.86.136:18504")
+        // Strip IPv4-mapped IPv6 prefix, then strip the port if present
+        let cleanIp = ip.replace(/^::ffff:/, "");
+        if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+$/.test(cleanIp)) {
+          cleanIp = cleanIp.split(":")[0]; // "122.172.86.136:18504" → "122.172.86.136"
+        }
         const isPrivate = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|100\.|169\.254\.|::1$|localhost$)/.test(cleanIp);
         console.log("[geo-debug] cleanIp:", cleanIp, "| isPrivate:", isPrivate);
         if (cleanIp && !isPrivate) {
