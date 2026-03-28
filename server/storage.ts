@@ -1,6 +1,13 @@
 import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail } from "@shared/schema";
 import { db } from "./db";
-import { desc, sql, gte, count, eq } from "drizzle-orm";
+import { desc, sql, gte, lte, count, eq, and, isNotNull } from "drizzle-orm";
+
+export interface VisitorFilters {
+  country?: string;
+  startDate?: Date;
+  endDate?: Date;
+  limit?: number;
+}
 
 export interface IStorage {
   createContactRequest(insertRequest: InsertContactRequest): Promise<ContactRequest>;
@@ -9,6 +16,8 @@ export interface IStorage {
   getAllWhitePaperDownloads(): Promise<WhitePaperDownload[]>;
   createPageView(insertView: InsertPageView): Promise<PageView>;
   getRecentPageViews(limit: number): Promise<PageView[]>;
+  getFilteredPageViews(filters: VisitorFilters): Promise<PageView[]>;
+  getDistinctCountries(): Promise<string[]>;
   getNotificationEmails(): Promise<NotificationEmail[]>;
   addNotificationEmail(data: InsertNotificationEmail): Promise<NotificationEmail>;
   deleteNotificationEmail(id: number): Promise<void>;
@@ -60,6 +69,36 @@ export class DatabaseStorage implements IStorage {
 
   async getRecentPageViews(limit: number): Promise<PageView[]> {
     return await db.select().from(pageViews).orderBy(desc(pageViews.createdAt)).limit(limit);
+  }
+
+  async getFilteredPageViews(filters: VisitorFilters): Promise<PageView[]> {
+    const conditions = [];
+    if (filters.country) {
+      conditions.push(eq(pageViews.country, filters.country));
+    }
+    if (filters.startDate) {
+      conditions.push(gte(pageViews.createdAt, filters.startDate));
+    }
+    if (filters.endDate) {
+      // Include the full end day by setting time to 23:59:59
+      const endOfDay = new Date(filters.endDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      conditions.push(lte(pageViews.createdAt, endOfDay));
+    }
+    const query = db.select().from(pageViews).orderBy(desc(pageViews.createdAt));
+    if (conditions.length > 0) {
+      return await query.where(and(...conditions)).limit(filters.limit || 10000);
+    }
+    return await query.limit(filters.limit || 10000);
+  }
+
+  async getDistinctCountries(): Promise<string[]> {
+    const rows = await db
+      .selectDistinct({ country: pageViews.country })
+      .from(pageViews)
+      .where(isNotNull(pageViews.country))
+      .orderBy(pageViews.country);
+    return rows.map(r => r.country!).filter(Boolean);
   }
 
   async getNotificationEmails(): Promise<NotificationEmail[]> {

@@ -80,6 +80,11 @@ export default function AdminLeads() {
   const [pageStats, setPageStats] = useState<PageViewStats | null>(null);
   const [recentViews, setRecentViews] = useState<RecentPageView[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [filterCountry, setFilterCountry] = useState("");
+  const [filterStartDate, setFilterStartDate] = useState("");
+  const [filterEndDate, setFilterEndDate] = useState("");
+  const [exportLoading, setExportLoading] = useState(false);
   const [notifEmails, setNotifEmails] = useState<{id: number; email: string; name: string | null; createdAt: string}[]>([]);
   const [newEmail, setNewEmail] = useState("");
   const [newName, setNewName] = useState("");
@@ -165,16 +170,42 @@ export default function AdminLeads() {
   const fetchAnalytics = async () => {
     setAnalyticsLoading(true);
     try {
-      const [statsRes, recentRes] = await Promise.all([
+      const [statsRes, recentRes, countriesRes] = await Promise.all([
         fetch("/api/page-views/stats"),
-        fetch("/api/page-views/recent?limit=50")
+        fetch("/api/page-views/recent?limit=50"),
+        fetch("/api/visitors/countries"),
       ]);
       if (statsRes.ok) setPageStats(await statsRes.json());
       if (recentRes.ok) setRecentViews(await recentRes.json());
+      if (countriesRes.ok) setCountries(await countriesRes.json());
     } catch (error) {
       console.error("Error fetching analytics:", error);
     } finally {
       setAnalyticsLoading(false);
+    }
+  };
+
+  const exportVisitors = async () => {
+    setExportLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filterCountry) params.set("country", filterCountry);
+      if (filterStartDate) params.set("startDate", filterStartDate);
+      if (filterEndDate) params.set("endDate", filterEndDate);
+      const res = await fetch(`/api/visitors/export?${params.toString()}`);
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = res.headers.get("Content-Disposition")?.split('filename="')[1]?.replace('"', '') || "visitors.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error("Error exporting visitors:", error);
+    } finally {
+      setExportLoading(false);
     }
   };
 
@@ -542,9 +573,56 @@ export default function AdminLeads() {
                   </div>
 
                   <div className="bg-white rounded-xl border p-5">
-                    <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-primary" /> Recent Visitors
-                    </h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+                      <h3 className="font-bold text-slate-900 flex items-center gap-2 flex-1">
+                        <Clock className="h-4 w-4 text-primary" /> Recent Visitors
+                      </h3>
+                      {/* Filters */}
+                      <div className="flex flex-wrap gap-2 items-center">
+                        <select
+                          value={filterCountry}
+                          onChange={e => setFilterCountry(e.target.value)}
+                          className="text-sm border rounded-md px-2 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary"
+                        >
+                          <option value="">All Countries</option>
+                          {countries.map(c => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                        <input
+                          type="date"
+                          value={filterStartDate}
+                          onChange={e => setFilterStartDate(e.target.value)}
+                          className="text-sm border rounded-md px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary"
+                          placeholder="Start date"
+                        />
+                        <input
+                          type="date"
+                          value={filterEndDate}
+                          onChange={e => setFilterEndDate(e.target.value)}
+                          className="text-sm border rounded-md px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary"
+                          placeholder="End date"
+                        />
+                        <Button
+                          size="sm"
+                          onClick={exportVisitors}
+                          disabled={exportLoading}
+                          className="flex items-center gap-1.5"
+                        >
+                          {exportLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+                          Export CSV
+                        </Button>
+                        {(filterCountry || filterStartDate || filterEndDate) && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => { setFilterCountry(""); setFilterStartDate(""); setFilterEndDate(""); }}
+                          >
+                            Clear
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                     <div className="rounded-lg border overflow-hidden">
                       <Table>
                         <TableHeader>

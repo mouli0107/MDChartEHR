@@ -259,6 +259,56 @@ export async function registerRoutes(
     }
   });
 
+  // Returns distinct countries for the filter dropdown
+  app.get("/api/visitors/countries", isAuthenticated, async (_req, res) => {
+    try {
+      const countries = await storage.getDistinctCountries();
+      res.json(countries);
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+      res.status(500).json({ error: "Failed to fetch countries" });
+    }
+  });
+
+  // Export visitors as CSV filtered by country and/or date range
+  app.get("/api/visitors/export", isAuthenticated, async (req, res) => {
+    try {
+      const { country, startDate, endDate } = req.query;
+      const filters: { country?: string; startDate?: Date; endDate?: Date } = {};
+      if (country && typeof country === "string") filters.country = country;
+      if (startDate && typeof startDate === "string") filters.startDate = new Date(startDate);
+      if (endDate && typeof endDate === "string") filters.endDate = new Date(endDate);
+
+      const views = await storage.getFilteredPageViews(filters);
+
+      // Build CSV
+      const headers = ["ID", "Page", "Country", "City", "Region", "Device", "Browser", "OS", "Date/Time"];
+      const rows = views.map(v => [
+        v.id,
+        v.path,
+        v.country || "",
+        v.city || "",
+        v.region || "",
+        v.deviceType || "",
+        v.browser || "",
+        v.os || "",
+        new Date(v.createdAt).toISOString(),
+      ]);
+
+      const csv = [headers, ...rows]
+        .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        .join("\n");
+
+      const filename = `visitors_${country || "all"}_${new Date().toISOString().split("T")[0]}.csv`;
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+      res.send(csv);
+    } catch (error) {
+      console.error("Error exporting visitors:", error);
+      res.status(500).json({ error: "Failed to export visitors" });
+    }
+  });
+
   app.get("/api/notification-emails", isAuthenticated, async (req, res) => {
     try {
       const emails = await storage.getNotificationEmails();
