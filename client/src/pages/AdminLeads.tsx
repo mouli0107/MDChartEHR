@@ -53,6 +53,7 @@ interface PageViewStats {
 interface RecentPageView {
   id: number;
   path: string;
+  ipAddress: string | null;
   country: string | null;
   city: string | null;
   deviceType: string | null;
@@ -84,6 +85,7 @@ export default function AdminLeads() {
   const [filterCountry, setFilterCountry] = useState("");
   const [filterStartDate, setFilterStartDate] = useState("");
   const [filterEndDate, setFilterEndDate] = useState("");
+  const [recordLimit, setRecordLimit] = useState<number>(50);
   const [exportLoading, setExportLoading] = useState(false);
   const [notifEmails, setNotifEmails] = useState<{id: number; email: string; name: string | null; createdAt: string}[]>([]);
   const [newEmail, setNewEmail] = useState("");
@@ -167,12 +169,12 @@ export default function AdminLeads() {
     }
   };
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = async (limit = recordLimit) => {
     setAnalyticsLoading(true);
     try {
       const [statsRes, recentRes, countriesRes] = await Promise.all([
         fetch("/api/page-views/stats"),
-        fetch("/api/page-views/recent?limit=50"),
+        fetch(`/api/page-views/recent?limit=${limit}`),
         fetch("/api/visitors/countries"),
       ]);
       if (statsRes.ok) setPageStats(await statsRes.json());
@@ -184,6 +186,18 @@ export default function AdminLeads() {
       setAnalyticsLoading(false);
     }
   };
+
+  // Compute filtered view of recentViews based on country + date filters
+  const filteredViews = recentViews.filter(view => {
+    if (filterCountry && view.country !== filterCountry) return false;
+    if (filterStartDate && new Date(view.createdAt) < new Date(filterStartDate)) return false;
+    if (filterEndDate) {
+      const end = new Date(filterEndDate);
+      end.setHours(23, 59, 59, 999);
+      if (new Date(view.createdAt) > end) return false;
+    }
+    return true;
+  });
 
   const exportVisitors = async () => {
     setExportLoading(true);
@@ -579,6 +593,7 @@ export default function AdminLeads() {
                       </h3>
                       {/* Filters */}
                       <div className="flex flex-wrap gap-2 items-center">
+                        {/* Location filter */}
                         <select
                           value={filterCountry}
                           onChange={e => setFilterCountry(e.target.value)}
@@ -589,20 +604,35 @@ export default function AdminLeads() {
                             <option key={c} value={c}>{c}</option>
                           ))}
                         </select>
+                        {/* Date range */}
                         <input
                           type="date"
                           value={filterStartDate}
                           onChange={e => setFilterStartDate(e.target.value)}
                           className="text-sm border rounded-md px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary"
-                          placeholder="Start date"
                         />
                         <input
                           type="date"
                           value={filterEndDate}
                           onChange={e => setFilterEndDate(e.target.value)}
                           className="text-sm border rounded-md px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary"
-                          placeholder="End date"
                         />
+                        {/* Records per page */}
+                        <select
+                          value={recordLimit}
+                          onChange={e => {
+                            const val = Number(e.target.value);
+                            setRecordLimit(val);
+                            fetchAnalytics(val);
+                          }}
+                          className="text-sm border rounded-md px-2 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary"
+                        >
+                          <option value={10}>Show 10</option>
+                          <option value={50}>Show 50</option>
+                          <option value={200}>Show 200</option>
+                          <option value={500}>Show 500</option>
+                        </select>
+                        {/* Export */}
                         <Button
                           size="sm"
                           onClick={exportVisitors}
@@ -612,22 +642,31 @@ export default function AdminLeads() {
                           {exportLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
                           Export CSV
                         </Button>
+                        {/* Clear filters */}
                         {(filterCountry || filterStartDate || filterEndDate) && (
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => { setFilterCountry(""); setFilterStartDate(""); setFilterEndDate(""); }}
                           >
-                            Clear
+                            Clear Filters
                           </Button>
                         )}
                       </div>
                     </div>
+                    {/* Record count summary */}
+                    <p className="text-xs text-slate-500 mb-2">
+                      Showing <span className="font-semibold text-slate-700">{filteredViews.length}</span> of <span className="font-semibold text-slate-700">{recentViews.length}</span> records
+                      {filterCountry && <span> · Filtered by <span className="font-semibold">{filterCountry}</span></span>}
+                      {filterStartDate && <span> · From <span className="font-semibold">{filterStartDate}</span></span>}
+                      {filterEndDate && <span> · To <span className="font-semibold">{filterEndDate}</span></span>}
+                    </p>
                     <div className="rounded-lg border overflow-hidden">
                       <Table>
                         <TableHeader>
                           <TableRow>
                             <TableHead>Page</TableHead>
+                            <TableHead>IP Address</TableHead>
                             <TableHead>Location</TableHead>
                             <TableHead>Device</TableHead>
                             <TableHead>Browser</TableHead>
@@ -635,9 +674,10 @@ export default function AdminLeads() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {recentViews.slice(0, 20).map((view) => (
+                          {filteredViews.map((view) => (
                             <TableRow key={view.id} data-testid={`row-pageview-${view.id}`}>
                               <TableCell className="font-medium text-sm">{view.path}</TableCell>
+                              <TableCell className="text-sm text-slate-500 font-mono">{view.ipAddress || "—"}</TableCell>
                               <TableCell className="text-sm text-slate-600">
                                 {[view.city, view.country].filter(Boolean).join(", ") || "—"}
                               </TableCell>
@@ -651,10 +691,10 @@ export default function AdminLeads() {
                               </TableCell>
                             </TableRow>
                           ))}
-                          {recentViews.length === 0 && (
+                          {filteredViews.length === 0 && (
                             <TableRow>
-                              <TableCell colSpan={5} className="text-center py-8 text-slate-400">
-                                No page views recorded yet
+                              <TableCell colSpan={6} className="text-center py-8 text-slate-400">
+                                {recentViews.length === 0 ? "No page views recorded yet" : "No records match the selected filters"}
                               </TableCell>
                             </TableRow>
                           )}

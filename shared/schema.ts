@@ -71,6 +71,7 @@ export const pageViews = pgTable("page_views", {
   language: text("language"),
   screenWidth: integer("screen_width"),
   screenHeight: integer("screen_height"),
+  ipAddress: text("ip_address"),
   country: text("country"),
   city: text("city"),
   region: text("region"),

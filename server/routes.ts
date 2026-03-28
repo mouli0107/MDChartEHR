@@ -225,6 +225,9 @@ export async function registerRoutes(
 
       console.log("[geo-debug] final location before DB insert → country:", country, "| city:", city, "| region:", region);
 
+      // Store the clean IP (port already stripped) for display in admin
+      const storedIp = cleanIp || null;
+
       const viewData = {
         path: req.body.path || "/",
         referrer: req.body.referrer || null,
@@ -232,6 +235,7 @@ export async function registerRoutes(
         language: req.body.language || null,
         screenWidth: req.body.screenWidth || null,
         screenHeight: req.body.screenHeight || null,
+        ipAddress: storedIp,
         country,
         city,
         region,
@@ -282,10 +286,11 @@ export async function registerRoutes(
       const views = await storage.getFilteredPageViews(filters);
 
       // Build CSV
-      const headers = ["ID", "Page", "Country", "City", "Region", "Device", "Browser", "OS", "Date/Time"];
+      const headers = ["ID", "Page", "IP Address", "Country", "City", "Region", "Device", "Browser", "OS", "Date/Time"];
       const rows = views.map(v => [
         v.id,
         v.path,
+        v.ipAddress || "",
         v.country || "",
         v.city || "",
         v.region || "",
