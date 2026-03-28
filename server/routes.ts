@@ -184,6 +184,13 @@ export async function registerRoutes(
       else if (/android/i.test(ua)) os = "Android";
       else if (/iphone|ipad/i.test(ua)) os = "iOS";
 
+      // Clean the IP once here — used for both geo lookup and storage
+      // Azure App Service appends port to IP in X-Forwarded-For (e.g. "122.172.86.136:18504")
+      let cleanIp = ip.replace(/^::ffff:/, "");
+      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+$/.test(cleanIp)) {
+        cleanIp = cleanIp.split(":")[0]; // "122.172.86.136:18504" → "122.172.86.136"
+      }
+
       let country = null;
       let city = null;
       let region = null;
@@ -196,12 +203,6 @@ export async function registerRoutes(
 
       // Method 2: Local geoip-lite database lookup (offline, works on any host)
       if (!country) {
-        // Azure App Service appends port to IP in X-Forwarded-For (e.g. "122.172.86.136:18504")
-        // Strip IPv4-mapped IPv6 prefix, then strip the port if present
-        let cleanIp = ip.replace(/^::ffff:/, "");
-        if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+$/.test(cleanIp)) {
-          cleanIp = cleanIp.split(":")[0]; // "122.172.86.136:18504" → "122.172.86.136"
-        }
         const isPrivate = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|100\.|169\.254\.|::1$|localhost$)/.test(cleanIp);
         console.log("[geo-debug] cleanIp:", cleanIp, "| isPrivate:", isPrivate);
         if (cleanIp && !isPrivate) {
@@ -225,9 +226,6 @@ export async function registerRoutes(
 
       console.log("[geo-debug] final location before DB insert → country:", country, "| city:", city, "| region:", region);
 
-      // Store the clean IP (port already stripped) for display in admin
-      const storedIp = cleanIp || null;
-
       const viewData = {
         path: req.body.path || "/",
         referrer: req.body.referrer || null,
@@ -235,7 +233,7 @@ export async function registerRoutes(
         language: req.body.language || null,
         screenWidth: req.body.screenWidth || null,
         screenHeight: req.body.screenHeight || null,
-        ipAddress: storedIp,
+        ipAddress: cleanIp || null,
         country,
         city,
         region,
