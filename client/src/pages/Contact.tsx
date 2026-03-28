@@ -39,24 +39,46 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Message Sent!",
-      description: "An MD Charts representative will contact you shortly.",
-    });
-    
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      company: "",
-      state: "",
-      message: ""
-    });
-    setIsSubmitting(false);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.phone || null,
+          company: formData.company
+            ? `${formData.company}${formData.state ? ` (${formData.state})` : ""}`
+            : formData.state || null,
+          requestType: "General Inquiry",
+          message: formData.message,
+        }),
+      });
+
+      if (res.ok) {
+        toast({
+          title: "Message Sent!",
+          description: "An MD Charts representative will contact you shortly.",
+        });
+        setFormData({ firstName: "", lastName: "", email: "", phone: "", company: "", state: "", message: "" });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast({
+          title: "Submission Failed",
+          description: err.error || "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({
+        title: "Network Error",
+        description: "Unable to send your message. Please check your connection and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
