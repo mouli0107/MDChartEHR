@@ -16,6 +16,13 @@ export const pool = new Pool({
   idleTimeoutMillis: 30000,
   max: 10,
 });
+
+// Prevent unhandled 'error' events from crashing the server when
+// Neon drops a connection (e.g. during their maintenance/outages)
+pool.on("error", (err) => {
+  console.error("[db] pool client error (non-fatal):", err.message);
+});
+
 export const db = drizzle(pool, { schema });
 
 // Run additive schema migrations synchronously before server starts
