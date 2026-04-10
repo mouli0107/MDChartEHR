@@ -169,12 +169,22 @@ export default function AdminLeads() {
     }
   };
 
-  const fetchAnalytics = async (limit = recordLimit) => {
+  const fetchAnalytics = async (
+    limit = recordLimit,
+    country = filterCountry,
+    startDate = filterStartDate,
+    endDate = filterEndDate
+  ) => {
     setAnalyticsLoading(true);
     try {
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (country) params.set("country", country);
+      if (startDate) params.set("startDate", startDate);
+      if (endDate) params.set("endDate", endDate);
+
       const [statsRes, recentRes, countriesRes] = await Promise.all([
         fetch("/api/page-views/stats"),
-        fetch(`/api/page-views/recent?limit=${limit}`),
+        fetch(`/api/page-views/recent?${params.toString()}`),
         fetch("/api/visitors/countries"),
       ]);
       if (statsRes.ok) setPageStats(await statsRes.json());
@@ -187,17 +197,8 @@ export default function AdminLeads() {
     }
   };
 
-  // Compute filtered view of recentViews based on country + date filters
-  const filteredViews = recentViews.filter(view => {
-    if (filterCountry && view.country !== filterCountry) return false;
-    if (filterStartDate && new Date(view.createdAt) < new Date(filterStartDate)) return false;
-    if (filterEndDate) {
-      const end = new Date(filterEndDate);
-      end.setHours(23, 59, 59, 999);
-      if (new Date(view.createdAt) > end) return false;
-    }
-    return true;
-  });
+  // filteredViews is now server-filtered; recentViews already matches the selected filters
+  const filteredViews = recentViews;
 
   const exportVisitors = async () => {
     setExportLoading(true);
@@ -617,13 +618,21 @@ export default function AdminLeads() {
                           onChange={e => setFilterEndDate(e.target.value)}
                           className="text-sm border rounded-md px-2 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary"
                         />
+                        {/* Apply filters button */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => fetchAnalytics(recordLimit, filterCountry, filterStartDate, filterEndDate)}
+                        >
+                          Apply
+                        </Button>
                         {/* Records per page */}
                         <select
                           value={recordLimit}
                           onChange={e => {
                             const val = Number(e.target.value);
                             setRecordLimit(val);
-                            fetchAnalytics(val);
+                            fetchAnalytics(val, filterCountry, filterStartDate, filterEndDate);
                           }}
                           className="text-sm border rounded-md px-2 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary"
                         >
@@ -647,7 +656,12 @@ export default function AdminLeads() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => { setFilterCountry(""); setFilterStartDate(""); setFilterEndDate(""); }}
+                            onClick={() => {
+                              setFilterCountry("");
+                              setFilterStartDate("");
+                              setFilterEndDate("");
+                              fetchAnalytics(recordLimit, "", "", "");
+                            }}
                           >
                             Clear Filters
                           </Button>
@@ -656,10 +670,11 @@ export default function AdminLeads() {
                     </div>
                     {/* Record count summary */}
                     <p className="text-xs text-slate-500 mb-2">
-                      Showing <span className="font-semibold text-slate-700">{filteredViews.length}</span> of <span className="font-semibold text-slate-700">{recentViews.length}</span> records
-                      {filterCountry && <span> · Filtered by <span className="font-semibold">{filterCountry}</span></span>}
+                      Showing <span className="font-semibold text-slate-700">{filteredViews.length}</span> records
+                      {filterCountry && <span> · Country: <span className="font-semibold">{filterCountry}</span></span>}
                       {filterStartDate && <span> · From <span className="font-semibold">{filterStartDate}</span></span>}
                       {filterEndDate && <span> · To <span className="font-semibold">{filterEndDate}</span></span>}
+                      {!filterCountry && !filterStartDate && !filterEndDate && <span className="text-slate-400"> (most recent {recordLimit})</span>}
                     </p>
                     <div className="rounded-lg border overflow-hidden">
                       <Table>

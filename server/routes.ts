@@ -377,6 +377,22 @@ export async function registerRoutes(
   app.get("/api/page-views/recent", isAuthenticated, async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 50;
+      const { country, startDate, endDate } = req.query;
+
+      // If any filters are set, use getFilteredPageViews so we search the full dataset
+      if (country || startDate || endDate) {
+        const filters: { country?: string; startDate?: Date; endDate?: Date; limit?: number } = { limit };
+        if (country && typeof country === "string") filters.country = country;
+        if (startDate && typeof startDate === "string") filters.startDate = new Date(startDate);
+        if (endDate && typeof endDate === "string") {
+          const end = new Date(endDate);
+          end.setHours(23, 59, 59, 999);
+          filters.endDate = end;
+        }
+        const views = await storage.getFilteredPageViews(filters);
+        return res.json(views);
+      }
+
       const views = await storage.getRecentPageViews(limit);
       res.json(views);
     } catch (error) {
