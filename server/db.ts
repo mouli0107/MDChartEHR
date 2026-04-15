@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "@shared/schema";
+import { blogPosts as blogPostsData } from "@shared/blogData";
 
 const { Pool } = pg;
 
@@ -67,5 +68,40 @@ export async function runMigrations() {
   } catch (err) {
     // Log but don't crash — migration may have already run
     console.error("[db] migration error (non-fatal):", err);
+  }
+}
+
+// Seed existing blog posts from static data if the DB table is empty
+export async function seedBlogPosts() {
+  try {
+    const result = await pool.query("SELECT COUNT(*) FROM blog_posts");
+    const count = parseInt(result.rows[0].count, 10);
+    if (count > 0) {
+      console.log(`[db] blog_posts already has ${count} rows — skipping seed`);
+      return;
+    }
+    console.log(`[db] seeding ${blogPostsData.length} blog posts...`);
+    for (const post of blogPostsData) {
+      await pool.query(
+        `INSERT INTO blog_posts (slug, title, excerpt, content, category, category_label, author, published_at, read_time, image, published)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, true)
+         ON CONFLICT (slug) DO NOTHING`,
+        [
+          post.slug,
+          post.title,
+          post.excerpt,
+          post.content,
+          post.category,
+          post.categoryLabel,
+          post.author,
+          post.date,
+          post.readTime,
+          post.image ?? null,
+        ]
+      );
+    }
+    console.log("[db] blog posts seeded successfully");
+  } catch (err) {
+    console.error("[db] seed error (non-fatal):", err);
   }
 }
