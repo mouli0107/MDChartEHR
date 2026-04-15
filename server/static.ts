@@ -83,10 +83,11 @@ export function serveStatic(app: Express) {
 
   // Catch-all: serve index.html with SEO tags injected for every page request.
   // This makes meta title/description/OG tags visible to ALL crawlers in raw HTML.
-  app.use("*", (req, res) => {
+  app.use((req, res) => {
     try {
       const html = fs.readFileSync(indexHtmlPath, "utf-8");
-      const pagePath = req.originalUrl.split("?")[0] || "/";
+      // req.url preserves the full path when no mount prefix is used
+      const pagePath = (req.url || req.originalUrl || "/").split("?")[0];
       const modified = injectSeoTags(html, pagePath);
       res.setHeader("Content-Type", "text/html");
       res.setHeader("Cache-Control", "no-cache");
