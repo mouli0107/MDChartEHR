@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
-import { runMigrations } from "./db";
+import { runMigrations, seedBlogPosts } from "./db";
 
 const app = express();
 app.set("trust proxy", true); // trust Cloudflare + hosting proxy headers for correct client IP
@@ -77,10 +77,12 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 
-  // Run migrations in background — non-blocking so server stays alive
-  runMigrations().catch(err => {
-    console.error("[db] migration failed:", err);
-  });
+  // Run migrations then seed blog posts — both non-blocking
+  runMigrations()
+    .then(() => seedBlogPosts())
+    .catch(err => {
+      console.error("[db] migration/seed failed:", err);
+    });
 
   await registerRoutes(httpServer, app);
 
