@@ -1075,7 +1075,7 @@ export default function AdminLeads() {
               ) : pageStats ? (
                 <div className="space-y-6">
                   <div className="flex justify-end">
-                    <Button variant="outline" size="sm" onClick={fetchAnalytics} data-testid="button-refresh-analytics">
+                    <Button variant="outline" size="sm" onClick={() => fetchAnalytics()} data-testid="button-refresh-analytics">
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Refresh
                     </Button>

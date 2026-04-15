@@ -190,7 +190,6 @@ export class DatabaseStorage implements IStorage {
       hourlyViews: hourlyViews.map(h => ({ hour: h.hour, views: h.views })),
     };
   }
-}
 
   async getAllBlogPosts(includeUnpublished = false): Promise<BlogPost[]> {
     if (includeUnpublished) {
@@ -256,3 +255,4 @@ export class DatabaseStorage implements IStorage {
 }
 
 export const storage = new DatabaseStorage();
+
