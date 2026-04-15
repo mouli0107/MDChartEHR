@@ -17,12 +17,209 @@ setTimeout(() => {
   });
 }, 4 * 60 * 1000);
 
+// All pages for sitemap generation
+const SITE_PAGES_FOR_SITEMAP = [
+  { path: "/", priority: "1.0", changefreq: "weekly" },
+  { path: "/ehr", priority: "0.9", changefreq: "monthly" },
+  { path: "/rcm", priority: "0.9", changefreq: "monthly" },
+  { path: "/practice-management", priority: "0.8", changefreq: "monthly" },
+  { path: "/patient-engagement", priority: "0.8", changefreq: "monthly" },
+  { path: "/telehealth", priority: "0.8", changefreq: "monthly" },
+  { path: "/mobile-app", priority: "0.7", changefreq: "monthly" },
+  { path: "/lab-integration", priority: "0.7", changefreq: "monthly" },
+  { path: "/e-prescribing", priority: "0.7", changefreq: "monthly" },
+  { path: "/patient-portal", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/dermatology", priority: "0.8", changefreq: "monthly" },
+  { path: "/specialties/cardiology", priority: "0.8", changefreq: "monthly" },
+  { path: "/specialties/obgyn", priority: "0.8", changefreq: "monthly" },
+  { path: "/specialties/pediatrics", priority: "0.8", changefreq: "monthly" },
+  { path: "/specialties/urology", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/family-medicine", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/orthopedics", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/ophthalmology", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/ent", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/gastroenterology", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/neurology", priority: "0.7", changefreq: "monthly" },
+  { path: "/specialties/psychiatry", priority: "0.7", changefreq: "monthly" },
+  { path: "/why-mdcharts", priority: "0.8", changefreq: "monthly" },
+  { path: "/pricing", priority: "0.8", changefreq: "monthly" },
+  { path: "/book-demo", priority: "0.9", changefreq: "monthly" },
+  { path: "/contact", priority: "0.7", changefreq: "monthly" },
+  { path: "/blog", priority: "0.8", changefreq: "weekly" },
+  { path: "/case-studies", priority: "0.7", changefreq: "monthly" },
+  { path: "/testimonials", priority: "0.7", changefreq: "monthly" },
+  { path: "/faqs", priority: "0.7", changefreq: "monthly" },
+  { path: "/webinars", priority: "0.6", changefreq: "monthly" },
+  { path: "/white-papers", priority: "0.6", changefreq: "monthly" },
+  { path: "/about", priority: "0.7", changefreq: "monthly" },
+  { path: "/careers", priority: "0.6", changefreq: "monthly" },
+  { path: "/partners", priority: "0.6", changefreq: "monthly" },
+  { path: "/hipaa-compliance", priority: "0.7", changefreq: "yearly" },
+  { path: "/security", priority: "0.7", changefreq: "yearly" },
+];
+
+// Social media / SEO bot user-agents that need server-side meta tags
+const BOT_USER_AGENTS = /facebookexternalhit|twitterbot|linkedinbot|whatsapp|slackbot|telegrambot|discordbot|googlebot|bingbot|applebot/i;
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   await setupAuth(app);
   registerAuthRoutes(app);
+
+  // ── Dynamic Redirect Middleware (from DB) ────────────────────────────────
+  // Cache starts empty — populated in background after startup so the first
+  // request is never delayed by a Neon cold start.
+  let redirectCache: Map<string, { toPath: string; statusCode: number }> = new Map();
+  let redirectCacheTime = 0;
+
+  async function refreshRedirectCache() {
+    try {
+      redirectCache = await storage.getRedirectMap();
+      redirectCacheTime = Date.now();
+    } catch {
+      // Keep existing cache on DB error — don't reset it
+    }
+  }
+
+  // Warm up in background after server starts, then refresh every 5 minutes
+  setTimeout(() => {
+    refreshRedirectCache();
+    setInterval(refreshRedirectCache, 5 * 60 * 1000);
+  }, 10000); // 10s after startup — DB should be ready by then
+
+  app.use((req, res, next) => {
+    // Synchronous cache lookup — no DB call, no await, zero latency
+    const match = redirectCache.get(req.path);
+    if (match) return res.redirect(match.statusCode, match.toPath);
+    next();
+  });
+
+  // ── robots.txt ────────────────────────────────────────────────────────────
+  app.get("/robots.txt", (_req, res) => {
+    const host = process.env.SITE_URL || "https://mdcharts.com";
+    res.setHeader("Content-Type", "text/plain");
+    res.send(`User-agent: *
+Allow: /
+
+Sitemap: ${host}/sitemap.xml`);
+  });
+
+  // ── XML Sitemap ───────────────────────────────────────────────────────────
+  app.get("/sitemap.xml", async (_req, res) => {
+    try {
+      const host = process.env.SITE_URL || "https://mdcharts.com";
+      const now = new Date().toISOString().split("T")[0];
+
+      // Get published blog posts
+      const posts = await storage.getAllBlogPosts(false);
+
+      const staticEntries = SITE_PAGES_FOR_SITEMAP.map(p => `
+  <url>
+    <loc>${host}${p.path}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>${p.changefreq}</changefreq>
+    <priority>${p.priority}</priority>
+  </url>`).join("");
+
+      const blogEntries = posts.map(p => `
+  <url>
+    <loc>${host}/blog/${p.slug}</loc>
+    <lastmod>${new Date(p.updatedAt).toISOString().split("T")[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`).join("");
+
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${staticEntries}
+${blogEntries}
+</urlset>`;
+
+      res.setHeader("Content-Type", "application/xml");
+      res.send(xml);
+    } catch (err) {
+      console.error("[sitemap] error:", err);
+      res.status(500).send("Failed to generate sitemap");
+    }
+  });
+
+  // ── Social Bot OG Tag Prerendering ────────────────────────────────────────
+  // When Facebook/LinkedIn/Twitter/Slack bots request a page, inject proper
+  // meta tags server-side (bots don't execute JavaScript).
+  app.use(async (req, res, next) => {
+    // Only intercept HTML page requests from known bots
+    if (!BOT_USER_AGENTS.test(req.headers["user-agent"] || "")) return next();
+    if (req.path.startsWith("/api") || req.path.startsWith("/assets")) return next();
+    if (!["GET", "HEAD"].includes(req.method)) return next();
+
+    // Safety: if DB takes >3s (Neon cold start), fall through to normal serving
+    const timeout = setTimeout(() => next(), 3000);
+
+    try {
+      const host = process.env.SITE_URL || "https://mdcharts.com";
+      const siteDefaults = {
+        title: "MDCharts EHR — Click Less, Care More",
+        description: "HIPAA-compliant EHR and RCM built for specialty practices. Streamline workflows, boost revenue, and deliver better patient care.",
+        image: `${host}/assets/mdcharts_live_logo-BYq-gX04.png`,
+      };
+
+      // Check if it's a blog post
+      let title = siteDefaults.title;
+      let description = siteDefaults.description;
+      let image = siteDefaults.image;
+      let canonicalUrl = `${host}${req.path}`;
+
+      const blogSlugMatch = req.path.match(/^\/blog\/(.+)$/);
+      if (blogSlugMatch) {
+        const post = await storage.getBlogPostBySlug(blogSlugMatch[1]);
+        if (post) {
+          title = post.metaTitle || post.title;
+          description = post.metaDescription || post.excerpt;
+          if (post.image) image = post.image.startsWith("http") ? post.image : `${host}${post.image}`;
+        }
+      } else {
+        // Check page SEO table
+        const seo = await storage.getPageSeo(req.path);
+        if (seo) {
+          if (seo.ogTitle || seo.metaTitle) title = (seo.ogTitle || seo.metaTitle)!;
+          if (seo.ogDescription || seo.metaDescription) description = (seo.ogDescription || seo.metaDescription)!;
+          if (seo.ogImage) image = seo.ogImage.startsWith("http") ? seo.ogImage : `${host}${seo.ogImage}`;
+          if (seo.canonicalUrl) canonicalUrl = seo.canonicalUrl;
+        }
+      }
+
+      // Escape for HTML attribute safety
+      const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+      clearTimeout(timeout);
+      if (res.headersSent) return;
+      res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(description)}">
+<link rel="canonical" href="${esc(canonicalUrl)}">
+<meta property="og:type" content="${blogSlugMatch ? "article" : "website"}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:image" content="${esc(image)}">
+<meta property="og:url" content="${esc(canonicalUrl)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
+<meta name="twitter:image" content="${esc(image)}">
+</head>
+<body></body>
+</html>`);
+    } catch (err) {
+      clearTimeout(timeout);
+      console.error("[og-bot] error:", err);
+      if (!res.headersSent) next();
+    }
+  });
 
   // ── Legacy URL 301 Redirects ──────────────────────────────────────────────
   // Old URLs from email campaigns and social media → new URLs
@@ -411,6 +608,46 @@ export async function registerRoutes(
     }
   });
 
+  // ── Redirects API ────────────────────────────────────────────────────────
+  app.get("/api/admin/redirects", isAuthenticated, async (_req, res) => {
+    try {
+      const all = await storage.getAllRedirects();
+      res.json(all);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch redirects" });
+    }
+  });
+
+  app.post("/api/admin/redirects", isAuthenticated, async (req, res) => {
+    try {
+      const { fromPath, toPath, statusCode } = req.body;
+      if (!fromPath || !toPath) return res.status(400).json({ error: "fromPath and toPath are required" });
+      // Normalize paths
+      const from = fromPath.startsWith("/") ? fromPath : `/${fromPath}`;
+      const redirect = await storage.createRedirect({ fromPath: from, toPath, statusCode: statusCode || 301 });
+      redirectCache = new Map(); // invalidate cache immediately
+      redirectCacheTime = 0;
+      res.status(201).json(redirect);
+    } catch (err: any) {
+      if (err?.code === "23505") return res.status(409).json({ error: "A redirect from that path already exists" });
+      console.error("Error creating redirect:", err);
+      res.status(500).json({ error: "Failed to create redirect" });
+    }
+  });
+
+  app.delete("/api/admin/redirects/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      await storage.deleteRedirect(id);
+      redirectCache = new Map(); // invalidate cache
+      redirectCacheTime = 0;
+      res.json({ success: true });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to delete redirect" });
+    }
+  });
+
   // ── Blog API ──────────────────────────────────────────────────────────────
   // Public: list published posts
   app.get("/api/blog/posts", async (_req, res) => {
@@ -508,9 +745,9 @@ export async function registerRoutes(
   // Admin: upsert page SEO
   app.post("/api/admin/seo", isAuthenticated, async (req, res) => {
     try {
-      const { path, metaTitle, metaDescription, focusKeyword, canonicalUrl } = req.body;
+      const { path, metaTitle, metaDescription, focusKeyword, canonicalUrl, ogImage, ogTitle, ogDescription } = req.body;
       if (!path) return res.status(400).json({ error: "path is required" });
-      const seo = await storage.upsertPageSeo({ path, metaTitle, metaDescription, focusKeyword, canonicalUrl });
+      const seo = await storage.upsertPageSeo({ path, metaTitle, metaDescription, focusKeyword, canonicalUrl, ogImage, ogTitle, ogDescription });
       res.json(seo);
     } catch (error) {
       console.error("Error saving SEO data:", error);

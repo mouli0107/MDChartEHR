@@ -61,7 +61,24 @@ export async function runMigrations() {
         meta_description TEXT,
         focus_keyword TEXT,
         canonical_url TEXT,
+        og_image TEXT,
+        og_title TEXT,
+        og_description TEXT,
         updated_at TIMESTAMP DEFAULT NOW() NOT NULL
+      );
+    `);
+    await pool.query(`
+      ALTER TABLE page_seo ADD COLUMN IF NOT EXISTS og_image TEXT;
+      ALTER TABLE page_seo ADD COLUMN IF NOT EXISTS og_title TEXT;
+      ALTER TABLE page_seo ADD COLUMN IF NOT EXISTS og_description TEXT;
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS redirects (
+        id SERIAL PRIMARY KEY,
+        from_path TEXT NOT NULL UNIQUE,
+        to_path TEXT NOT NULL,
+        status_code INTEGER NOT NULL DEFAULT 301,
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
     console.log("[db] migrations completed successfully");
