@@ -1,31 +1,68 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { blogPosts, blogCategories, getPostsByCategory } from "@/lib/blogData";
+import { blogPosts as staticBlogPosts, blogCategories, getPostsByCategory as staticGetPostsByCategory } from "@/lib/blogData";
 import { getBlogImage } from "@/lib/blogImages";
 import { Footer } from "@/components/Footer";
-import { 
-  Calendar, 
-  Clock, 
-  ArrowRight, 
+import {
+  Calendar,
+  Clock,
+  ArrowRight,
   Search,
   BookOpen,
   Sparkles,
   User
 } from "lucide-react";
 
+interface BlogPost {
+  id: string | number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  categoryLabel: string;
+  author: string;
+  date?: string;
+  publishedAt?: string;
+  readTime: string;
+  image?: string | null;
+}
+
+function getDate(post: BlogPost) {
+  return post.date || post.publishedAt || "";
+}
+
 export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [posts, setPosts] = useState<BlogPost[]>(staticBlogPosts as BlogPost[]);
 
-  const filteredPosts = getPostsByCategory(selectedCategory).filter(post =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    fetch("/api/blog/posts")
+      .then(r => r.ok ? r.json() : null)
+      .then((dbPosts: BlogPost[] | null) => {
+        if (dbPosts && Array.isArray(dbPosts) && dbPosts.length > 0) {
+          // Merge DB posts with static posts — DB posts override static by slug
+          const dbSlugs = new Set(dbPosts.map(p => p.slug));
+          const staticOnly = (staticBlogPosts as BlogPost[]).filter(p => !dbSlugs.has(p.slug));
+          setPosts([...dbPosts, ...staticOnly]);
+        }
+      })
+      .catch(() => {/* keep static fallback */});
+  }, []);
 
-  const featuredPost = blogPosts[0];
+  const filteredPosts = posts.filter(post => {
+    const matchesCategory = selectedCategory === "all" || post.category === selectedCategory;
+    const matchesSearch = !searchQuery ||
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const featuredPost = posts[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white font-sans">
@@ -35,11 +72,11 @@ export default function Blog() {
       <section className="relative pt-28 pb-12 overflow-hidden">
         {/* Subtle background pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#f0f9ff_1px,transparent_1px),linear-gradient(to_bottom,#f0f9ff_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-        
+
         {/* Soft gradient orbs */}
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-100/40 rounded-full blur-3xl"></div>
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0.9, y: 5 }}
@@ -52,11 +89,11 @@ export default function Blog() {
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               <span className="text-xs font-medium text-slate-600">Insights & Resources</span>
             </div>
-            
+
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight tracking-tight">
               Healthcare Technology <span className="text-primary">Insights</span>
             </h1>
-            
+
             <p className="text-base md:text-lg text-slate-500 mb-8 max-w-2xl mx-auto leading-relaxed">
               Expert advice on EHR systems, practice management, and specialty-specific healthcare solutions.
             </p>
@@ -102,7 +139,7 @@ export default function Blog() {
       </section>
 
       {/* Featured Post - Only show when viewing all */}
-      {selectedCategory === "all" && !searchQuery && (
+      {selectedCategory === "all" && !searchQuery && featuredPost && (
         <section className="py-12">
           <div className="container mx-auto px-4">
             <motion.article
@@ -114,7 +151,7 @@ export default function Blog() {
                 <div className="h-72 lg:h-[420px] relative overflow-hidden">
                   {(getBlogImage(featuredPost.slug) || featuredPost.image) ? (
                     <img
-                      src={getBlogImage(featuredPost.slug) || featuredPost.image}
+                      src={getBlogImage(featuredPost.slug) || featuredPost.image!}
                       alt={featuredPost.title}
                       className="w-full h-full object-cover"
                       loading="lazy"
@@ -132,25 +169,25 @@ export default function Blog() {
                     Featured Article
                   </div>
                 </div>
-                
+
                 <div className="p-10 lg:p-14 flex flex-col justify-center bg-gradient-to-br from-white to-slate-50/50">
                   <div className="flex items-center gap-5 text-sm text-slate-400 mb-6">
                     <span className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" /> {featuredPost.date}
+                      <Calendar className="h-4 w-4" /> {getDate(featuredPost)}
                     </span>
                     <span className="flex items-center gap-2">
                       <Clock className="h-4 w-4" /> {featuredPost.readTime}
                     </span>
                   </div>
-                  
+
                   <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-5 leading-snug">
                     {featuredPost.title}
                   </h2>
-                  
+
                   <p className="text-slate-500 mb-8 leading-relaxed text-base">
                     {featuredPost.excerpt}
                   </p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -203,7 +240,7 @@ export default function Blog() {
                   <div className="h-52 relative overflow-hidden">
                     {(getBlogImage(post.slug) || post.image) ? (
                       <img
-                        src={getBlogImage(post.slug) || post.image}
+                        src={getBlogImage(post.slug) || post.image!}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
@@ -223,7 +260,7 @@ export default function Blog() {
                   <div className="p-6">
                     <div className="flex items-center gap-4 text-xs text-slate-400 mb-4">
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5" /> {post.date}
+                        <Calendar className="h-3.5 w-3.5" /> {getDate(post)}
                       </span>
                       <span className="flex items-center gap-1.5">
                         <Clock className="h-3.5 w-3.5" /> {post.readTime}
@@ -273,7 +310,7 @@ export default function Blog() {
       <section className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl"></div>
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5">

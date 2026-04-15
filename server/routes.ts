@@ -5,8 +5,8 @@ import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageV
 import { z } from "zod";
 import { sendContactEmail, sendWhitePaperDownloadEmail } from "./resend";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
-// Lazy-load geoip-lite after server starts to avoid blocking Node.js startup
-// (the 50MB database takes 1-2 min to load on Azure's slow post-extraction disk)
+// Lazy-load geoip-lite after server starts to avoid blocking Node.js startup.
+// Wait 4 minutes so the background tar extraction of node_modules finishes first.
 let geoipModule: typeof import("geoip-lite") | null = null;
 setTimeout(() => {
   import("geoip-lite").then((mod) => {
@@ -15,7 +15,7 @@ setTimeout(() => {
   }).catch((err) => {
     console.error("[geoip] failed to load:", err);
   });
-}, 100);
+}, 4 * 60 * 1000);
 
 export async function registerRoutes(
   httpServer: Server,
@@ -408,6 +408,113 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error fetching recent page views:", error);
       res.status(500).json({ error: "Failed to fetch recent views" });
+    }
+  });
+
+  // ── Blog API ──────────────────────────────────────────────────────────────
+  // Public: list published posts
+  app.get("/api/blog/posts", async (_req, res) => {
+    try {
+      const posts = await storage.getAllBlogPosts(false);
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      res.status(500).json({ error: "Failed to fetch blog posts" });
+    }
+  });
+
+  // Public: single post by slug
+  app.get("/api/blog/posts/:slug", async (req, res) => {
+    try {
+      const post = await storage.getBlogPostBySlug(req.params.slug);
+      if (!post || !post.published) return res.status(404).json({ error: "Post not found" });
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+      res.status(500).json({ error: "Failed to fetch blog post" });
+    }
+  });
+
+  // Admin: list all posts (including drafts)
+  app.get("/api/admin/blog/posts", isAuthenticated, async (_req, res) => {
+    try {
+      const posts = await storage.getAllBlogPosts(true);
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch blog posts" });
+    }
+  });
+
+  // Admin: create post
+  app.post("/api/admin/blog/posts", isAuthenticated, async (req, res) => {
+    try {
+      const post = await storage.createBlogPost(req.body);
+      res.status(201).json(post);
+    } catch (error) {
+      console.error("Error creating blog post:", error);
+      res.status(500).json({ error: "Failed to create blog post" });
+    }
+  });
+
+  // Admin: update post
+  app.put("/api/admin/blog/posts/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      const post = await storage.updateBlogPost(id, req.body);
+      res.json(post);
+    } catch (error) {
+      console.error("Error updating blog post:", error);
+      res.status(500).json({ error: "Failed to update blog post" });
+    }
+  });
+
+  // Admin: delete post
+  app.delete("/api/admin/blog/posts/:id", isAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      await storage.deleteBlogPost(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+      res.status(500).json({ error: "Failed to delete blog post" });
+    }
+  });
+
+  // ── SEO API ───────────────────────────────────────────────────────────────
+  // Public: get SEO for a specific page path
+  app.get("/api/seo", async (req, res) => {
+    try {
+      const path = req.query.path as string;
+      if (!path) return res.status(400).json({ error: "path is required" });
+      const seo = await storage.getPageSeo(path);
+      res.json(seo || {});
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch SEO data" });
+    }
+  });
+
+  // Admin: get all page SEO entries
+  app.get("/api/admin/seo", isAuthenticated, async (_req, res) => {
+    try {
+      const all = await storage.getAllPageSeo();
+      res.json(all);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch SEO data" });
+    }
+  });
+
+  // Admin: upsert page SEO
+  app.post("/api/admin/seo", isAuthenticated, async (req, res) => {
+    try {
+      const { path, metaTitle, metaDescription, focusKeyword, canonicalUrl } = req.body;
+      if (!path) return res.status(400).json({ error: "path is required" });
+      const seo = await storage.upsertPageSeo({ path, metaTitle, metaDescription, focusKeyword, canonicalUrl });
+      res.json(seo);
+    } catch (error) {
+      console.error("Error saving SEO data:", error);
+      res.status(500).json({ error: "Failed to save SEO data" });
     }
   });
 

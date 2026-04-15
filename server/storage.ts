@@ -1,4 +1,4 @@
-import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail } from "@shared/schema";
+import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo } from "@shared/schema";
 import { db } from "./db";
 import { desc, sql, gte, lte, count, eq, and, isNotNull } from "drizzle-orm";
 
@@ -23,6 +23,17 @@ export interface IStorage {
   deleteNotificationEmail(id: number): Promise<void>;
   getSetting(key: string): Promise<string | null>;
   setSetting(key: string, value: string): Promise<void>;
+  // Blog
+  getAllBlogPosts(includeUnpublished?: boolean): Promise<BlogPost[]>;
+  getBlogPostBySlug(slug: string): Promise<BlogPost | null>;
+  getBlogPostById(id: number): Promise<BlogPost | null>;
+  createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<BlogPost>;
+  deleteBlogPost(id: number): Promise<void>;
+  // Page SEO
+  getAllPageSeo(): Promise<PageSeo[]>;
+  getPageSeo(path: string): Promise<PageSeo | null>;
+  upsertPageSeo(data: InsertPageSeo): Promise<PageSeo>;
   getPageViewStats(): Promise<{
     totalViews: number;
     todayViews: number;
@@ -179,6 +190,69 @@ export class DatabaseStorage implements IStorage {
       hourlyViews: hourlyViews.map(h => ({ hour: h.hour, views: h.views })),
     };
   }
+
+  async getAllBlogPosts(includeUnpublished = false): Promise<BlogPost[]> {
+    if (includeUnpublished) {
+      return await db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
+    }
+    return await db.select().from(blogPosts).where(eq(blogPosts.published, true)).orderBy(desc(blogPosts.createdAt));
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+    const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
+    return post ?? null;
+  }
+
+  async getBlogPostById(id: number): Promise<BlogPost | null> {
+    const [post] = await db.select().from(blogPosts).where(eq(blogPosts.id, id));
+    return post ?? null;
+  }
+
+  async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
+    const [created] = await db.insert(blogPosts).values(post).returning();
+    return created;
+  }
+
+  async updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<BlogPost> {
+    const [updated] = await db
+      .update(blogPosts)
+      .set({ ...post, updatedAt: new Date() })
+      .where(eq(blogPosts.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteBlogPost(id: number): Promise<void> {
+    await db.delete(blogPosts).where(eq(blogPosts.id, id));
+  }
+
+  async getAllPageSeo(): Promise<PageSeo[]> {
+    return await db.select().from(pageSeo).orderBy(pageSeo.path);
+  }
+
+  async getPageSeo(path: string): Promise<PageSeo | null> {
+    const [row] = await db.select().from(pageSeo).where(eq(pageSeo.path, path));
+    return row ?? null;
+  }
+
+  async upsertPageSeo(data: InsertPageSeo): Promise<PageSeo> {
+    const [row] = await db
+      .insert(pageSeo)
+      .values(data)
+      .onConflictDoUpdate({
+        target: pageSeo.path,
+        set: {
+          metaTitle: data.metaTitle,
+          metaDescription: data.metaDescription,
+          focusKeyword: data.focusKeyword,
+          canonicalUrl: data.canonicalUrl,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return row;
+  }
 }
 
 export const storage = new DatabaseStorage();
+
