@@ -69,24 +69,30 @@ export async function registerRoutes(
   registerAuthRoutes(app);
 
   // ── Dynamic Redirect Middleware (from DB) ────────────────────────────────
-  // Cache in memory and refresh every 5 minutes
+  // Cache starts empty — populated in background after startup so the first
+  // request is never delayed by a Neon cold start.
   let redirectCache: Map<string, { toPath: string; statusCode: number }> = new Map();
   let redirectCacheTime = 0;
 
-  async function getRedirectCache() {
-    if (Date.now() - redirectCacheTime > 5 * 60 * 1000) {
+  async function refreshRedirectCache() {
+    try {
       redirectCache = await storage.getRedirectMap();
       redirectCacheTime = Date.now();
+    } catch {
+      // Keep existing cache on DB error — don't reset it
     }
-    return redirectCache;
   }
 
-  app.use(async (req, res, next) => {
-    try {
-      const cache = await getRedirectCache();
-      const match = cache.get(req.path);
-      if (match) return res.redirect(match.statusCode, match.toPath);
-    } catch { /* don't block requests on cache errors */ }
+  // Warm up in background after server starts, then refresh every 5 minutes
+  setTimeout(() => {
+    refreshRedirectCache();
+    setInterval(refreshRedirectCache, 5 * 60 * 1000);
+  }, 10000); // 10s after startup — DB should be ready by then
+
+  app.use((req, res, next) => {
+    // Synchronous cache lookup — no DB call, no await, zero latency
+    const match = redirectCache.get(req.path);
+    if (match) return res.redirect(match.statusCode, match.toPath);
     next();
   });
 
@@ -148,6 +154,9 @@ ${blogEntries}
     if (req.path.startsWith("/api") || req.path.startsWith("/assets")) return next();
     if (!["GET", "HEAD"].includes(req.method)) return next();
 
+    // Safety: if DB takes >3s (Neon cold start), fall through to normal serving
+    const timeout = setTimeout(() => next(), 3000);
+
     try {
       const host = process.env.SITE_URL || "https://mdcharts.com";
       const siteDefaults = {
@@ -184,6 +193,8 @@ ${blogEntries}
       // Escape for HTML attribute safety
       const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+      clearTimeout(timeout);
+      if (res.headersSent) return;
       res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -204,8 +215,9 @@ ${blogEntries}
 <body></body>
 </html>`);
     } catch (err) {
+      clearTimeout(timeout);
       console.error("[og-bot] error:", err);
-      next();
+      if (!res.headersSent) next();
     }
   });
 
