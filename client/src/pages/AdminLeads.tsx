@@ -15,7 +15,7 @@ import {
 import {
   Users, FileText, ArrowLeft, Search, Download, Mail, MapPin, Calendar, LogIn, Loader2,
   BarChart3, Eye, Monitor, Globe, Clock, Smartphone, Laptop, Tablet, RefreshCw, Settings, Plus, Trash2,
-  BookOpen, Tag, Link2, Save, X, Edit2, ChevronDown, ChevronUp, SearchCheck
+  BookOpen, Tag, Link2, Save, X, Edit2, ChevronDown, ChevronUp, SearchCheck, Upload, ImageIcon
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/use-auth";
@@ -182,6 +182,8 @@ export default function AdminLeads() {
   const [blogIsNew, setBlogIsNew] = useState(false);
   const [blogPreview, setBlogPreview] = useState(false);
   const [blogSaving, setBlogSaving] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const [blogForm, setBlogForm] = useState({
     title: "", slug: "", excerpt: "", content: "", category: "ehr", categoryLabel: "EHR",
     author: "MD Charts Team", publishedAt: new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
@@ -395,6 +397,23 @@ export default function AdminLeads() {
       console.error("Error saving blog post:", err);
     } finally {
       setBlogSaving(false);
+    }
+  };
+
+  const uploadBlogImage = async (file: File) => {
+    setImageUploading(true);
+    setImageUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      if (!res.ok) throw new Error("Upload failed");
+      const { url } = await res.json();
+      setBlogForm(f => ({ ...f, image: url }));
+    } catch {
+      setImageUploadError("Upload failed. Please try again or use a URL.");
+    } finally {
+      setImageUploading(false);
     }
   };
 
@@ -907,8 +926,47 @@ export default function AdminLeads() {
                           <Input value={blogForm.readTime} onChange={e => setBlogForm(f => ({ ...f, readTime: e.target.value }))} className="text-sm" placeholder="5 min read" />
                         </div>
                         <div>
-                          <label className="text-xs font-medium text-slate-600 mb-1 block">Featured Image URL</label>
-                          <Input value={blogForm.image} onChange={e => setBlogForm(f => ({ ...f, image: e.target.value }))} className="text-sm font-mono" placeholder="/assets/image.png" />
+                          <label className="text-xs font-medium text-slate-600 mb-1 block flex items-center gap-1">
+                            <ImageIcon className="h-3.5 w-3.5" /> Thumbnail Image
+                          </label>
+                          {/* Image preview */}
+                          {blogForm.image && (
+                            <div className="relative mb-2 rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                              <img
+                                src={blogForm.image}
+                                alt="Thumbnail preview"
+                                className="w-full h-36 object-cover"
+                                onError={e => (e.currentTarget.style.display = "none")}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setBlogForm(f => ({ ...f, image: "" }))}
+                                className="absolute top-1.5 right-1.5 bg-black/60 hover:bg-black/80 text-white rounded-full p-0.5"
+                                title="Remove image"
+                              >
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          )}
+                          {/* Upload button */}
+                          <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg py-3 cursor-pointer transition-colors text-sm
+                            ${imageUploading ? "border-slate-200 text-slate-400 cursor-not-allowed" : "border-slate-300 hover:border-primary hover:text-primary text-slate-500"}`}>
+                            {imageUploading
+                              ? <><Loader2 className="h-4 w-4 animate-spin" /> Uploading...</>
+                              : <><Upload className="h-4 w-4" /> {blogForm.image ? "Change image" : "Upload thumbnail"}</>
+                            }
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={imageUploading}
+                              onChange={e => { const f = e.target.files?.[0]; if (f) uploadBlogImage(f); e.target.value = ""; }}
+                            />
+                          </label>
+                          {imageUploadError && <p className="text-xs text-red-500 mt-1">{imageUploadError}</p>}
+                          {/* Manual URL fallback */}
+                          <p className="text-xs text-slate-400 mt-1.5 mb-1">Or paste an image URL:</p>
+                          <Input value={blogForm.image} onChange={e => setBlogForm(f => ({ ...f, image: e.target.value }))} className="text-xs font-mono" placeholder="https://... or /assets/image.png" />
                         </div>
                       </div>
 

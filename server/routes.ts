@@ -5,6 +5,10 @@ import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageV
 import { z } from "zod";
 import { sendContactEmail, sendWhitePaperDownloadEmail } from "./resend";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import express from "express";
 // Lazy-load geoip-lite after server starts to avoid blocking Node.js startup.
 // Wait 4 minutes so the background tar extraction of node_modules finishes first.
 let geoipModule: typeof import("geoip-lite") | null = null;
@@ -646,6 +650,51 @@ ${blogEntries}
     } catch (err) {
       res.status(500).json({ error: "Failed to delete redirect" });
     }
+  });
+
+  // ── Image Upload ──────────────────────────────────────────────────────────
+  // Uploaded images are stored in UPLOADS_DIR (default: <cwd>/uploads) and
+  // served at /uploads/<filename>.  On Azure App Service set UPLOADS_DIR to
+  // a persistent path such as D:\home\uploads (Windows) or /home/uploads (Linux)
+  // so images survive redeployments.
+  const uploadsDir = process.env.UPLOADS_DIR
+    ? path.resolve(process.env.UPLOADS_DIR)
+    : path.join(process.cwd(), "uploads");
+
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
+  // Serve uploaded images as static files
+  app.use("/uploads", express.static(uploadsDir, { maxAge: "7d" }));
+
+  const multerUpload = multer({
+    storage: multer.diskStorage({
+      destination: (_req, _file, cb) => cb(null, uploadsDir),
+      filename: (_req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const name = `blog-${Date.now()}-${Math.random().toString(36).substr(2, 6)}${ext}`;
+        cb(null, name);
+      },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+    fileFilter: (_req, file, cb) => {
+      if (file.mimetype.startsWith("image/")) {
+        cb(null, true);
+      } else {
+        cb(new Error("Only image files are allowed"));
+      }
+    },
+  });
+
+  // POST /api/admin/upload — upload a blog thumbnail image (admin only)
+  app.post("/api/admin/upload", isAuthenticated, multerUpload.single("image"), (req, res) => {
+    if (!req.file) {
+      res.status(400).json({ error: "No image file received" });
+      return;
+    }
+    const url = `/uploads/${req.file.filename}`;
+    res.json({ url });
   });
 
   // ── Blog API ──────────────────────────────────────────────────────────────
