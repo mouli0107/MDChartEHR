@@ -1,4 +1,4 @@
-import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo } from "@shared/schema";
+import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, redirects, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo, type Redirect, type InsertRedirect } from "@shared/schema";
 import { db } from "./db";
 import { desc, sql, gte, lte, count, eq, and, isNotNull } from "drizzle-orm";
 
@@ -34,6 +34,11 @@ export interface IStorage {
   getAllPageSeo(): Promise<PageSeo[]>;
   getPageSeo(path: string): Promise<PageSeo | null>;
   upsertPageSeo(data: InsertPageSeo): Promise<PageSeo>;
+  // Redirects
+  getAllRedirects(): Promise<Redirect[]>;
+  createRedirect(data: InsertRedirect): Promise<Redirect>;
+  deleteRedirect(id: number): Promise<void>;
+  getRedirectMap(): Promise<Map<string, { toPath: string; statusCode: number }>>;
   getPageViewStats(): Promise<{
     totalViews: number;
     todayViews: number;
@@ -246,11 +251,36 @@ export class DatabaseStorage implements IStorage {
           metaDescription: data.metaDescription,
           focusKeyword: data.focusKeyword,
           canonicalUrl: data.canonicalUrl,
+          ogImage: data.ogImage,
+          ogTitle: data.ogTitle,
+          ogDescription: data.ogDescription,
           updatedAt: new Date(),
         },
       })
       .returning();
     return row;
+  }
+
+  async getAllRedirects(): Promise<Redirect[]> {
+    return await db.select().from(redirects).orderBy(desc(redirects.createdAt));
+  }
+
+  async createRedirect(data: InsertRedirect): Promise<Redirect> {
+    const [row] = await db.insert(redirects).values(data).returning();
+    return row;
+  }
+
+  async deleteRedirect(id: number): Promise<void> {
+    await db.delete(redirects).where(eq(redirects.id, id));
+  }
+
+  async getRedirectMap(): Promise<Map<string, { toPath: string; statusCode: number }>> {
+    const rows = await db.select().from(redirects);
+    const map = new Map<string, { toPath: string; statusCode: number }>();
+    for (const row of rows) {
+      map.set(row.fromPath, { toPath: row.toPath, statusCode: row.statusCode });
+    }
+    return map;
   }
 }
 

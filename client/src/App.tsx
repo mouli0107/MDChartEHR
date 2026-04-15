@@ -63,6 +63,7 @@ import AdminLoginPage from "@/pages/AdminLogin";
 
 import { usePageTracker } from "@/hooks/use-page-tracker";
 import { CookieConsent } from "@/components/CookieConsent";
+import { OrganizationSchema } from "@/components/SchemaMarkup";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -152,6 +153,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <OrganizationSchema />
         <Toaster />
         <Router />
         <CookieConsent />

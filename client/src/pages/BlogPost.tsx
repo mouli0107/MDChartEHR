@@ -20,6 +20,7 @@ import {
   Loader2
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { ArticleSchema, BreadcrumbSchema } from "@/components/SchemaMarkup";
 
 interface BlogPostData {
   id: string | number;
@@ -113,8 +114,26 @@ export default function BlogPost() {
     .filter(p => String(p.id) !== String(post.id))
     .slice(0, 3);
 
+  const siteUrl = "https://mdcharts.com";
+  const postUrl = `${siteUrl}/blog/${post.slug}`;
+
   return (
     <div className="min-h-screen bg-white font-sans">
+      <ArticleSchema
+        title={post.metaTitle || post.title}
+        description={post.metaDescription || post.excerpt}
+        author={post.author}
+        datePublished={getDate(post)}
+        image={post.image || undefined}
+        url={postUrl}
+        siteUrl={siteUrl}
+      />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: siteUrl },
+        { name: "Blog", url: `${siteUrl}/blog` },
+        { name: post.categoryLabel, url: `${siteUrl}/blog` },
+        { name: post.title, url: postUrl },
+      ]} />
       <Navbar />
 
       {/* Hero Section */}

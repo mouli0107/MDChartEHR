@@ -125,9 +125,24 @@ export const pageSeo = pgTable("page_seo", {
   metaDescription: text("meta_description"),
   focusKeyword: text("focus_keyword"),
   canonicalUrl: text("canonical_url"),
+  ogImage: text("og_image"),
+  ogTitle: text("og_title"),
+  ogDescription: text("og_description"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const insertPageSeoSchema = createInsertSchema(pageSeo);
 export type InsertPageSeo = z.infer<typeof insertPageSeoSchema>;
 export type PageSeo = typeof pageSeo.$inferSelect;
+
+export const redirects = pgTable("redirects", {
+  id: serial("id").primaryKey(),
+  fromPath: text("from_path").notNull().unique(),
+  toPath: text("to_path").notNull(),
+  statusCode: integer("status_code").default(301).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertRedirectSchema = createInsertSchema(redirects).omit({ id: true, createdAt: true });
+export type InsertRedirect = z.infer<typeof insertRedirectSchema>;
+export type Redirect = typeof redirects.$inferSelect;

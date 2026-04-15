@@ -155,7 +155,7 @@ export default function AdminLeads() {
   const [downloads, setDownloads] = useState<WhitePaperDownload[]>([]);
   const [contacts, setContacts] = useState<ContactRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo">("downloads");
+  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects">("downloads");
   const [isLoading, setIsLoading] = useState(true);
   const [pageStats, setPageStats] = useState<PageViewStats | null>(null);
   const [recentViews, setRecentViews] = useState<RecentPageView[]>([]);
@@ -192,9 +192,19 @@ export default function AdminLeads() {
   const [seoData, setSeoData] = useState<Record<string, PageSeoEntry>>({});
   const [seoLoading, setSeoLoading] = useState(false);
   const [seoEditing, setSeoEditing] = useState<string | null>(null);
-  const [seoForm, setSeoForm] = useState({ metaTitle: "", metaDescription: "", focusKeyword: "", canonicalUrl: "" });
+  const [seoForm, setSeoForm] = useState({ metaTitle: "", metaDescription: "", focusKeyword: "", canonicalUrl: "", ogTitle: "", ogDescription: "", ogImage: "" });
   const [seoSaving, setSeoSaving] = useState(false);
   const [seoSaved, setSeoSaved] = useState<string | null>(null);
+
+  // Redirects state
+  interface RedirectEntry { id: number; fromPath: string; toPath: string; statusCode: number; createdAt: string; }
+  const [redirectsList, setRedirectsList] = useState<RedirectEntry[]>([]);
+  const [redirectsLoading, setRedirectsLoading] = useState(false);
+  const [redirectFrom, setRedirectFrom] = useState("");
+  const [redirectTo, setRedirectTo] = useState("");
+  const [redirectCode, setRedirectCode] = useState<301 | 302>(301);
+  const [redirectSaving, setRedirectSaving] = useState(false);
+  const [redirectError, setRedirectError] = useState("");
 
   const fetchCalendlyUrl = async () => {
     try {
@@ -434,6 +444,9 @@ export default function AdminLeads() {
       metaDescription: existing?.metaDescription || "",
       focusKeyword: existing?.focusKeyword || "",
       canonicalUrl: existing?.canonicalUrl || "",
+      ogTitle: (existing as any)?.ogTitle || "",
+      ogDescription: (existing as any)?.ogDescription || "",
+      ogImage: (existing as any)?.ogImage || "",
     });
     setSeoEditing(path);
   };
@@ -457,6 +470,51 @@ export default function AdminLeads() {
       console.error("Error saving SEO:", err);
     } finally {
       setSeoSaving(false);
+    }
+  };
+
+  const fetchRedirects = async () => {
+    setRedirectsLoading(true);
+    try {
+      const res = await fetch("/api/admin/redirects");
+      if (res.ok) setRedirectsList(await res.json());
+    } catch (err) {
+      console.error("Error fetching redirects:", err);
+    } finally {
+      setRedirectsLoading(false);
+    }
+  };
+
+  const addRedirect = async () => {
+    if (!redirectFrom.trim() || !redirectTo.trim()) return;
+    setRedirectError("");
+    setRedirectSaving(true);
+    try {
+      const res = await fetch("/api/admin/redirects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fromPath: redirectFrom.trim(), toPath: redirectTo.trim(), statusCode: redirectCode }),
+      });
+      if (res.status === 409) { setRedirectError("A redirect from that path already exists."); return; }
+      if (res.ok) {
+        setRedirectFrom("");
+        setRedirectTo("");
+        await fetchRedirects();
+      }
+    } catch (err) {
+      console.error("Error creating redirect:", err);
+    } finally {
+      setRedirectSaving(false);
+    }
+  };
+
+  const deleteRedirect = async (id: number) => {
+    if (!confirm("Delete this redirect?")) return;
+    try {
+      await fetch(`/api/admin/redirects/${id}`, { method: "DELETE" });
+      await fetchRedirects();
+    } catch (err) {
+      console.error("Error deleting redirect:", err);
     }
   };
 
@@ -669,6 +727,14 @@ export default function AdminLeads() {
               >
                 <SearchCheck className="h-4 w-4 mr-2" />
                 SEO Manager
+              </Button>
+              <Button
+                variant={activeTab === "redirects" ? "default" : "outline"}
+                onClick={() => { setActiveTab("redirects"); fetchRedirects(); }}
+                data-testid="tab-redirects"
+              >
+                <Link2 className="h-4 w-4 mr-2" />
+                Redirects
               </Button>
             </div>
             
@@ -1042,6 +1108,24 @@ export default function AdminLeads() {
                                 />
                               </div>
                             </div>
+                            {/* Social sharing (OG) fields */}
+                            <div className="md:col-span-2 border-t pt-3 mt-1">
+                              <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Social Sharing (Open Graph)</p>
+                              <div className="grid md:grid-cols-2 gap-3">
+                                <div className="md:col-span-2">
+                                  <label className="text-xs font-medium text-slate-600 mb-1 block">OG Title <span className="text-slate-400">(LinkedIn, Facebook, Slack previews)</span></label>
+                                  <Input value={seoForm.ogTitle} onChange={e => setSeoForm(f => ({ ...f, ogTitle: e.target.value }))} placeholder="Same as SEO title if empty" className="text-sm" />
+                                </div>
+                                <div className="md:col-span-2">
+                                  <label className="text-xs font-medium text-slate-600 mb-1 block">OG Description</label>
+                                  <textarea value={seoForm.ogDescription} onChange={e => setSeoForm(f => ({ ...f, ogDescription: e.target.value }))} rows={2} placeholder="Same as meta description if empty" className="w-full border rounded-md px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none bg-white" />
+                                </div>
+                                <div className="md:col-span-2">
+                                  <label className="text-xs font-medium text-slate-600 mb-1 block">OG Image URL <span className="text-slate-400">(shown when page is shared on social media)</span></label>
+                                  <Input value={seoForm.ogImage} onChange={e => setSeoForm(f => ({ ...f, ogImage: e.target.value }))} placeholder="https://mdcharts.com/assets/image.png" className="text-sm font-mono" />
+                                </div>
+                              </div>
+                            </div>
                             {/* Google preview */}
                             {(seoForm.metaTitle || seoForm.metaDescription) && (
                               <div className="bg-white rounded-lg p-3 border mt-3">
@@ -1063,6 +1147,104 @@ export default function AdminLeads() {
                       </div>
                     );
                   })}
+                </div>
+              )}
+            </div>
+          ) : activeTab === "redirects" ? (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">Redirect Manager</h2>
+                  <p className="text-sm text-slate-500 mt-1">301/302 redirects take effect immediately — no deployment needed</p>
+                </div>
+              </div>
+
+              {/* Add new redirect */}
+              <div className="bg-white border rounded-xl p-5 mb-6">
+                <h3 className="font-semibold text-slate-800 mb-4">Add New Redirect</h3>
+                <div className="grid md:grid-cols-4 gap-3 items-end">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-1 block">From Path</label>
+                    <Input
+                      value={redirectFrom}
+                      onChange={e => { setRedirectFrom(e.target.value); setRedirectError(""); }}
+                      placeholder="/old-page-url"
+                      className="font-mono text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-1 block">To Path / URL</label>
+                    <Input
+                      value={redirectTo}
+                      onChange={e => setRedirectTo(e.target.value)}
+                      placeholder="/new-page or https://..."
+                      className="font-mono text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-1 block">Type</label>
+                    <select
+                      value={redirectCode}
+                      onChange={e => setRedirectCode(Number(e.target.value) as 301 | 302)}
+                      className="w-full text-sm border rounded-md px-2 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      <option value={301}>301 — Permanent</option>
+                      <option value={302}>302 — Temporary</option>
+                    </select>
+                  </div>
+                  <Button onClick={addRedirect} disabled={redirectSaving || !redirectFrom.trim() || !redirectTo.trim()}>
+                    {redirectSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
+                    Add Redirect
+                  </Button>
+                </div>
+                {redirectError && <p className="text-sm text-red-500 mt-2">{redirectError}</p>}
+                <div className="mt-3 p-3 bg-blue-50 rounded-lg text-xs text-blue-700">
+                  <strong>301 Permanent</strong> — use when a page has moved forever (Google transfers SEO value). &nbsp;
+                  <strong>302 Temporary</strong> — use for short-term redirects (Google keeps the original URL indexed).
+                </div>
+              </div>
+
+              {/* Redirects list */}
+              {redirectsLoading ? (
+                <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+              ) : redirectsList.length === 0 ? (
+                <div className="text-center py-20 border-2 border-dashed rounded-xl">
+                  <Link2 className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-600 mb-2">No redirects yet</h3>
+                  <p className="text-slate-500">Add your first redirect above</p>
+                </div>
+              ) : (
+                <div className="bg-white border rounded-xl overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>From</TableHead>
+                        <TableHead>To</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Added</TableHead>
+                        <TableHead></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {redirectsList.map(r => (
+                        <TableRow key={r.id}>
+                          <TableCell className="font-mono text-sm text-slate-700">{r.fromPath}</TableCell>
+                          <TableCell className="font-mono text-sm text-primary">{r.toPath}</TableCell>
+                          <TableCell>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${r.statusCode === 301 ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                              {r.statusCode} {r.statusCode === 301 ? "Permanent" : "Temporary"}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-sm text-slate-400">{formatDate(r.createdAt)}</TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="sm" onClick={() => deleteRedirect(r.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               )}
             </div>
