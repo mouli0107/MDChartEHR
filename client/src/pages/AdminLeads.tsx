@@ -155,7 +155,7 @@ export default function AdminLeads() {
   const [downloads, setDownloads] = useState<WhitePaperDownload[]>([]);
   const [contacts, setContacts] = useState<ContactRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects">("downloads");
+  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects" | "report">("downloads");
   const [isLoading, setIsLoading] = useState(true);
   const [pageStats, setPageStats] = useState<PageViewStats | null>(null);
   const [recentViews, setRecentViews] = useState<RecentPageView[]>([]);
@@ -174,6 +174,15 @@ export default function AdminLeads() {
   const [calendlyInput, setCalendlyInput] = useState("");
   const [calendlySaving, setCalendlySaving] = useState(false);
   const [calendlySaved, setCalendlySaved] = useState(false);
+  // Analytics Report tab state
+  const [reportFrom, setReportFrom] = useState(() => { const d = new Date(); d.setDate(d.getDate() - 29); return d.toISOString().slice(0, 10); });
+  const [reportTo, setReportTo] = useState(() => new Date().toISOString().slice(0, 10));
+  const [reportCountry, setReportCountry] = useState("__all");
+  const [reportCountries, setReportCountries] = useState<string[]>([]);
+  const [reportCountriesLoaded, setReportCountriesLoaded] = useState(false);
+  const [reportGenerating, setReportGenerating] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
+  const [reportSuccess, setReportSuccess] = useState<string | null>(null);
 
   // Blog state
   const [blogPosts, setBlogPosts] = useState<AdminBlogPost[]>([]);
@@ -571,6 +580,11 @@ export default function AdminLeads() {
     fetchAnalytics();
     fetchNotifEmails();
     fetchCalendlyUrl();
+    // Pre-load countries for the report tab
+    fetch("/api/admin/analytics/countries")
+      .then(r => r.json())
+      .then((data: string[]) => { setReportCountries(Array.isArray(data) ? data : []); setReportCountriesLoaded(true); })
+      .catch(() => setReportCountriesLoaded(true));
   }, [isAuthenticated]);
 
   if (authLoading) {
@@ -755,16 +769,14 @@ export default function AdminLeads() {
                 <Link2 className="h-4 w-4 mr-2" />
                 Redirects
               </Button>
-              <Link href="/admin/analytics">
-                <Button
-                  variant="outline"
-                  data-testid="tab-analytics-report"
-                  className="border-blue-600 text-blue-400 hover:bg-blue-900/30"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Analytics Report
-                </Button>
-              </Link>
+              <Button
+                variant={activeTab === "report" ? "default" : "outline"}
+                onClick={() => setActiveTab("report")}
+                data-testid="tab-analytics-report"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Analytics Report
+              </Button>
             </div>
             
             <div className="flex gap-2">
@@ -1688,6 +1700,122 @@ export default function AdminLeads() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          ) : activeTab === "report" ? (
+            <div className="max-w-2xl">
+              <div className="bg-white rounded-xl border p-8 shadow-sm">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                    <BarChart3 className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-lg">Analytics Report Generator</h3>
+                    <p className="text-sm text-slate-500">Generate a downloadable HTML report for any date range</p>
+                  </div>
+                </div>
+
+                {/* Quick presets */}
+                <div className="mb-5">
+                  <label className="text-sm font-medium text-slate-700 mb-2 block">Quick Select</label>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { key: "last7", label: "Last 7 days" },
+                      { key: "last30", label: "Last 30 days" },
+                      { key: "last90", label: "Last 90 days" },
+                      { key: "thisMonth", label: "This month" },
+                      { key: "lastMonth", label: "Last month" },
+                      { key: "ytd", label: "Year to date" },
+                    ].map(({ key, label }) => (
+                      <Button key={key} variant="outline" size="sm" className="text-xs"
+                        onClick={() => {
+                          const today = new Date();
+                          const fmt = (d: Date) => d.toISOString().slice(0, 10);
+                          if (key === "last7") { const f = new Date(today); f.setDate(today.getDate() - 6); setReportFrom(fmt(f)); setReportTo(fmt(today)); }
+                          else if (key === "last30") { const f = new Date(today); f.setDate(today.getDate() - 29); setReportFrom(fmt(f)); setReportTo(fmt(today)); }
+                          else if (key === "last90") { const f = new Date(today); f.setDate(today.getDate() - 89); setReportFrom(fmt(f)); setReportTo(fmt(today)); }
+                          else if (key === "thisMonth") { setReportFrom(fmt(new Date(today.getFullYear(), today.getMonth(), 1))); setReportTo(fmt(today)); }
+                          else if (key === "lastMonth") { setReportFrom(fmt(new Date(today.getFullYear(), today.getMonth() - 1, 1))); setReportTo(fmt(new Date(today.getFullYear(), today.getMonth(), 0))); }
+                          else if (key === "ytd") { setReportFrom(fmt(new Date(today.getFullYear(), 0, 1))); setReportTo(fmt(today)); }
+                        }}>
+                        {label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Date range */}
+                <div className="grid grid-cols-2 gap-4 mb-5">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Start Date</label>
+                    <Input type="date" value={reportFrom} onChange={e => setReportFrom(e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">End Date</label>
+                    <Input type="date" value={reportTo} onChange={e => setReportTo(e.target.value)} />
+                  </div>
+                </div>
+
+                {/* Country filter */}
+                <div className="mb-6">
+                  <label className="text-sm font-medium text-slate-700 mb-1 block">
+                    Country Filter (optional)
+                    {!reportCountriesLoaded && <Loader2 className="h-3 w-3 animate-spin inline ml-1" />}
+                  </label>
+                  <select
+                    value={reportCountry}
+                    onChange={e => setReportCountry(e.target.value)}
+                    disabled={!reportCountriesLoaded}
+                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    <option value="__all">🌍 All Countries</option>
+                    {reportCountries.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <p className="text-slate-400 text-xs mt-1">
+                    {reportCountriesLoaded ? `${reportCountries.length} countries with visitor data` : "Loading…"}
+                  </p>
+                </div>
+
+                {/* Error / Success */}
+                {reportError && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{reportError}</div>
+                )}
+                {reportSuccess && !reportError && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">{reportSuccess}</div>
+                )}
+
+                {/* Generate button */}
+                <Button
+                  className="w-full"
+                  disabled={reportGenerating}
+                  onClick={async () => {
+                    if (!reportFrom || !reportTo) { setReportError("Please select both a start and end date."); return; }
+                    if (reportFrom > reportTo) { setReportError("Start date must be before end date."); return; }
+                    setReportError(null); setReportSuccess(null); setReportGenerating(true);
+                    try {
+                      const params = new URLSearchParams({ from: reportFrom, to: reportTo });
+                      if (reportCountry && reportCountry !== "__all") params.set("country", reportCountry);
+                      const res = await fetch(`/api/admin/analytics/report?${params}`);
+                      if (!res.ok) { const b = await res.json().catch(() => ({})); throw new Error(b.error ?? `Error ${res.status}`); }
+                      const blob = await res.blob();
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      const sc = (reportCountry && reportCountry !== "__all") ? `_${reportCountry.toLowerCase().replace(/\s+/g, "_")}` : "";
+                      a.download = `mdcharts_analytics_${reportFrom}_to_${reportTo}${sc}.html`;
+                      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+                      setReportSuccess(`Report downloaded successfully at ${new Date().toLocaleTimeString()}`);
+                    } catch (err: any) {
+                      setReportError(err.message ?? "Failed to generate report.");
+                    } finally { setReportGenerating(false); }
+                  }}
+                >
+                  {reportGenerating ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Generating…</> : <><Download className="h-4 w-4 mr-2" />Generate &amp; Download HTML Report</>}
+                </Button>
+
+                <p className="text-slate-400 text-xs mt-3 text-center">
+                  Self-contained HTML file — open in any browser. Includes traffic charts, top pages, device breakdown, city data and more.
+                </p>
               </div>
             </div>
           ) : activeTab === "downloads" ? (
