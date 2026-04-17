@@ -227,8 +227,6 @@ export function generateReportHtml(data: ReportData): string {
     `<div class="city-item"><span class="city-name">${c.city}</span><span class="city-count">${c.count}</span></div>`
   ).join("");
 
-  const topPagesHtml = data.topPages.map(([, ] as unknown as never, idx: never) => "").join(""); // placeholder
-
   const maxPageCount = data.topPages[0]?.count ?? 1;
   const pagesHtml = data.topPages.map((p, i) => {
     const pct = ((p.count / maxPageCount) * 100).toFixed(1);
