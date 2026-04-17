@@ -755,6 +755,16 @@ export default function AdminLeads() {
                 <Link2 className="h-4 w-4 mr-2" />
                 Redirects
               </Button>
+              <Link href="/admin/analytics">
+                <Button
+                  variant="outline"
+                  data-testid="tab-analytics-report"
+                  className="border-blue-600 text-blue-400 hover:bg-blue-900/30"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Analytics Report
+                </Button>
+              </Link>
             </div>
             
             <div className="flex gap-2">

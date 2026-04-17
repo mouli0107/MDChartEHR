@@ -810,5 +810,29 @@ ${blogEntries}
     }
   });
 
+  // ── Analytics Report ──────────────────────────────────────────────────────
+  // GET /api/admin/analytics/report?from=YYYY-MM-DD&to=YYYY-MM-DD[&country=US]
+  // Generates and downloads a self-contained HTML analytics report
+  app.get("/api/admin/analytics/report", isAuthenticated, async (req, res) => {
+    try {
+      const { from, to, country } = req.query as { from: string; to: string; country?: string };
+      if (!from || !to) {
+        res.status(400).json({ error: "from and to query params are required (YYYY-MM-DD)" });
+        return;
+      }
+      const { buildReportData, generateReportHtml } = await import("./analyticsReport");
+      const data = await buildReportData({ from, to, country: country || undefined });
+      const html = generateReportHtml(data);
+      const safeCountry = country ? `_${country.toLowerCase()}` : "";
+      const filename = `mdcharts_analytics_${from}_to_${to}${safeCountry}.html`;
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+      res.send(html);
+    } catch (err) {
+      console.error("[analytics report] error:", err);
+      res.status(500).json({ error: "Failed to generate report" });
+    }
+  });
+
   return httpServer;
 }
