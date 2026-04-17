@@ -811,7 +811,21 @@ ${blogEntries}
   });
 
   // ── Analytics Report ──────────────────────────────────────────────────────
-  // GET /api/admin/analytics/report?from=YYYY-MM-DD&to=YYYY-MM-DD[&country=US]
+  // GET /api/admin/analytics/countries — distinct country names in the DB
+  app.get("/api/admin/analytics/countries", isAuthenticated, async (_req, res) => {
+    try {
+      const { pool } = await import("./db");
+      const result = await pool.query(
+        `SELECT DISTINCT country FROM page_views WHERE country IS NOT NULL AND country <> '' ORDER BY country`
+      );
+      res.json(result.rows.map((r: { country: string }) => r.country));
+    } catch (err) {
+      console.error("[analytics countries] error:", err);
+      res.status(500).json({ error: "Failed to fetch countries" });
+    }
+  });
+
+  // GET /api/admin/analytics/report?from=YYYY-MM-DD&to=YYYY-MM-DD[&country=NAME]
   // Generates and downloads a self-contained HTML analytics report
   app.get("/api/admin/analytics/report", isAuthenticated, async (req, res) => {
     try {
