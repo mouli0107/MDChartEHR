@@ -44,7 +44,7 @@ export default function AboutUs() {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
-              Practice the way <span className="text-primary">you want</span>
+              Practice the way <span className="text-primary">you want.</span>
             </h1>
             
             <p className="text-xl text-slate-600 mb-8 leading-relaxed">

@@ -87,7 +87,7 @@ export function Footer() {
           <div className="flex items-center gap-2">
             <p>© 2026 MD Charts LLC. All rights reserved.</p>
             <span className="hidden md:inline">|</span>
-            <span className="text-xs">4.8 stars - Based on Software Advice</span>
+            <span className="text-xs">4.8 stars - Based on Software Advice..</span>
           </div>
           <div className="flex gap-6">
             <Link href="/terms-of-service" className="hover:text-slate-700">Terms of Service</Link>

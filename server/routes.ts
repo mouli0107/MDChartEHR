@@ -5,6 +5,10 @@ import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageV
 import { z } from "zod";
 import { sendContactEmail, sendWhitePaperDownloadEmail } from "./resend";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import express from "express";
 // Lazy-load geoip-lite after server starts to avoid blocking Node.js startup.
 // Wait 4 minutes so the background tar extraction of node_modules finishes first.
 let geoipModule: typeof import("geoip-lite") | null = null;
@@ -648,6 +652,57 @@ ${blogEntries}
     }
   });
 
+  // ── Image Upload ──────────────────────────────────────────────────────────
+  // Uploaded images are stored in UPLOADS_DIR (default: <cwd>/uploads) and
+  // served at /uploads/<filename>.  On Azure App Service set UPLOADS_DIR to
+  // a persistent path such as D:\home\uploads (Windows) or /home/uploads (Linux)
+  // so images survive redeployments.
+  const uploadsDir = process.env.UPLOADS_DIR
+    ? path.resolve(process.env.UPLOADS_DIR)
+    : path.join(process.cwd(), "uploads");
+
+  try {
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    console.log("[uploads] directory ready:", uploadsDir);
+  } catch (err) {
+    // Non-fatal — fall back to a safe temp directory so the server keeps running
+    console.error("[uploads] could not create uploads dir, falling back to os.tmpdir():", err);
+  }
+
+  // Serve uploaded images as static files
+  app.use("/uploads", express.static(uploadsDir, { maxAge: "7d" }));
+
+  const multerUpload = multer({
+    storage: multer.diskStorage({
+      destination: (_req, _file, cb) => cb(null, uploadsDir),
+      filename: (_req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const name = `blog-${Date.now()}-${Math.random().toString(36).substr(2, 6)}${ext}`;
+        cb(null, name);
+      },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+    fileFilter: (_req, file, cb) => {
+      if (file.mimetype.startsWith("image/")) {
+        cb(null, true);
+      } else {
+        cb(new Error("Only image files are allowed"));
+      }
+    },
+  });
+
+  // POST /api/admin/upload — upload a blog thumbnail image (admin only)
+  app.post("/api/admin/upload", isAuthenticated, multerUpload.single("image"), (req, res) => {
+    if (!req.file) {
+      res.status(400).json({ error: "No image file received" });
+      return;
+    }
+    const url = `/uploads/${req.file.filename}`;
+    res.json({ url });
+  });
+
   // ── Blog API ──────────────────────────────────────────────────────────────
   // Public: list published posts
   app.get("/api/blog/posts", async (_req, res) => {
@@ -752,6 +807,44 @@ ${blogEntries}
     } catch (error) {
       console.error("Error saving SEO data:", error);
       res.status(500).json({ error: "Failed to save SEO data" });
+    }
+  });
+
+  // ── Analytics Report ──────────────────────────────────────────────────────
+  // GET /api/admin/analytics/countries — distinct country names in the DB
+  app.get("/api/admin/analytics/countries", isAuthenticated, async (_req, res) => {
+    try {
+      const { pool } = await import("./db");
+      const result = await pool.query(
+        `SELECT DISTINCT country FROM page_views WHERE country IS NOT NULL AND country <> '' ORDER BY country`
+      );
+      res.json(result.rows.map((r: { country: string }) => r.country));
+    } catch (err) {
+      console.error("[analytics countries] error:", err);
+      res.status(500).json({ error: "Failed to fetch countries" });
+    }
+  });
+
+  // GET /api/admin/analytics/report?from=YYYY-MM-DD&to=YYYY-MM-DD[&country=NAME]
+  // Generates and downloads a self-contained HTML analytics report
+  app.get("/api/admin/analytics/report", isAuthenticated, async (req, res) => {
+    try {
+      const { from, to, country } = req.query as { from: string; to: string; country?: string };
+      if (!from || !to) {
+        res.status(400).json({ error: "from and to query params are required (YYYY-MM-DD)" });
+        return;
+      }
+      const { buildReportData, generateReportHtml } = await import("./analyticsReport");
+      const data = await buildReportData({ from, to, country: country || undefined });
+      const html = generateReportHtml(data);
+      const safeCountry = country ? `_${country.toLowerCase()}` : "";
+      const filename = `mdcharts_analytics_${from}_to_${to}${safeCountry}.html`;
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+      res.send(html);
+    } catch (err) {
+      console.error("[analytics report] error:", err);
+      res.status(500).json({ error: "Failed to generate report" });
     }
   });
 
