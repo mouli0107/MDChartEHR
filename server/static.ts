@@ -86,8 +86,8 @@ export function serveStatic(app: Express) {
   app.use((req, res) => {
     try {
       const html = fs.readFileSync(indexHtmlPath, "utf-8");
-      // req.url preserves the full path in a bare app.use() (no mount prefix)
-      const pagePath = (req.url || "/").split("?")[0];
+      // req.url preserves the full path when no mount prefix is used
+      const pagePath = (req.url || req.originalUrl || "/").split("?")[0];
       const modified = injectSeoTags(html, pagePath);
       res.setHeader("Content-Type", "text/html");
       res.setHeader("Cache-Control", "no-cache");
