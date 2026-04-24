@@ -56,6 +56,7 @@ import PressPage from "@/pages/Press";
 
 import PrivacyPolicyPage from "@/pages/PrivacyPolicy";
 import TermsOfServicePage from "@/pages/TermsOfService";
+import SitemapPage from "@/pages/Sitemap";
 import HIPAACompliancePage from "@/pages/HIPAACompliance";
 import SecurityPage from "@/pages/Security";
 import AdminLeadsPage from "@/pages/AdminLeads";
@@ -137,6 +138,7 @@ function Router() {
         
         <Route path="/privacy-policy" component={PrivacyPolicyPage} />
         <Route path="/terms-of-service" component={TermsOfServicePage} />
+        <Route path="/sitemap" component={SitemapPage} />
         <Route path="/hipaa-compliance" component={HIPAACompliancePage} />
         <Route path="/security" component={SecurityPage} />
         
