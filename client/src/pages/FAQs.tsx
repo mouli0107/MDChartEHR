@@ -43,8 +43,30 @@ const faqs = [
 ];
 
 export default function FAQs() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+  
   return (
     <div className="min-h-screen bg-background font-sans overflow-x-hidden">
+
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+      
       <Navbar />
       
       <section className="pt-28 pb-20 bg-gradient-to-b from-slate-50 to-white">
