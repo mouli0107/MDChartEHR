@@ -103,7 +103,7 @@ export async function registerRoutes(
 
   // ── robots.txt ────────────────────────────────────────────────────────────
   app.get("/robots.txt", (_req, res) => {
-    const host = process.env.SITE_URL || "https://mdcharts.com";
+    const host = process.env.SITE_URL || "https://mdchartsehr.com";
     res.setHeader("Content-Type", "text/plain");
     res.send(`User-agent: *
 Disallow: 
@@ -114,7 +114,7 @@ Sitemap: ${host}/sitemap.xml`);
   // ── XML Sitemap ───────────────────────────────────────────────────────────
   app.get("/sitemap.xml", async (_req, res) => {
     try {
-      const host = process.env.SITE_URL || "https://mdcharts.com";
+      const host = process.env.SITE_URL || "https://mdchartsehr.com/";
       const now = new Date().toISOString().split("T")[0];
 
       // Get published blog posts
@@ -163,7 +163,7 @@ ${blogEntries}
     const timeout = setTimeout(() => next(), 3000);
 
     try {
-      const host = process.env.SITE_URL || "https://mdcharts.com";
+      const host = process.env.SITE_URL || "https://mdchartsehr.com";
       const siteDefaults = {
         title: "MDCharts EHR — Click Less, Care More",
         description: "HIPAA-compliant EHR and RCM built for specialty practices. Streamline workflows, boost revenue, and deliver better patient care.",
