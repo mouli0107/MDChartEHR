@@ -20,11 +20,11 @@ export default function Sitemap() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white" style={{ paddingTop: "0px" }}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mx-auto prose prose-slate">
 
-              <ul style={{ lineHeight: "2.2em" }}>
+              <ul style={{ lineHeight: "2.2em", listStyleType: "disc" }}>
                 <li><Link to="https://mdchartsehr.com/"><strong>Home</strong></Link></li>
                 <li><Link to="https://mdchartsehr.com/ehr">Electronic Health Records</Link></li>
                 <li><Link to="https://mdchartsehr.com/practice-management">Practice Management</Link></li>
