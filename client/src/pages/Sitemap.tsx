@@ -46,7 +46,7 @@ export default function Sitemap() {
                 <li><Link to="https://mdchartsehr.com/contact">Contact</Link></li>
                 <li><Link to="https://mdchartsehr.com/resources/faqs">FAQs</Link></li>
                 <li><Link to="https://mdchartsehr.com/terms-of-service">Terms of Service</Link></li>
-                <li><Link to="https://mdchartsehr.com/privacy-policy">Privacy Policy</Link></li>
+                <li><Link to="https://mdchartsehr.com/privacy-policy">Privacy Policy </Link></li>
                 <li><Link to="https://mdchartsehr.com/hipaa-compliance">HIPAA Notice </Link></li>
               </ul>
 
