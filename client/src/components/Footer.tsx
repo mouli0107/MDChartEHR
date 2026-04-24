@@ -93,6 +93,7 @@ export function Footer() {
             <Link href="/terms-of-service" className="hover:text-slate-700">Terms of Service</Link>
             <Link href="/privacy-policy" className="hover:text-slate-700">Privacy Policy</Link>
             <Link href="/hipaa-compliance" className="hover:text-slate-700">HIPAA Notice</Link>
+            <Link href="/sitemap" className="hover:text-slate-700">Sitemap</Link>
           </div>
         </div>
       </div>
