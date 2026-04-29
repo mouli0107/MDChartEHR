@@ -5,7 +5,7 @@ import mdchartsLogo from "@assets/mdcharts_live_logo.png";
 export function Footer() {
   return (
     <footer className="bg-white text-slate-500 py-16 border-t border-slate-200">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4" >
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center mb-6">
