@@ -9,6 +9,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import express from "express";
+import { refreshSeoCache } from "./seoCache";
 // Lazy-load geoip-lite after server starts to avoid blocking Node.js startup.
 // Wait 4 minutes so the background tar extraction of node_modules finishes first.
 let geoipModule: typeof import("geoip-lite") | null = null;
@@ -852,6 +853,9 @@ ${blogEntries}
       const { path, metaTitle, metaDescription, focusKeyword, canonicalUrl, ogImage, ogTitle, ogDescription } = req.body;
       if (!path) return res.status(400).json({ error: "path is required" });
       const seo = await storage.upsertPageSeo({ path, metaTitle, metaDescription, focusKeyword, canonicalUrl, ogImage, ogTitle, ogDescription });
+      // Refresh the in-memory SEO cache immediately so the new tags
+      // appear in page source on the very next request — no 5-min wait.
+      refreshSeoCache().catch(() => {});
       res.json(seo);
     } catch (error) {
       console.error("Error saving SEO data:", error);
