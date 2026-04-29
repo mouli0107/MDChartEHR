@@ -105,7 +105,7 @@ export function Hero() {
                 whileHover={{ scale: 1.03 }}
                 className="h-48 md:h-56 rounded-2xl border-4 border-white shadow-2xl overflow-hidden mt-8"
               >
-                <img src={medicalTeam} alt="Care Team" className="w-full h-full object-cover" />
+                <img src={medicalTeam} alt="Medical Team of Doctors" className="w-full h-full object-cover" />
               </motion.div>
 
               {/* Row 2 */}
@@ -116,7 +116,7 @@ export function Hero() {
                 whileHover={{ scale: 1.03 }}
                 className="h-48 md:h-56 rounded-2xl border-4 border-white shadow-2xl overflow-hidden -mt-4"
               >
-                <img src={doctorTablet} alt="Digital Workflow" className="w-full h-full object-cover" />
+                <img src={doctorTablet} alt="Dermatology Patient Records" className="w-full h-full object-cover" />
               </motion.div>
               
               <motion.div
@@ -126,7 +126,7 @@ export function Hero() {
                 whileHover={{ scale: 1.03 }}
                 className="h-48 md:h-56 rounded-2xl border-4 border-white shadow-2xl overflow-hidden mt-4"
               >
-                <img src={clinicInterior} alt="Modern Clinic" className="w-full h-full object-cover" />
+                <img src={clinicInterior} alt="MD Charts Doctors" className="w-full h-full object-cover" />
               </motion.div>
             </div>
 
