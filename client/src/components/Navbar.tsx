@@ -156,7 +156,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center shrink-0 group relative z-50">
             <img 
               src={mdchartsLogo} 
-              alt="MD Charts – EMR Software " 
+              alt="MD Charts – EMR Software" 
               className="h-10 md:h-[48px] w-auto object-contain"
             />
           </Link>
