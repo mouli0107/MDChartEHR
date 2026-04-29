@@ -156,7 +156,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center shrink-0 group relative z-50">
             <img 
               src={mdchartsLogo} 
-              alt="MD Charts – EMR Software" 
+              alt="MD Charts – EMR Software " 
               className="h-10 md:h-[48px] w-auto object-contain"
             />
           </Link>
@@ -175,7 +175,7 @@ export function Navbar() {
                       <div className="grid grid-cols-12 divide-x divide-slate-100">
                         {/* Left Column - Main Solutions */}
                         <div className="col-span-5 p-6">
-                          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Core Platforn</h3>
+                          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Core Platform</h3>
                           <div className="space-y-1">
                             {solutionsLeft.map((item) => (
                               <NavLink
