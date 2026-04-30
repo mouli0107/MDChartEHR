@@ -26,7 +26,6 @@ const solutionsLeft = [
     title: "Electronic Health Records", 
     href: "/ehr", 
     description: "Intuitive charting with specialty templates",
-    attribute: "EHR System",
     icon: FileText
   },
   { 
@@ -182,7 +181,7 @@ export function Navbar() {
                               <NavLink
                                 key={item.title}
                                 href={item.href}
-                                title={item.attribute}
+                                title={item.title}
                                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 group transition-all"
                               >
                                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
