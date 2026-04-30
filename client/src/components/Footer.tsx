@@ -21,7 +21,7 @@ export function Footer() {
             </p>
             <div className="space-y-2 text-sm text-slate-500 mb-6">
               <p>16 Middle Neck Road, #156</p>
-              <p>Great Neck, New York 11021</p>
+              <p>Great Neck, New York 11021 </p>
               <p><a href="tel:5166849521" className="hover:text-primary transition-colors">516.684.9521</a></p>
               <p><a href="mailto:info@mdcharts.net" className="hover:text-primary transition-colors">info@mdcharts.net</a></p>
               <p className="text-xs text-slate-400">Fax: 516.706.5075</p>
