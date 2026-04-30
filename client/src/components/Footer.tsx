@@ -48,7 +48,7 @@ export function Footer() {
           <div>
             <h4 className="text-slate-900 font-bold mb-6">Solutions</h4>
             <ul className="space-y-4 text-sm">
-              <li><Link href="/ehr" className="hover:text-primary transition-colors">Electronic Health Records</Link></li>
+              <li><Link href="/ehr" className="hover:text-primary transition-colors" title="Electronic Health Records">Electronic Health Records</Link></li>
               <li><Link href="/practice-management" className="hover:text-primary transition-colors">Practice Management</Link></li>
               <li><Link href="/rcm" className="hover:text-primary transition-colors">Revenue Cycle Management</Link></li>
               <li><Link href="/patient-engagement" className="hover:text-primary transition-colors">Patient Engagement</Link></li>
