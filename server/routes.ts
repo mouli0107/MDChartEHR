@@ -725,16 +725,23 @@ ${blogEntries}
     },
   });
 
-  // POST /api/admin/upload-video — upload testimonial video (admin only)
+  // Helper: map slot number to settings key
+  function videoSettingKey(slot: string | undefined): string {
+    if (slot === "2") return "testimonials_video_url_2";
+    if (slot === "3") return "testimonials_video_url_3";
+    return "testimonials_video_url";
+  }
+
+  // POST /api/admin/upload-video?slot=1|2|3 — upload testimonial video (admin only)
   app.post("/api/admin/upload-video", isAuthenticated, multerVideo.single("video"), async (req, res) => {
     if (!req.file) { res.status(400).json({ error: "No video file received" }); return; }
     const url = `/uploads/${req.file.filename}`;
-    // Save URL to settings so Testimonials page can fetch it
-    await storage.setSetting("testimonials_video_url", url);
+    const key = videoSettingKey(req.query.slot as string | undefined);
+    await storage.setSetting(key, url);
     res.json({ url });
   });
 
-  // GET /api/settings/testimonials-video — public, returns current video URL
+  // GET /api/settings/testimonials-video — public, returns slot-1 URL (backwards compat)
   app.get("/api/settings/testimonials-video", async (_req, res) => {
     try {
       const url = await storage.getSetting("testimonials_video_url");
@@ -744,10 +751,29 @@ ${blogEntries}
     }
   });
 
-  // DELETE /api/admin/settings/testimonials-video — remove video (admin only)
-  app.delete("/api/admin/settings/testimonials-video", isAuthenticated, async (_req, res) => {
+  // GET /api/settings/testimonials-videos — public, returns all 3 video URLs
+  app.get("/api/settings/testimonials-videos", async (_req, res) => {
     try {
-      await storage.setSetting("testimonials_video_url", "");
+      const [url1, url2, url3] = await Promise.all([
+        storage.getSetting("testimonials_video_url"),
+        storage.getSetting("testimonials_video_url_2"),
+        storage.getSetting("testimonials_video_url_3"),
+      ]);
+      res.json({
+        url1: url1 || null,
+        url2: url2 || null,
+        url3: url3 || null,
+      });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch video settings" });
+    }
+  });
+
+  // DELETE /api/admin/settings/testimonials-video?slot=1|2|3 — remove video (admin only)
+  app.delete("/api/admin/settings/testimonials-video", isAuthenticated, async (req, res) => {
+    try {
+      const key = videoSettingKey(req.query.slot as string | undefined);
+      await storage.setSetting(key, "");
       res.json({ success: true });
     } catch (err) {
       res.status(500).json({ error: "Failed to remove video" });

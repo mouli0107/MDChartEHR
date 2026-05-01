@@ -131,6 +131,7 @@ const SITE_PAGES = [
   { path: "/partners", label: "Partners" },
   { path: "/hipaa-compliance", label: "HIPAA Compliance" },
   { path: "/security", label: "Security" },
+  { path: "/test", label: "🧪 TEST (safe to delete)" },
 ];
 
 const BLOG_CATEGORIES = [
@@ -151,18 +152,28 @@ const whitePaperTitles: Record<string, string> = {
 };
 
 // ── Testimonials Video Upload Component ───────────────────────────────────
-function TestimonialsVideoUpload() {
+function TestimonialsVideoUpload({ slot }: { slot: 1 | 2 | 3 }) {
   const [currentUrl, setCurrentUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
+  const uploadEndpoint = slot === 1
+    ? "/api/admin/upload-video"
+    : `/api/admin/upload-video?slot=${slot}`;
+  const deleteEndpoint = slot === 1
+    ? "/api/admin/settings/testimonials-video"
+    : `/api/admin/settings/testimonials-video?slot=${slot}`;
+
   useEffect(() => {
-    fetch("/api/settings/testimonials-video")
+    fetch("/api/settings/testimonials-videos")
       .then(r => r.json())
-      .then(d => setCurrentUrl(d.url || null))
+      .then(d => {
+        const url = slot === 1 ? d.url1 : slot === 2 ? d.url2 : d.url3;
+        setCurrentUrl(url || null);
+      })
       .catch(() => {});
-  }, []);
+  }, [slot]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -172,7 +183,7 @@ function TestimonialsVideoUpload() {
     try {
       const formData = new FormData();
       formData.append("video", file);
-      const res = await fetch("/api/admin/upload-video", { method: "POST", body: formData });
+      const res = await fetch(uploadEndpoint, { method: "POST", body: formData });
       if (!res.ok) { const b = await res.json().catch(() => ({})); throw new Error(b.error ?? "Upload failed"); }
       const data = await res.json();
       setCurrentUrl(data.url);
@@ -183,8 +194,8 @@ function TestimonialsVideoUpload() {
   };
 
   const handleRemove = async () => {
-    if (!confirm("Remove the testimonials video?")) return;
-    await fetch("/api/admin/settings/testimonials-video", { method: "DELETE" });
+    if (!confirm(`Remove video ${slot}?`)) return;
+    await fetch(deleteEndpoint, { method: "DELETE" });
     setCurrentUrl(null); setUploadSuccess(false);
   };
 
@@ -1712,18 +1723,25 @@ export default function AdminLeads() {
                 )}
               </div>
 
-              {/* Testimonials Video */}
+              {/* Testimonials Videos */}
               <div className="bg-white rounded-xl border p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Eye className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900">Testimonials Page Video</h3>
-                    <p className="text-sm text-slate-500">Upload a video to display at the top of the Testimonials page (max 200 MB)</p>
+                    <h3 className="font-bold text-slate-900">Testimonials Page Videos</h3>
+                    <p className="text-sm text-slate-500">Upload up to 3 videos — they display side by side on the Testimonials page (max 200 MB each)</p>
                   </div>
                 </div>
-                <TestimonialsVideoUpload />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {([1, 2, 3] as const).map(slot => (
+                    <div key={slot}>
+                      <p className="text-sm font-semibold text-slate-700 mb-2">Video {slot}</p>
+                      <TestimonialsVideoUpload slot={slot} />
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Notification Emails */}
