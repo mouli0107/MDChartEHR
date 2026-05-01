@@ -358,12 +358,15 @@ function VideoPlayer({ src }: { src: string }) {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Testimonials() {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videos, setVideos] = useState<(string | null)[]>([]);
 
   useEffect(() => {
-    fetch("/api/settings/testimonials-video")
+    fetch("/api/settings/testimonials-videos")
       .then((r) => r.json())
-      .then((data) => { if (data.url) setVideoUrl(data.url); })
+      .then((data) => {
+        const list = [data.url1, data.url2, data.url3].filter(Boolean) as string[];
+        setVideos(list);
+      })
       .catch(() => {});
   }, []);
 
@@ -390,18 +393,24 @@ export default function Testimonials() {
         </div>
       </section>
 
-      {/* Video Section — only renders when a video has been uploaded */}
-      {videoUrl && (
+      {/* Video Section — only renders when at least one video has been uploaded */}
+      {videos.length > 0 && (
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-slate-900 mb-3">
-                  Hear It From Our <span className="text-primary">Customers</span>
-                </h2>
-                <p className="text-slate-600">Real stories from practices using MD Charts EHR</p>
-              </div>
-              <VideoPlayer src={videoUrl} />
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-slate-900 mb-3">
+                Hear It From Our <span className="text-primary">Customers</span>
+              </h2>
+              <p className="text-slate-600">Real stories from practices using MD Charts EHR</p>
+            </div>
+            <div className={`grid gap-6 ${
+              videos.length === 1 ? "max-w-4xl mx-auto" :
+              videos.length === 2 ? "grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto" :
+              "grid-cols-1 md:grid-cols-3"
+            }`}>
+              {videos.map((src, i) => (
+                <VideoPlayer key={i} src={src} />
+              ))}
             </div>
           </div>
         </section>
