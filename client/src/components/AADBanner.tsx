@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { X, MapPin, Calendar, Star } from "lucide-react";
 
-// EST: show from Mar 27 9am, hide after Mar 29 midnight
-const CONF_START = new Date("2026-03-27T09:00:00-05:00");
-const CONF_END   = new Date("2026-03-30T00:00:00-05:00");
+// EDT: show from May 1 9am, hide after May 2 midnight
+const CONF_START = new Date("2026-05-01T09:00:00-04:00");
+const CONF_END   = new Date("2026-05-03T00:00:00-04:00");
 
 export function AADBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [isLive, setIsLive] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem("aad-banner-dismissed") === "true") {
+    if (sessionStorage.getItem("acog-banner-dismissed") === "true") {
       setDismissed(true);
     }
-    setIsLive(new Date() >= CONF_START);
+    setIsLive(new Date() >= CONF_START && new Date() < CONF_END);
   }, []);
 
   if (new Date() >= CONF_END) return null;
@@ -55,7 +55,7 @@ export function AADBanner() {
 
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-4 relative">
 
-          {/* Left badges */}
+          {/* Left badge */}
           <div className="flex items-center gap-2 shrink-0">
             <span
               className="font-black tracking-widest uppercase px-3 py-1 rounded text-sm"
@@ -65,7 +65,7 @@ export function AADBanner() {
                 boxShadow: "0 0 12px rgba(201,162,39,0.6)",
               }}
             >
-              AAD 2026
+              ACOG 2026
             </span>
             {isLive && (
               <span
@@ -92,20 +92,20 @@ export function AADBanner() {
               }}
             >
               {isLive
-                ? "We are LIVE at AAD! Come and visit us at"
-                : "Join us at the AAD Annual Meeting — Come visit us at"}
+                ? "We are LIVE at ACOG! Come and visit us at"
+                : "Join us at the ACOG Annual Meeting — Come visit us at"}
               &nbsp;
-              <span style={{ color: "#f0d060", fontWeight: 900 }}>Booth #1741</span>
+              <span style={{ color: "#f0d060", fontWeight: 900 }}>Booth #1431</span>
             </span>
 
             <span className="hidden sm:flex items-center gap-1.5 text-sm font-medium" style={{ color: "#c9c9c9" }}>
               <MapPin className="w-3.5 h-3.5" style={{ color: "#c9a227" }} />
-              Denver, CO
+              Washington, D.C
             </span>
 
             <span className="hidden md:flex items-center gap-1.5 text-sm font-medium" style={{ color: "#c9c9c9" }}>
               <Calendar className="w-3.5 h-3.5" style={{ color: "#c9a227" }} />
-              Mar 27 to 29
+              May 1 – 2
             </span>
 
             <Star className="w-4 h-4 hidden sm:block" style={{ color: "#c9a227" }} fill="#c9a227" />
@@ -114,7 +114,7 @@ export function AADBanner() {
           {/* Dismiss */}
           <button
             onClick={() => {
-              sessionStorage.setItem("aad-banner-dismissed", "true");
+              sessionStorage.setItem("acog-banner-dismissed", "true");
               setDismissed(true);
             }}
             className="shrink-0 p-1.5 rounded-full transition-all duration-200"
