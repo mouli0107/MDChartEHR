@@ -11,6 +11,7 @@ import teamCollabImage from "@assets/generated_images/medical_team_collaboration
 import obgynMotherBabyImage from "@assets/generated_images/obgyn_with_new_mother_and_baby.png";
 import dermSkincareImage from "@assets/generated_images/dermatology_skin_care_illustration.png";
 import claimDenialImage from "@assets/generated_images/rcm_claim_denial_prevention.png";
+import aiRoiImage from "@assets/generated_images/ai_roi_revenue_cycle_automation.png";
 
 export const blogImages: Record<string, string> = {
   "ehr-healthcare-data-security": securityImage,
@@ -26,6 +27,7 @@ export const blogImages: Record<string, string> = {
   "obgyn-ehr-optimize-workflows": obgynMotherBabyImage,
   "recession-proofing-dermatology-practices": dermSkincareImage,
   "preventing-claim-denials-before-they-happen": claimDenialImage,
+  "ai-roi-revenue-cycle-automation": aiRoiImage,
 };
 
 export function getBlogImage(slug: string): string | undefined {
