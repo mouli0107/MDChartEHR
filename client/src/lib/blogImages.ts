@@ -10,6 +10,7 @@ import practiceManagementImage from "@assets/generated_images/practice_managemen
 import teamCollabImage from "@assets/generated_images/medical_team_collaboration.png";
 import obgynMotherBabyImage from "@assets/generated_images/obgyn_with_new_mother_and_baby.png";
 import dermSkincareImage from "@assets/generated_images/dermatology_skin_care_illustration.png";
+import claimDenialImage from "@assets/generated_images/rcm_claim_denial_prevention.png";
 
 export const blogImages: Record<string, string> = {
   "ehr-healthcare-data-security": securityImage,
@@ -24,6 +25,7 @@ export const blogImages: Record<string, string> = {
   "ehr-practice-management-streamline-admin": teamCollabImage,
   "obgyn-ehr-optimize-workflows": obgynMotherBabyImage,
   "recession-proofing-dermatology-practices": dermSkincareImage,
+  "preventing-claim-denials-before-they-happen": claimDenialImage,
 };
 
 export function getBlogImage(slug: string): string | undefined {
