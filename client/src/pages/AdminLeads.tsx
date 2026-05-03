@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/use-auth";
+import { blogPosts as staticBlogPosts } from "@shared/blogData";
 
 interface WhitePaperDownload {
   id: number;
@@ -1125,22 +1126,16 @@ export default function AdminLeads() {
                 /* Blog post list */
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-slate-900">Blog Posts ({blogPosts.length})</h2>
+                    <h2 className="text-xl font-bold text-slate-900">Blog Posts ({blogPosts.length + staticBlogPosts.length})</h2>
                     <Button onClick={openNewBlog}>
                       <Plus className="h-4 w-4 mr-2" />New Post
                     </Button>
                   </div>
                   {blogLoading ? (
                     <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-                  ) : blogPosts.length === 0 ? (
-                    <div className="text-center py-20 border-2 border-dashed rounded-xl">
-                      <BookOpen className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-slate-600 mb-2">No blog posts yet</h3>
-                      <p className="text-slate-500 mb-4">Create your first post to get started</p>
-                      <Button onClick={openNewBlog}><Plus className="h-4 w-4 mr-2" />New Post</Button>
-                    </div>
                   ) : (
                     <div className="space-y-3">
+                      {/* DB posts — fully editable */}
                       {blogPosts.map(post => (
                         <div key={post.id} className="flex items-center gap-4 bg-white border rounded-xl p-4 hover:border-primary/30 transition-colors">
                           <div className="flex-1 min-w-0">
@@ -1169,6 +1164,40 @@ export default function AdminLeads() {
                           </div>
                         </div>
                       ))}
+                      {/* Static (code-based) posts — read-only */}
+                      {staticBlogPosts.map(post => (
+                        <div key={`static-${post.id}`} className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 opacity-80">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
+                                Published
+                              </span>
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                                {post.categoryLabel}
+                              </span>
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
+                                Static (code)
+                              </span>
+                            </div>
+                            <h3 className="font-semibold text-slate-700 truncate">{post.title}</h3>
+                            <p className="text-sm text-slate-400 truncate">{post.excerpt}</p>
+                            <p className="text-xs text-slate-400 mt-1">{post.author} · {post.date} · {post.readTime}</p>
+                          </div>
+                          <div className="flex gap-2 shrink-0">
+                            <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
+                              <Button variant="outline" size="sm"><Eye className="h-4 w-4" /></Button>
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                      {blogPosts.length === 0 && staticBlogPosts.length === 0 && (
+                        <div className="text-center py-20 border-2 border-dashed rounded-xl">
+                          <BookOpen className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-slate-600 mb-2">No blog posts yet</h3>
+                          <p className="text-slate-500 mb-4">Create your first post to get started</p>
+                          <Button onClick={openNewBlog}><Plus className="h-4 w-4 mr-2" />New Post</Button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
