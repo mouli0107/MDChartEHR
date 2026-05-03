@@ -4,7 +4,7 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   content: string;
-  category: "derm" | "ehr" | "obgyn" | "pediatrics" | "practice-management";
+  category: "derm" | "ehr" | "obgyn" | "pediatrics" | "practice-management" | "rcm";
   categoryLabel: string;
   author: string;
   date: string;
@@ -15,6 +15,7 @@ export interface BlogPost {
 export const blogCategories = [
   { id: "all", label: "All Posts" },
   { id: "ehr", label: "EHR" },
+  { id: "rcm", label: "RCM" },
   { id: "derm", label: "Dermatology" },
   { id: "obgyn", label: "OB/GYN" },
   { id: "pediatrics", label: "Pediatrics" },
@@ -1676,10 +1677,10 @@ Reach out to the MDCharts team to walk through your specific denial patterns and
 
 *Sources: Experian Health State of Claims 2025 (September 2025) | MGMA Denial Management Benchmarking 2024 | AMA Prior Authorization Physician Survey 2024 | OS Healthcare Denial Rates Index 2025*
     `,
-    category: "practice-management",
-    categoryLabel: "Practice Management",
+    category: "rcm",
+    categoryLabel: "Revenue Cycle Management",
     author: "MDCharts RCM Team",
-    date: "April 2026",
+    date: "May 2026",
     readTime: "9 min read",
   },
 ];
