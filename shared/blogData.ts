@@ -1683,6 +1683,89 @@ Reach out to the MDCharts team to walk through your specific denial patterns and
     date: "May 2026",
     readTime: "9 min read",
   },
+  {
+    id: "30",
+    slug: "ai-roi-revenue-cycle-automation",
+    title: "From AI Hype to Real ROI: 5 Things Practices Need to Know About Automation in the Revenue Cycle",
+    excerpt: "Every RCM vendor has AI in their pitch deck. But where does it actually deliver - and where do the claims outpace the evidence? Here are five things worth knowing before you invest, expand, or dismiss AI in your revenue cycle.",
+    content: `
+## 01 Most Practices Believe in AI - Very Few Are Actually Using It
+
+Experian Health's State of Claims 2025 report found that **67% of providers believe AI can improve the claims process.** Only 14% are currently using it to reduce denials.
+
+That gap between belief and deployment is telling. The hesitation isn't about whether AI works. Revenue cycle leaders consistently cite three specific concerns: data privacy, accuracy, and cost. And underneath all of that is a harder question - with so many vendors claiming AI capabilities, how do you tell which ones actually deliver?
+
+The answer almost always comes down to outcome data. Vendors with real results show you denial rate changes, first-pass acceptance rate movement, and days in AR reduction from comparable practices. Those without real results show you feature lists.
+
+> **Key Takeaway:** Ask any AI vendor to show you actual outcome data from practices similar to yours. Projected benefits are not the same as proven results.
+
+## 02 AI Works Best at the Front End - Before the Claim Goes Out
+
+The most consistent ROI from AI in RCM comes from the front end of the cycle - eligibility verification and prior authorization. The task is well-defined, the data is structured, and the impact of getting it wrong shows up clearly in denial rates.
+
+Menlo Ventures' 2025 State of AI in Healthcare report flagged prior authorization automation as one of the fastest-growing AI deployment categories in healthcare - because **the ROI is immediate and measurable.** Authorizations that previously took significant staff time can be processed far faster. That directly cuts one of the most common and most preventable denial categories.
+
+The limitation is integration. An eligibility AI tool that operates outside your EHR and billing system still requires manual handoff steps. The value compounds when verification is embedded directly in the scheduling and check-in workflow - so the flag happens at the moment someone can act on it.
+
+> **Key Takeaway:** Front-end AI tools that prevent denials are generally more valuable than back-end tools that automate appeals. Prevention beats recovery every time.
+
+## 03 Coding Automation Is Real - With One Important Caveat
+
+Coding and billing automation attracted significant healthcare AI investment in 2025, according to Menlo Ventures. The reason is clear: **coding errors are a leading cause of claim denials,** and the volume of coding decisions required across a busy practice creates pressure that manual review alone struggles to keep up with.
+
+What AI does well here is pattern recognition across large claim datasets - identifying when a diagnosis and procedure combination is likely to trigger a denial with a specific payer, surfacing missing modifiers, flagging NCCI bundling conflicts before submission. It handles the high-volume routine checks at a speed no billing team can match.
+
+Lee Kupferman, EVP at R1, put it plainly in a March 2026 STAT News piece: cleaner claims from AI-assisted review **improve first-pass yield, reduce denials and appeals, lower rework cost, and accelerate cash** - with gains in one area reinforcing gains in others over time.
+
+**The caveat:** AI coding tools are only as good as the clinical documentation they work from. If the underlying encounter notes are incomplete or ambiguous, AI amplifies that problem. Clean source data is not optional.
+
+> **Key Takeaway:** AI can support your coders on high-volume routine checks - but it cannot substitute for clinical documentation quality or specialty-specific coding judgment on complex cases.
+
+## 04 Your Denial History Is a Data Asset - Most Practices Aren't Using It
+
+A billing team reviewing denials in a queue sees individual claims. An AI system reviewing the same data sees patterns - the same CARC code repeating from the same payer for the same procedure range, a modifier consistently missing on a specific service type, a documentation gap correlating with a cluster of medical necessity denials.
+
+Those patterns exist in your denial data right now. The question is whether your workflow surfaces them fast enough to act on them - or whether they stay buried in a report that nobody has time to analyze thoroughly.
+
+EY's 2026 analysis of AI-driven RCM described the shift clearly: AI allows organizations to move from **reacting to denials toward preventing them** - by converting denial history into a continuous improvement feedback loop rather than just a queue to work through. Organizations that use denial data as a diagnostic tool consistently outperform those that don't.
+
+> **Key Takeaway:** Your historical denial data is one of the most underused assets in your revenue cycle. AI turns that data into a prevention roadmap - not just faster appeals.
+
+## 05 Integration Determines Whether AI Delivers - or Just Adds Complexity
+
+This is the one that most vendor conversations skip over. The practices getting measurable results from AI share a common characteristic: they are not running AI as a point solution bolted onto an existing workflow.
+
+They are running it in a platform where clinical documentation, eligibility verification, coding, billing, and denial tracking all operate from the same data layer. When those components are connected, AI can work across the entire cycle rather than one piece of it.
+
+McKinsey's January 2026 analysis of agentic AI in the revenue cycle was direct about this: health systems collectively spend more than **$140 billion annually on revenue cycle operations,** with manual processes and fragmented vendor landscapes as major contributors. Nearly 20% of claims are denied on average, and as many as 60% of those are never appealed - representing millions in lost revenue per practice per year. The path forward requires **integrated data and unified logic** across the full cycle, not disconnected point solutions.
+
+When your EHR, billing, and RCM run in separate systems with manual handoffs between them, AI tools in any one of those systems are working with incomplete information. The seams between disconnected tools are exactly where errors accumulate - and where AI's value gets diluted.
+
+MDCharts is built as an integrated EHR and RCM platform for exactly this reason. Clinical documentation, eligibility verification, superbill generation, claim validation, and denial tracking all operate from the same patient and encounter data. That integration is what allows each step in the cycle to inform the next - which is the precondition for AI to actually work the way the demos suggest.
+
+> **Key Takeaway:** If your EHR, billing, and RCM are running in separate systems with manual handoffs between them, the AI conversation is premature. Fix the integration first. That is where the real revenue is.
+
+## The Questions Worth Asking
+
+Before expanding AI use in your revenue cycle - or evaluating a new platform - these four questions cut through the noise:
+
+- Where does the AI intervene? Pre-submission tools that prevent denials are worth more than post-denial tools that automate appeals.
+- Is it embedded in your actual workflow - or does staff need to go to a separate tool to use it? Adoption drops sharply when AI requires an extra step outside the normal process.
+- What happens when it gets it wrong? Every AI system has an error rate. Is there a human review step for high-risk decisions, or do errors go straight through?
+- Can the vendor show outcome data from comparable practices? Not projected benefits. Actual denial rate changes, first-pass acceptance improvement, days in AR movement.
+
+If your current setup has the clinical and billing sides of your practice running in disconnected systems, start there. MDCharts is built to give practices that integrated foundation. Reach out to the team to walk through how this applies to your specific setup and specialty.
+
+---
+
+*Sources: Experian Health State of Claims 2025 (September 2025) | Experian Health AI in RCM (February 2026) | McKinsey Agentic AI and the Revenue Cycle (January 2026) | Menlo Ventures State of AI in Healthcare (October 2025) | EY AI-Driven RCM in Healthcare (February 2026) | STAT News / R1 (March 2026)*
+    `,
+    category: "rcm",
+    categoryLabel: "Revenue Cycle Management",
+    author: "MDCharts RCM Team",
+    date: "May 2026",
+    readTime: "8 min read",
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
