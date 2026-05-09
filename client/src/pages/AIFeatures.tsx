@@ -135,17 +135,17 @@ export default function AIFeaturesPage() {
             </div>
           </motion.div>
 
-          {/* RIGHT — image: full width of right half, full height, no crop */}
+          {/* RIGHT — image: medium, centered, full image visible */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="lg:w-1/2 shrink-0 flex items-stretch overflow-hidden"
+            className="lg:w-1/2 shrink-0 flex items-center justify-center px-6 pb-6 pt-24 lg:pt-6"
           >
             <img
               src={aiHeroImage}
               alt="AI-powered clinical workflow"
-              className="w-full h-full object-cover object-left"
+              className="w-full h-auto rounded-2xl shadow-2xl"
             />
           </motion.div>
         </div>
