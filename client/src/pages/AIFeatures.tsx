@@ -9,7 +9,8 @@ import {
 } from "lucide-react";
 import aiScribeIcon from "@assets/generated_images/ai_ambient_scribe_icon.png";
 import aiCodingIcon from "@assets/generated_images/ai_medical_charting_icon.png";
-import dashboardImage from "@assets/generated_images/medical_software_dashboard_mockup.png";
+import aiHeroImage from "@assets/generated_images/ai_hero_futuristic_medical.png";
+import aiTemplatesImage from "@assets/generated_images/ai_templates_autofill_ui.png";
 import tabletImage from "@assets/generated_images/doctor_using_tablet.png";
 import efficientDoctorImage from "@assets/generated_images/efficient_doctor_using_technology.png";
 import securityImage from "@assets/generated_images/ehr_data_security_concept.png";
@@ -58,11 +59,12 @@ const AI_FEATURES = [
       "MDCharts AI works inside every specialty template — automatically surfacing patient history, medication context, and relevant clinical data right where you need it, when you need it.",
     bullets: [
       "Compatible with all specialty templates",
+
       "Auto-generates summaries and history overviews",
       "On-demand or automatic on note open",
     ],
-    image: dashboardImage,
-    imageAlt: "AI template auto-fill in EMR dashboard",
+    image: aiTemplatesImage,
+    imageAlt: "AI intelligent auto-fill for any note template",
     flip: false,
   },
   {
@@ -112,76 +114,69 @@ const AI_FEATURES = [
   },
 ];
 
-const STATS = [
-  { value: "6+", label: "AI-Powered Features" },
-  { value: "0", label: "Extra Clicks to Scribe" },
-  { value: "100%", label: "HIPAA Compliant" },
-  { value: "Any", label: "Device Supported" },
-];
-
 export default function AIFeaturesPage() {
   return (
     <div className="min-h-screen bg-background font-sans overflow-x-hidden">
       <Navbar />
 
-      {/* Hero */}
+      {/* Hero — two column: text left, image right */}
       <section className="pt-28 pb-16 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]" />
         <div className="absolute top-0 right-0 w-[600px] h-[500px] bg-blue-200/20 rounded-full blur-[100px] -translate-y-1/3 translate-x-1/3 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[400px] bg-emerald-100/20 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary uppercase tracking-wider">Special AI Features</span>
-            </div>
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left — text */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-sm font-bold text-primary uppercase tracking-wider">Special AI Features</span>
+              </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-6">
-              The AI That Works<br />
-              <span className="text-primary">While You Care</span>
-            </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-6">
+                The AI That Works<br />
+                <span className="text-primary">While You Care</span>
+              </h1>
 
-            <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-              MDCharts brings AI directly into your clinical workflow — from the moment a patient walks in to the moment the claim goes out. Less documentation. More care.
-            </p>
+              <p className="text-lg text-slate-600 mb-10 leading-relaxed">
+                MDCharts brings AI directly into your clinical workflow — from the moment a patient walks in to the moment the claim goes out. Less documentation. More care.
+              </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/book-demo">
-                <Button size="lg" className="h-12 px-8 text-sm font-bold uppercase tracking-wide shadow-lg shadow-blue-900/20">
-                  Book a Demo <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
-              <Link href="/ehr">
-                <Button size="lg" variant="outline" className="h-12 px-8 text-sm font-bold uppercase tracking-wide">
-                  Explore the EHR
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/book-demo">
+                  <Button size="lg" className="h-12 px-8 text-sm font-bold uppercase tracking-wide shadow-lg shadow-blue-900/20">
+                    Book a Demo <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/ehr">
+                  <Button size="lg" variant="outline" className="h-12 px-8 text-sm font-bold uppercase tracking-wide">
+                    Explore the EHR
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
 
-      {/* Stats Bar */}
-      <section className="bg-[#2da0c7] py-8">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {STATS.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <p className="text-3xl font-extrabold text-white">{s.value}</p>
-                <p className="text-sm text-white/80 font-medium mt-1">{s.label}</p>
-              </motion.div>
-            ))}
+            {/* Right — hero image */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="relative"
+            >
+              <div className="rounded-2xl overflow-hidden shadow-2xl shadow-blue-200/40 border border-slate-100">
+                <img
+                  src={aiHeroImage}
+                  alt="AI-powered clinical workflow"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+              <div className="absolute -z-10 w-72 h-72 bg-blue-300/20 rounded-full blur-3xl -right-10 top-10" />
+            </motion.div>
           </div>
         </div>
       </section>
