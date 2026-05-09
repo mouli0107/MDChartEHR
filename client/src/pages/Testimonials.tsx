@@ -358,7 +358,7 @@ function VideoPlayer({ src }: { src: string }) {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Testimonials() {
-  const [videos, setVideos] = useState<(string | null)[]>([]);
+  const [videos, setVideos] = useState<string[]>([]);
 
   useEffect(() => {
     fetch("/api/settings/testimonials-videos")
