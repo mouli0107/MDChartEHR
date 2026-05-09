@@ -150,14 +150,17 @@ export default function AIFeaturesPage() {
           </motion.div>
         </div>
 
-        {/* BOTTOM — cyan banner with 6 features */}
-        <div className="bg-[#2da0c7] shrink-0">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="grid grid-cols-3 md:grid-cols-6 divide-x divide-white/20">
+        {/* BOTTOM — dark navy pill-badge banner */}
+        <div className="bg-gradient-to-r from-[#0b1f3a] via-[#0f2744] to-[#1a3a5c] shrink-0 border-t border-white/10">
+          <div className="container mx-auto px-4 md:px-6 py-4">
+            <div className="flex flex-wrap justify-center gap-3">
               {BANNER_FEATURES.map(({ Icon, label }, i) => (
-                <div key={i} className="flex flex-col items-center justify-center gap-1.5 py-4 px-2">
-                  <Icon className="h-5 w-5 text-white" />
-                  <span className="text-xs font-bold text-white text-center leading-tight">{label}</span>
+                <div
+                  key={i}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 hover:bg-white/15 hover:border-blue-400/40 transition-all"
+                >
+                  <Icon className="h-4 w-4 text-blue-300 shrink-0" />
+                  <span className="text-xs font-bold text-white whitespace-nowrap">{label}</span>
                 </div>
               ))}
             </div>
