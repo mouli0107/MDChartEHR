@@ -113,8 +113,8 @@ export default function AIFeaturesPage() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-5">
-              The AI That Works<br />
-              <span className="text-primary">While You Care</span>
+              AI-Powered EHR.<br />
+              <span className="text-primary">Trusted by Physicians.</span>
             </h1>
 
             <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
@@ -227,7 +227,7 @@ export default function AIFeaturesPage() {
             <p className="text-slate-500 max-w-xl mx-auto">Every feature works together seamlessly — from the first word spoken to the final claim submitted.</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {TEXT_FEATURES.map((feature, i) => (
               <motion.div
                 key={i}
@@ -236,7 +236,7 @@ export default function AIFeaturesPage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.08 }}
-                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:shadow-md hover:border-primary/20 transition-all"
+                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:shadow-md hover:border-primary/20 transition-all w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
                   <feature.icon className="h-4 w-4 text-primary" />
