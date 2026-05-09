@@ -36,6 +36,7 @@ import GastroenterologySpecialtyPage from "@/pages/GastroenterologySpecialty";
 import NeurologySpecialtyPage from "@/pages/NeurologySpecialty";
 import PsychiatrySpecialtyPage from "@/pages/PsychiatrySpecialty";
 
+import AIFeaturesPage from "@/pages/AIFeatures";
 import EPrescribingPage from "@/pages/EPrescribing";
 import LabIntegrationPage from "@/pages/LabIntegration";
 import TelehealthPage from "@/pages/Telehealth";
@@ -117,6 +118,7 @@ function Router() {
         <Route path="/blog/:slug" component={BlogPostPage} />
         <Route path="/pricing" component={PricingPage} />
         
+        <Route path="/ai-features" component={AIFeaturesPage} />
         <Route path="/features/e-prescribing" component={EPrescribingPage} />
         <Route path="/features/lab-integration" component={LabIntegrationPage} />
         <Route path="/features/telehealth" component={TelehealthPage} />

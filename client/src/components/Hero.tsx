@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Award, FileText, DollarSign, Users, UserCircle, Pill, FlaskConical, Video, BarChart3 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award, FileText, DollarSign, Users, UserCircle, Pill, FlaskConical, Video, BarChart3, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import heroImage from "@assets/generated_images/futuristic_glass_medical_interface_abstract_3d.png";
 import oncSeal from "@assets/generated_images/onc_certified_health_it_seal_3d_gold_and_blue.png";
@@ -70,16 +70,22 @@ export function Hero() {
 
               {/* Clean Stats Row - Integrated */}
               <div className="flex items-center gap-8 border-t border-slate-200 pt-6">
-                {[
-                  { label: "Platform Uptime", value: "99.9%" },
-                  { label: "Fully Compliant", value: "HIPAA Secure" },
-                  { label: "Smart Charting", value: "AI Powered" },
-                ].map((stat, i) => (
-                  <div key={i} className="flex flex-col">
-                    <span className="text-[23px] font-bold text-slate-900 leading-none">{stat.value}</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">{stat.label}</span>
+                <div className="flex flex-col">
+                  <span className="text-[23px] font-bold text-slate-900 leading-none">99.9%</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Platform Uptime</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[23px] font-bold text-slate-900 leading-none">HIPAA Secure</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Fully Compliant</span>
+                </div>
+                <Link href="/ai-features">
+                  <div className="flex flex-col group cursor-pointer">
+                    <span className="text-[23px] font-bold text-primary leading-none group-hover:text-blue-700 transition-colors flex items-center gap-1">
+                      Special AI Features <ChevronRight className="h-5 w-5 mt-0.5 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Smart Charting</span>
                   </div>
-                ))}
+                </Link>
               </div>
             </motion.div>
           </div>
