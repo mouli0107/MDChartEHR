@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Award, FileText, DollarSign, Users, UserCircle, Pill, FlaskConical, Video, BarChart3, ChevronRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award, FileText, DollarSign, Users, UserCircle, Pill, FlaskConical, Video, BarChart3, ChevronRight, Mic2, Brain, Zap, Shield, Smartphone, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import heroImage from "@assets/generated_images/futuristic_glass_medical_interface_abstract_3d.png";
 import oncSeal from "@assets/generated_images/onc_certified_health_it_seal_3d_gold_and_blue.png";
@@ -9,7 +10,21 @@ import clinicInterior from "@assets/generated_images/diverse_doctors_hallway_pat
 import doctorTablet from "@assets/generated_images/doctor_using_tablet.png";
 import medicalTeam from "@assets/generated_images/medical_team_collaboration.png";
 
+const AI_MESSAGES = [
+  { Icon: Mic2,       text: "AI listens to your patient encounters and auto-generates clinical notes in real time — no manual charting needed." },
+  { Icon: Brain,      text: "AI recommends the right ICD & CPT billing codes directly from your clinical notes — fewer denials, faster reimbursement." },
+  { Icon: Zap,        text: "One tap completes the full workflow — record, transcribe, fill the note, and populate the superbill." },
+  { Icon: Smartphone, text: "Scribe from any device — smartphone, tablet, or desktop. No extra hardware required." },
+  { Icon: Shield,     text: "Every AI interaction is HIPAA-compliant with built-in PHI protection and full audit logging." },
+  { Icon: Sparkles,   text: "AI auto-fills any specialty template — surfaces patient history and context right where you need it." },
+];
+
 export function Hero() {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(c => (c + 1) % AI_MESSAGES.length), 3500);
+    return () => clearInterval(t);
+  }, []);
   return (
     <section className="relative pt-[92px] pb-2 md:pt-[119px] md:pb-3 overflow-hidden bg-slate-50/50">
       {/* Dense Professional Grid Background */}
@@ -87,6 +102,28 @@ export function Hero() {
                   </div>
                 </Link>
               </div>
+              {/* AI Feature Rotating Card */}
+              <Link href="/ai-features">
+                <div className="mt-6 cursor-pointer group">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={current}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex items-start gap-3 px-4 py-3 bg-primary/5 border border-primary/20 rounded-xl group-hover:border-primary/40 group-hover:bg-primary/8 transition-colors"
+                    >
+                      <div className="shrink-0 h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center mt-0.5">
+                        <AI_MESSAGES[current].Icon className="h-4 w-4 text-primary" />
+                      </div>
+                      <p className="text-sm text-slate-600 leading-snug">
+                        {AI_MESSAGES[current].text}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </Link>
             </motion.div>
           </div>
 

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Features } from "@/components/Features";
@@ -49,52 +49,6 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0 }
 };
 
-const AI_TICKER_MESSAGES = [
-  { icon: "🎤", text: "AI Scribe — Speak naturally. MDCharts writes the note." },
-  { icon: "💡", text: "Smart Billing Codes — AI recommends the right ICD & CPT codes from your clinical notes." },
-  { icon: "⚡", text: "One-Click Workflow — Record, transcribe, and bill in a single tap." },
-  { icon: "🔒", text: "HIPAA-Compliant AI — Patient data protected at every step." },
-  { icon: "📱", text: "Scribe from Any Device — Phone, tablet, or desktop. Your choice." },
-  { icon: "🧠", text: "AI in Every Template — Intelligent auto-fill across all specialties." },
-];
-
-function AITicker() {
-  const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setCurrent(c => (c + 1) % AI_TICKER_MESSAGES.length), 3500);
-    return () => clearInterval(t);
-  }, []);
-  const msg = AI_TICKER_MESSAGES[current];
-  return (
-    <Link href="/ai-features">
-      <section className="bg-gradient-to-r from-[#0f2744] via-[#1a3a5c] to-[#0f2744] border-b border-white/10 cursor-pointer hover:brightness-110 transition-all">
-        <div className="container mx-auto px-4 md:px-6 py-2.5 flex items-center justify-center gap-3">
-          <span className="hidden sm:flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-primary/80 shrink-0">
-            <Sparkles className="h-3 w-3" /> AI Features
-          </span>
-          <span className="hidden sm:block w-px h-4 bg-white/20" />
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={current}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35 }}
-              className="text-sm font-medium text-white/90 text-center"
-            >
-              <span className="mr-2">{msg.icon}</span>{msg.text}
-            </motion.p>
-          </AnimatePresence>
-          <span className="hidden sm:block w-px h-4 bg-white/20" />
-          <span className="hidden sm:flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-primary/70 shrink-0">
-            Learn More <ArrowRight className="h-3 w-3" />
-          </span>
-        </div>
-      </section>
-    </Link>
-  );
-}
-
 export default function Home() {
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -105,7 +59,6 @@ export default function Home() {
     <div className="min-h-screen bg-background font-sans selection:bg-primary/20">
       <Navbar />
       <Hero />
-      <AITicker />
 
       {/* Popular Specialties Scroll */}
       <section className="py-1.5 bg-slate-50 border-b border-slate-100 overflow-hidden">
