@@ -93,17 +93,17 @@ export default function AIFeaturesPage() {
       <Navbar />
 
       {/* ── Hero: fills full viewport ── */}
-      <section className="h-screen flex flex-col">
+      <section className="flex flex-col" style={{ minHeight: "100vh" }}>
 
-        {/* Top: text left + image right */}
-        <div className="flex-1 grid lg:grid-cols-2 overflow-hidden">
+        {/* Top: text left + image right — flex-1 so it fills remaining space above banner */}
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
 
           {/* LEFT — text */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col justify-center px-8 md:px-12 lg:px-16 pt-24 pb-6 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden"
+            className="flex flex-col justify-center px-8 md:px-12 lg:px-16 pt-24 pb-6 bg-gradient-to-b from-slate-50 to-white relative lg:w-1/2 shrink-0"
           >
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
@@ -135,17 +135,17 @@ export default function AIFeaturesPage() {
             </div>
           </motion.div>
 
-          {/* RIGHT — image fills edge-to-edge */}
+          {/* RIGHT — image: full width of right half, full height, no crop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="relative overflow-hidden"
+            className="lg:w-1/2 shrink-0 flex items-stretch overflow-hidden"
           >
             <img
               src={aiHeroImage}
               alt="AI-powered clinical workflow"
-              className="absolute inset-0 w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-left"
             />
           </motion.div>
         </div>
