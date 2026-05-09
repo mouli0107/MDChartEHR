@@ -7,7 +7,7 @@ import {
   Mic2, Brain, Zap, Shield, Smartphone, FileText,
   CheckCircle2, ArrowRight, Sparkles, ChevronRight
 } from "lucide-react";
-import aiHeroImage from "@assets/generated_images/ai_hero_futuristic_medical.png";
+import aiHeroImage from "@assets/generated_images/ai_brain_hero.png";
 import aiTemplatesImage from "@assets/generated_images/ai_templates_autofill_ui.png";
 
 const fadeUp = {
@@ -144,8 +144,8 @@ export default function AIFeaturesPage() {
           >
             <img
               src={aiHeroImage}
-              alt="AI-powered clinical workflow"
-              className="w-full h-[470px] object-cover rounded-2xl shadow-2xl"
+              alt="AI brain with circuit board and ECG heartbeat"
+              className="w-full h-auto object-contain"
             />
           </motion.div>
         </div>
