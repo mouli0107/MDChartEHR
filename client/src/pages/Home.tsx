@@ -182,12 +182,12 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Brain, title: "AI-Powered Platform", desc: "MD Charts brings AI to key areas of your workflow — from Ambient Scribe charting to AI Medical Coding — so your team spends less time on admin and more time on care." },
-              { icon: MonitorSmartphone, title: "Built for Busy Providers Like You", desc: "Your time belongs with your patients, not your screen. Minimal clicks, fast workflows -- built around your day." },
+              { icon: Brain, title: "One Platform for Everything", desc: "EHR, billing, RCM, telehealth, and scheduling -- all in one place. No third-party patchwork, no data silos, just one system that runs your entire practice." },
+              { icon: MonitorSmartphone, title: "Built for Busy Providers Like You", desc: "Designed for how busy providers actually work -- fewer clicks, faster charting, more time with patients." },
               { icon: ClipboardList, title: "Highly Customizable", desc: "Tailor the system to fit your practice perfectly, with fully customizable template objects and workflow configurations." },
               { icon: Headphones, title: "World-Class Support", desc: "Training and troubleshooting are always available\u2014just a message or call away. Customer-focused, friendly and professional." },
               { icon: TrendingUp, title: "Reliable and Scalable", desc: "A dependable system that grows with your practice, adapting as your needs evolve with 99.9% uptime." },
-              { icon: ShieldCheck, title: "ONC Certified & Secure", desc: "ONC 2015 Edition certified, HIPAA compliant with secure patient data, Direct Messaging, and integration with national emergency databases." },
+              { icon: ShieldCheck, title: "Built to Get You Paid", desc: "Clean claims, faster reimbursements, and fewer denials -- MDCharts RCM tools are built to protect your practice revenue from day one." },
             ].map((item, i) => (
               <motion.div
                 key={i}
