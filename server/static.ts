@@ -70,10 +70,13 @@ export function serveStatic(app: Express) {
 
   const indexHtmlPath = path.resolve(distPath, "index.html");
 
-  // Cache hashed assets (JS/CSS/images) for 1 year; HTML never cached
+  // Cache hashed assets (JS/CSS/images) for 1 year; HTML never cached.
+  // index: false — do NOT auto-serve index.html for "/" so the catch-all
+  // below can inject SEO tags (canonical, OG, etc.) on the homepage too.
   app.use(express.static(distPath, {
     maxAge: "1y",
     immutable: true,
+    index: false,
     setHeaders(res, filePath) {
       if (filePath.endsWith(".html")) {
         res.setHeader("Cache-Control", "no-cache");
