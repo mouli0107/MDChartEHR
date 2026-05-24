@@ -15,11 +15,11 @@
 export const blogCategories = [
   { id: "all", label: "All Posts" },
   { id: "ehr", label: "EHR" },
+  { id: "practice-management", label: "Practice Management" },
   { id: "rcm", label: "RCM" },
   { id: "derm", label: "Dermatology" },
   { id: "obgyn", label: "OB/GYN" },
   { id: "pediatrics", label: "Pediatrics" },
-  { id: "practice-management", label: "Practice Management" },
 ];
 
 export const blogPosts: BlogPost[] = [
@@ -1582,7 +1582,7 @@ And here's what gets missed in most of these conversations: the number one cause
 
 **It is inaccurate or incomplete data collected at patient registration.** Per the same Experian Health report, missing or inaccurate claim data was cited by 50% of respondents as their primary driver of rising denials  -  up from 46% the year before. More than a quarter of providers said at least 10% of their denials trace directly back to intake errors.
 
-A wrong digit in a member ID. An insurance plan that lapsed and was never re-verified. A prior auth requirement nobody flagged at scheduling. These are not complex billing problems. They are data collection failures that happen at the front desk and surface as claim rejections 30 days later.
+A wrong digit in a member ID, an insurance plan that lapsed and was never re-verified, a prior auth requirement nobody flagged at scheduling. These are not complex billing problems. They are data collection failures that happen at the front desk and surface as claim rejections 30 days later.
 
 Fixable. All of it. But only if you catch them before the claim goes out  -  not after.
 
@@ -1610,7 +1610,7 @@ Three weeks later, a denial comes back. Wrong payer ID. Missing modifier. Auth r
 
 Every one of those failure points had an earlier moment where it could have been caught. The lapsed coverage could have been caught at scheduling. The auth requirement could have been flagged before the appointment. The missing modifier could have been caught in a pre-submission validation check.
 
-Instead, each one became a denial  -  and now someone has to work it.
+Instead, they turn into denials and now you're paying to fix what could have been prevented.
 
 The consistent culprits, backed by the Experian Health 2025 data, are:
 

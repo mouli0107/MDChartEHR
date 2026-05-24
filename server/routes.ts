@@ -245,7 +245,9 @@ ${blogEntries}
   };
 
   app.use((req, res, next) => {
-    const newPath = LEGACY_REDIRECTS[req.path.toLowerCase()];
+    const rawPath = req.path.toLowerCase();
+    const normalizedPath = rawPath.length > 1 ? rawPath.replace(/\/$/, "") : rawPath;
+    const newPath = LEGACY_REDIRECTS[normalizedPath];
     if (newPath) {
       return res.redirect(301, newPath);
     }
