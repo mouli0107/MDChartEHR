@@ -571,7 +571,7 @@ export default function AdminLeads() {
       metaTitle: existing?.metaTitle || "",
       metaDescription: existing?.metaDescription || "",
       focusKeyword: existing?.focusKeyword || "",
-      canonicalUrl: existing?.canonicalUrl || "",
+      canonicalUrl: existing?.canonicalUrl || `https://mdchartsehr.com${path}`,
       ogTitle: (existing as any)?.ogTitle || "",
       ogDescription: (existing as any)?.ogDescription || "",
       ogImage: (existing as any)?.ogImage || "",
@@ -1296,8 +1296,11 @@ export default function AdminLeads() {
                                   value={seoForm.canonicalUrl}
                                   onChange={e => setSeoForm(f => ({ ...f, canonicalUrl: e.target.value }))}
                                   placeholder={`https://mdchartsehr.com${page.path}`}
-                                  className="text-sm font-mono"
+                                  className={`text-sm font-mono ${seoForm.canonicalUrl && !seoForm.canonicalUrl.startsWith("https://mdchartsehr.com") ? "border-red-400 focus:ring-red-300" : ""}`}
                                 />
+                                {seoForm.canonicalUrl && !seoForm.canonicalUrl.startsWith("https://mdchartsehr.com") && (
+                                  <p className="text-xs text-red-500 mt-1">⚠️ Canonical URL must start with https://mdchartsehr.com</p>
+                                )}
                               </div>
                               <div className="md:col-span-2">
                                 <label className="text-xs font-medium text-slate-600 mb-1 block">
@@ -1358,7 +1361,7 @@ export default function AdminLeads() {
                             )}
                             <div className="flex justify-end gap-2 mt-3">
                               <Button variant="outline" size="sm" onClick={() => setSeoEditing(null)}>Cancel</Button>
-                              <Button size="sm" onClick={() => saveSeoEntry(page.path)} disabled={seoSaving}>
+                              <Button size="sm" onClick={() => saveSeoEntry(page.path)} disabled={seoSaving || !!(seoForm.canonicalUrl && !seoForm.canonicalUrl.startsWith("https://mdchartsehr.com"))}>
                                 {seoSaving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
                                 Save
                               </Button>
