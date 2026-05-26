@@ -9,9 +9,9 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center mb-6">
-              <img 
-                src={mdchartsLogo} 
-                alt="MD Charts –  EHR System" 
+              <img
+                src={mdchartsLogo}
+                alt="MD Charts –  EHR System"
                 className="h-[48px] w-auto object-contain"
                 loading="lazy"
               />
@@ -44,7 +44,7 @@ export function Footer() {
               </a>
             </div>
           </div>
-          
+
           <div>
             <h4 className="text-slate-900 font-bold mb-6">Solutions</h4>
             <ul className="space-y-4 text-sm">
@@ -56,7 +56,7 @@ export function Footer() {
               <li><Link href="/support" className="hover:text-primary transition-colors">Support</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="text-slate-900 font-bold mb-6">Specialties</h4>
             <ul className="space-y-4 text-sm">
@@ -68,7 +68,7 @@ export function Footer() {
               <li><Link href="/specialties/urology" className="hover:text-primary transition-colors">Urology</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="text-slate-900 font-bold mb-6">Company</h4>
             <ul className="space-y-4 text-sm">
@@ -82,7 +82,7 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        
+
         <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
           <div className="flex items-center gap-2">
             <p>© 2026 MD Charts LLC. All rights reserved.</p>
@@ -97,6 +97,7 @@ export function Footer() {
           </div>
         </div>
       </div>
+      <script id="analyticsId" type="text/javascript" src="https://analytics-5900.kxcdn.com/analytics.js" data-id="SWtwbWJHTlVOWHBOYVdSdlhDOXpiMVJaTkhsemREaG5QVDBp"  async></script>
     </footer>
   );
 }
