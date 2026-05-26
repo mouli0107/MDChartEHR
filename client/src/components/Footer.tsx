@@ -24,7 +24,7 @@ export function Footer() {
               <p>Great Neck, New York 11021 </p>
               <p><a href="tel:5166849521" className="hover:text-primary transition-colors">516.684.9521</a></p>
               <p><a href="mailto:info@mdcharts.net" className="hover:text-primary transition-colors">info@mdcharts.net</a></p>
-              <p className="text-xs text-slate-400">Fax: 516.706.5075</p>
+              <p className="text-xs text-slate-400">Fax: 516.706.5075 </p>
             </div>
             <div className="flex items-center gap-4">
               <a href="https://www.facebook.com/mdcharts/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center hover:bg-primary hover:text-white text-slate-500 transition-colors" aria-label="Facebook">
