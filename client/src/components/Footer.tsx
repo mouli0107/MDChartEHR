@@ -97,7 +97,13 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <script id="analyticsId" type="text/javascript" src="https://analytics-5900.kxcdn.com/analytics.js" data-id="SWtwbWJHTlVOWHBOYVdSdlhDOXpiMVJaTkhsemREaG5QVDBp" async></script>
+      <script
+        id="analyticsId"
+        type="text/javascript"
+        src="https://analytics-5900.kxcdn.com/analytics.js"
+        data-id="SWtwbWJHTlVOWHBOYVdSdlhDOXpiMVJaTkhsemREaG5QVDBp"
+        async
+        />
     </footer>
   );
 }
