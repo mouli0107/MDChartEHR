@@ -416,27 +416,17 @@ export function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <Link href="/contact">
-              <span className="relative inline-flex">
-                <span className="absolute inset-0 rounded-md bg-cyan-400 opacity-0" style={{ animation: "navbar-contact-ring 2s ease-out infinite" }} />
-                <Button
-                  size="sm"
-                  className="relative h-9 px-4 text-sm font-semibold rounded-md text-white border-0 z-10"
-                  style={{
-                    background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)",
-                    boxShadow: "0 3px 14px rgba(6,182,212,0.45)",
-                  }}
-                  data-testid="button-contact-us-navbar"
-                >
-                  Contact Us
-                </Button>
-              </span>
+              <Button
+                size="sm"
+                className="h-9 px-4 text-sm font-semibold rounded-md text-white border-0"
+                style={{
+                  background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)",
+                }}
+                data-testid="button-contact-us-navbar"
+              >
+                Contact Us
+              </Button>
             </Link>
-            <style>{`
-              @keyframes navbar-contact-ring {
-                0%   { transform: scale(1);    opacity: 0.6; }
-                100% { transform: scale(1.55); opacity: 0; }
-              }
-            `}</style>
             <Link href="/book-demo">
               <Button
                 size="sm"
