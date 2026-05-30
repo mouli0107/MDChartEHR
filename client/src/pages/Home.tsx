@@ -470,17 +470,20 @@ export default function Home() {
               </Button>
             </Link>
             <Link href="/contact">
-              <Button
-                size="lg"
-                className="h-14 px-8 font-bold text-lg text-white border-0 bg-cyan-500 hover:bg-cyan-400 transition-all hover:-translate-y-0.5"
-                style={{
-                  boxShadow: "0 0 20px 6px rgba(6,182,212,0.60), 0 0 40px 12px rgba(6,182,212,0.28)",
-                  animation: "cyan-glow-cta 2s ease-in-out infinite",
-                }}
-                data-testid="button-contact-us-cta"
-              >
-                Contact Us
-              </Button>
+              <span className="relative inline-flex">
+                <span className="absolute inset-0 rounded-md bg-cyan-300 opacity-0" style={{ animation: "cta-ring 2s ease-out infinite" }} />
+                <Button
+                  size="lg"
+                  className="relative h-14 px-8 font-bold text-lg text-white border-0 z-10"
+                  style={{
+                    background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)",
+                    boxShadow: "0 4px 22px rgba(6,182,212,0.50)",
+                  }}
+                  data-testid="button-contact-us-cta"
+                >
+                  Contact Us
+                </Button>
+              </span>
             </Link>
             <Link href="/resources/faqs">
               <Button
@@ -493,9 +496,9 @@ export default function Home() {
             </Link>
           </div>
           <style>{`
-            @keyframes cyan-glow-cta {
-              0%, 100% { box-shadow: 0 0 20px 6px rgba(6,182,212,0.60), 0 0 40px 12px rgba(6,182,212,0.28); }
-              50% { box-shadow: 0 0 32px 10px rgba(6,182,212,0.85), 0 0 60px 20px rgba(6,182,212,0.45); }
+            @keyframes cta-ring {
+              0%   { transform: scale(1);    opacity: 0.55; }
+              100% { transform: scale(1.6);  opacity: 0; }
             }
           `}</style>
           <p className="mt-6 text-blue-200 text-sm">No credit card required. Free migration assistance.</p>

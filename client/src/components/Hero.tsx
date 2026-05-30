@@ -83,23 +83,27 @@ export function Hero() {
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button
-                    size="lg"
-                    className="h-12 px-8 text-sm font-bold uppercase tracking-wide rounded-md transition-all hover:-translate-y-0.5 bg-cyan-500 hover:bg-cyan-400 text-white border-0"
-                    style={{
-                      boxShadow: "0 0 16px 4px rgba(6,182,212,0.55), 0 0 32px 8px rgba(6,182,212,0.25)",
-                      animation: "cyan-glow 2s ease-in-out infinite",
-                    }}
-                    data-testid="button-contact-us"
-                  >
-                    Contact Us
-                  </Button>
+                  <span className="relative inline-flex" style={{ animation: "contact-sonar 2s ease-out infinite" }}>
+                    {/* Sonar ring */}
+                    <span className="absolute inset-0 rounded-md bg-cyan-400 opacity-0" style={{ animation: "contact-ring 2s ease-out infinite" }} />
+                    <Button
+                      size="lg"
+                      className="relative h-12 px-8 text-sm font-bold uppercase tracking-wide rounded-md text-white border-0 z-10"
+                      style={{
+                        background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)",
+                        boxShadow: "0 4px 18px rgba(6,182,212,0.45)",
+                      }}
+                      data-testid="button-contact-us"
+                    >
+                      Contact Us
+                    </Button>
+                  </span>
                 </Link>
               </div>
               <style>{`
-                @keyframes cyan-glow {
-                  0%, 100% { box-shadow: 0 0 16px 4px rgba(6,182,212,0.55), 0 0 32px 8px rgba(6,182,212,0.25); }
-                  50% { box-shadow: 0 0 24px 8px rgba(6,182,212,0.80), 0 0 48px 16px rgba(6,182,212,0.40); }
+                @keyframes contact-ring {
+                  0%   { transform: scale(1);    opacity: 0.6; }
+                  100% { transform: scale(1.55); opacity: 0; }
                 }
               `}</style>
 
