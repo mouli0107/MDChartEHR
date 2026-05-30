@@ -460,18 +460,31 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/book-demo">
-              <Button 
-                size="lg" 
-                variant="secondary" 
+              <Button
+                size="lg"
+                variant="secondary"
                 className="h-14 px-8 text-primary font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
                 data-testid="button-schedule-demo"
               >
                 Book a Demo
               </Button>
             </Link>
+            <Link href="/contact">
+              <Button
+                size="lg"
+                className="h-14 px-8 font-bold text-lg text-white border-0 bg-cyan-500 hover:bg-cyan-400 transition-all hover:-translate-y-0.5"
+                style={{
+                  boxShadow: "0 0 20px 6px rgba(6,182,212,0.60), 0 0 40px 12px rgba(6,182,212,0.28)",
+                  animation: "cyan-glow-cta 2s ease-in-out infinite",
+                }}
+                data-testid="button-contact-us-cta"
+              >
+                Contact Us
+              </Button>
+            </Link>
             <Link href="/resources/faqs">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="h-14 px-8 bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white font-semibold text-lg"
                 data-testid="button-explore-faqs"
               >
@@ -479,6 +492,12 @@ export default function Home() {
               </Button>
             </Link>
           </div>
+          <style>{`
+            @keyframes cyan-glow-cta {
+              0%, 100% { box-shadow: 0 0 20px 6px rgba(6,182,212,0.60), 0 0 40px 12px rgba(6,182,212,0.28); }
+              50% { box-shadow: 0 0 32px 10px rgba(6,182,212,0.85), 0 0 60px 20px rgba(6,182,212,0.45); }
+            }
+          `}</style>
           <p className="mt-6 text-blue-200 text-sm">No credit card required. Free migration assistance.</p>
         </div>
       </section>

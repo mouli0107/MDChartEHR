@@ -74,15 +74,34 @@ export function Hero() {
 
               <div className="flex flex-col sm:flex-row gap-3 mb-10">
                 <Link href="/book-demo">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     className="h-12 px-8 text-sm font-bold uppercase tracking-wide shadow-lg shadow-blue-900/20 bg-primary hover:bg-blue-700 rounded-md transition-all hover:-translate-y-0.5"
                     data-testid="button-book-demo"
                   >
                      Book Demo
                   </Button>
                 </Link>
+                <Link href="/contact">
+                  <Button
+                    size="lg"
+                    className="h-12 px-8 text-sm font-bold uppercase tracking-wide rounded-md transition-all hover:-translate-y-0.5 bg-cyan-500 hover:bg-cyan-400 text-white border-0"
+                    style={{
+                      boxShadow: "0 0 16px 4px rgba(6,182,212,0.55), 0 0 32px 8px rgba(6,182,212,0.25)",
+                      animation: "cyan-glow 2s ease-in-out infinite",
+                    }}
+                    data-testid="button-contact-us"
+                  >
+                    Contact Us
+                  </Button>
+                </Link>
               </div>
+              <style>{`
+                @keyframes cyan-glow {
+                  0%, 100% { box-shadow: 0 0 16px 4px rgba(6,182,212,0.55), 0 0 32px 8px rgba(6,182,212,0.25); }
+                  50% { box-shadow: 0 0 24px 8px rgba(6,182,212,0.80), 0 0 48px 16px rgba(6,182,212,0.40); }
+                }
+              `}</style>
 
               {/* Clean Stats Row - Integrated */}
               <div className="flex items-center gap-8 border-t border-slate-200 pt-6">

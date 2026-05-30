@@ -1140,8 +1140,8 @@ export default function AdminLeads() {
                         <div>
                           <label className="text-xs font-medium text-slate-600 mb-1 block">
                             SEO Title
-                            <span className={`ml-2 text-xs ${blogForm.metaTitle.length > 60 ? "text-red-500" : "text-slate-400"}`}>
-                              {blogForm.metaTitle.length}/60
+                            <span className={`ml-2 text-xs ${blogForm.metaTitle.length > 200 ? "text-red-500" : "text-slate-400"}`}>
+                              {blogForm.metaTitle.length}/200
                             </span>
                           </label>
                           <Input value={blogForm.metaTitle} onChange={e => setBlogForm(f => ({ ...f, metaTitle: e.target.value }))} className="text-sm" placeholder="Same as title if empty" />
@@ -1332,8 +1332,8 @@ export default function AdminLeads() {
                               <div className="md:col-span-2">
                                 <label className="text-xs font-medium text-slate-600 mb-1 block">
                                   SEO Title
-                                  <span className={`ml-2 text-xs ${seoForm.metaTitle.length > 60 ? "text-red-500" : "text-slate-400"}`}>
-                                    {seoForm.metaTitle.length}/60 chars
+                                  <span className={`ml-2 text-xs ${seoForm.metaTitle.length > 200 ? "text-red-500" : "text-slate-400"}`}>
+                                    {seoForm.metaTitle.length}/200 chars
                                   </span>
                                 </label>
                                 <Input
