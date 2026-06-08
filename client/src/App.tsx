@@ -1,9 +1,11 @@
 import { Switch, Route, useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { MessageSquare } from "lucide-react";
+import { ContactModal } from "@/components/ContactModal";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import RCMPage from "@/pages/RCM";
@@ -68,6 +70,38 @@ import { usePageTracker } from "@/hooks/use-page-tracker";
 import { CookieConsent } from "@/components/CookieConsent";
 import { OrganizationSchema } from "@/components/SchemaMarkup";
 
+// ── Fix 4: Global floating Contact Us button ─────────────────────────────────
+// Visible on every page on all devices. Hidden on admin, /contact, /book-demo
+// (those pages already have their own prominent CTAs).
+function GlobalContactButton() {
+  const [location] = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const hideOn = ["/admin", "/contact", "/book-demo"];
+  if (hideOn.some((p) => location.startsWith(p))) return null;
+
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-[110px] right-4 z-[99999] flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-semibold shadow-lg hover:opacity-90 transition-opacity"
+        style={{ background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)" }}
+        aria-label="Contact Us"
+        data-testid="button-floating-contact"
+      >
+        <MessageSquare className="h-4 w-4 shrink-0" />
+        <span className="hidden sm:inline">Contact Us</span>
+      </button>
+      <ContactModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        requestType="contact"
+        title="Contact Us"
+      />
+    </>
+  );
+}
+
 function ScrollToTop() {
   const [location] = useLocation();
   
@@ -88,6 +122,7 @@ function Router() {
     <>
       <ScrollToTop />
       <PageTracker />
+      <GlobalContactButton />
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/rcm" component={RCMPage} />
@@ -148,7 +183,7 @@ function Router() {
         <Route path="/admin/login" component={AdminLoginPage} />
         <Route path="/admin/leads" component={AdminLeadsPage} />
         <Route path="/admin/analytics" component={AdminAnalyticsPage} />
-        
+
         <Route component={NotFound} />
       </Switch>
     </>
