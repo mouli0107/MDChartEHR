@@ -101,7 +101,7 @@ export default function LabIntegration() {
             </div>
             
             <div className="flex justify-center lg:justify-end">
-              <img src={labHeroImage} alt="Lab integration test results" className="rounded-2xl shadow-2xl w-full" loading="lazy" />
+              <img src={labHeroImage} alt="Lab integration test results" className="rounded-2xl shadow-2xl w-full" loading="lazy" width="1408" height="768" />
             </div>
           </div>
         </div>

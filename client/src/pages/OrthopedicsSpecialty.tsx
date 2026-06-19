@@ -111,7 +111,7 @@ export default function OrthopedicsSpecialty() {
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <div className="absolute -inset-4 bg-cyan-500/20 rounded-3xl blur-xl" />
-                <img src={orthopedicsHeroImage} alt="Orthopedic specialist examining X-ray" className="rounded-2xl shadow-2xl w-full relative z-10 border border-slate-700" loading="lazy" />
+                <img src={orthopedicsHeroImage} alt="Orthopedic specialist examining X-ray" className="rounded-2xl shadow-2xl w-full relative z-10 border border-slate-700" loading="lazy" width="1408" height="768" />
               </div>
             </div>
           </div>

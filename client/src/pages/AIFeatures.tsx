@@ -8,7 +8,13 @@ import {
   CheckCircle2, ArrowRight, Sparkles, ChevronRight
 } from "lucide-react";
 import aiHeroImage from "@assets/generated_images/ai_brain_hero.png";
+import aiHeroImageWebp from "@assets/generated_images/ai_brain_hero.webp";
+import aiHeroImageWebp480 from "@assets/generated_images/ai_brain_hero_480w.webp";
+import aiHeroImageWebp960 from "@assets/generated_images/ai_brain_hero_960w.webp";
 import aiTemplatesImage from "@assets/generated_images/ai_templates_autofill_ui.png";
+import aiTemplatesImageWebp from "@assets/generated_images/ai_templates_autofill_ui.webp";
+import aiTemplatesImageWebp480 from "@assets/generated_images/ai_templates_autofill_ui_480w.webp";
+import aiTemplatesImageWebp960 from "@assets/generated_images/ai_templates_autofill_ui_960w.webp";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -142,11 +148,14 @@ export default function AIFeaturesPage() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="lg:w-1/2 shrink-0 flex items-center justify-center px-6 pb-6 pt-24 lg:pt-6"
           >
-            <img
-              src={aiHeroImage}
-              alt="AI brain with circuit board and ECG heartbeat"
-              className="w-full h-auto object-contain"
-            />
+            <picture>
+              <source srcSet={`${aiHeroImageWebp480} 480w, ${aiHeroImageWebp960} 960w, ${aiHeroImageWebp} 1686w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+              <img
+                src={aiHeroImage}
+                alt="AI brain with circuit board and ECG heartbeat"
+                className="w-full h-auto object-contain"
+              />
+            </picture>
           </motion.div>
         </div>
 
@@ -204,11 +213,14 @@ export default function AIFeaturesPage() {
             {/* Image */}
             <div className="relative">
               <div className="rounded-2xl overflow-hidden shadow-2xl shadow-slate-200/60">
-                <img
-                  src={aiTemplatesImage}
-                  alt="AI intelligent auto-fill for any note template"
-                  className="w-full h-auto object-cover"
-                />
+                <picture>
+                  <source srcSet={`${aiTemplatesImageWebp480} 480w, ${aiTemplatesImageWebp960} 960w, ${aiTemplatesImageWebp} 2752w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                  <img
+                    src={aiTemplatesImage}
+                    alt="AI intelligent auto-fill for any note template"
+                    className="w-full h-auto object-cover"
+                  />
+                </picture>
               </div>
               <div className="absolute -z-10 w-64 h-64 bg-blue-300/20 rounded-full blur-3xl -right-10 top-10" />
             </div>

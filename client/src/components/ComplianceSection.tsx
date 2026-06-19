@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import { ShieldCheck, Lock, FileCheck, Server } from "lucide-react";
 import shieldImage from "@assets/generated_images/secure_data_lock_shield_for_compliance.png";
+import shieldImageWebp from "@assets/generated_images/secure_data_lock_shield_for_compliance.webp";
+import shieldImageWebp480 from "@assets/generated_images/secure_data_lock_shield_for_compliance_480w.webp";
+import shieldImageWebp960 from "@assets/generated_images/secure_data_lock_shield_for_compliance_960w.webp";
 import { Button } from "./ui/button";
 
 export function ComplianceSection() {
@@ -20,7 +23,10 @@ export function ComplianceSection() {
              <div className="absolute -inset-4 bg-blue-100/50 rounded-full blur-3xl -z-10" />
              
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-100 bg-white">
-              <img src={shieldImage} alt="HIPAA Compliance Security" className="w-full h-auto p-8 bg-slate-50" loading="lazy" />
+              <picture>
+                <source srcSet={`${shieldImageWebp480} 480w, ${shieldImageWebp960} 960w, ${shieldImageWebp} 1408w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                <img src={shieldImage} alt="HIPAA Compliance Security" className="w-full h-auto p-8 bg-slate-50" loading="lazy" width="1408" height="768" />
+              </picture>
             </div>
             
             {/* Floating Badges */}

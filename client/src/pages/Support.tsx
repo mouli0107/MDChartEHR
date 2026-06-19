@@ -8,6 +8,9 @@ import {
   BookOpen, Video, Users, ArrowRight, CheckCircle 
 } from "lucide-react";
 import heroImage from "@assets/generated_images/medical_support_team_helping.png";
+import heroImageWebp from "@assets/generated_images/medical_support_team_helping.webp";
+import heroImageWebp480 from "@assets/generated_images/medical_support_team_helping_480w.webp";
+import heroImageWebp960 from "@assets/generated_images/medical_support_team_helping_960w.webp";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -84,7 +87,9 @@ export default function Support() {
             className="max-w-5xl mx-auto"
           >
             <div className="rounded-3xl overflow-hidden shadow-2xl">
-              <img 
+              <picture>
+                <source srcSet={`${heroImageWebp480} 480w, ${heroImageWebp960} 960w, ${heroImageWebp} 1408w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                <img 
                 src={heroImage} 
                 alt="Professional support team helping customers" 
                 className="w-full h-[350px] object-cover"
@@ -92,6 +97,7 @@ export default function Support() {
                 width="800"
                 height="350"
               />
+              </picture>
             </div>
           </motion.div>
         </div>

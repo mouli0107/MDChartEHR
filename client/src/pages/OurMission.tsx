@@ -5,7 +5,13 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Target, Users, Heart, TrendingUp, Star, ArrowRight, CheckCircle, FileText, DollarSign, CalendarDays, UserCircle } from "lucide-react";
 import heroImage from "@assets/generated_images/healthcare_team_mission_image.png";
+import heroImageWebp from "@assets/generated_images/healthcare_team_mission_image.webp";
+import heroImageWebp480 from "@assets/generated_images/healthcare_team_mission_image_480w.webp";
+import heroImageWebp960 from "@assets/generated_images/healthcare_team_mission_image_960w.webp";
 import patientCareImage from "@assets/generated_images/caring_doctor_patient_consultation.png";
+import patientCareImageWebp from "@assets/generated_images/caring_doctor_patient_consultation.webp";
+import patientCareImageWebp480 from "@assets/generated_images/caring_doctor_patient_consultation_480w.webp";
+import patientCareImageWebp960 from "@assets/generated_images/caring_doctor_patient_consultation_960w.webp";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -80,7 +86,9 @@ export default function OurMission() {
               className="relative"
             >
               <div className="rounded-3xl overflow-hidden shadow-2xl">
-                <img 
+                <picture>
+                  <source srcSet={`${heroImageWebp480} 480w, ${heroImageWebp960} 960w, ${heroImageWebp} 1408w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                  <img 
                   src={heroImage} 
                   alt="Healthcare team working together" 
                   className="w-full h-[400px] object-cover"
@@ -88,6 +96,7 @@ export default function OurMission() {
                   width="800"
                   height="400"
                 />
+                </picture>
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 border border-slate-100">
                 <div className="flex items-center gap-3">
@@ -209,7 +218,9 @@ export default function OurMission() {
               viewport={{ once: true }}
               className="rounded-3xl overflow-hidden shadow-xl"
             >
-              <img 
+              <picture>
+                <source srcSet={`${patientCareImageWebp480} 480w, ${patientCareImageWebp960} 960w, ${patientCareImageWebp} 1280w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                <img 
                 src={patientCareImage} 
                 alt="Doctor caring for patient" 
                 className="w-full h-[350px] object-cover"
@@ -217,6 +228,7 @@ export default function OurMission() {
                 width="800"
                 height="350"
               />
+              </picture>
             </motion.div>
 
             <motion.div

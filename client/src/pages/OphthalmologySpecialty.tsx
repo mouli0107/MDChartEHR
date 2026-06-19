@@ -104,12 +104,14 @@ export default function OphthalmologySpecialty() {
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-r from-rose-400/20 to-orange-400/20 rounded-3xl blur-xl" />
-                <img 
-                  src={ophthalmologyHeroImage} 
-                  alt="Ophthalmologist eye examination" 
+                <img
+                  src={ophthalmologyHeroImage}
+                  alt="Ophthalmologist eye examination"
                   className="rounded-2xl shadow-2xl w-full max-w-lg relative z-10 ring-1 ring-rose-100"
                   data-testid="img-ophthalmology-hero"
                   loading="lazy"
+                  width="1408"
+                  height="768"
                 />
               </div>
             </div>

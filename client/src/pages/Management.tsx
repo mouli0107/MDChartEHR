@@ -5,6 +5,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Users, ArrowRight } from "lucide-react";
 import heroImage from "@assets/generated_images/corporate_leadership_team_meeting.png";
+import heroImageWebp from "@assets/generated_images/corporate_leadership_team_meeting.webp";
+import heroImageWebp480 from "@assets/generated_images/corporate_leadership_team_meeting_480w.webp";
+import heroImageWebp960 from "@assets/generated_images/corporate_leadership_team_meeting_960w.webp";
 import aaronImage from "@assets/Gemini_Generated_Image_7ejgbg7ejgbg7ejg_1770827867393.png";
 import maitryImage from "@assets/Gemini_Generated_Image_4s1te44s1te44s1t_1770827529031.png";
 import danielImage from "@assets/Gemini_Generated_Image_60hu5060hu5060hu_1770827363357.png";
@@ -86,7 +89,9 @@ export default function Management() {
             className="max-w-5xl mx-auto"
           >
             <div className="rounded-3xl overflow-hidden shadow-2xl">
-              <img 
+              <picture>
+                <source srcSet={`${heroImageWebp480} 480w, ${heroImageWebp960} 960w, ${heroImageWebp} 1408w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                <img 
                 src={heroImage} 
                 alt="Leadership team in meeting" 
                 className="w-full h-[400px] object-cover"
@@ -94,6 +99,7 @@ export default function Management() {
                 width="800"
                 height="400"
               />
+              </picture>
             </div>
           </motion.div>
         </div>
@@ -130,11 +136,13 @@ export default function Management() {
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="flex-shrink-0">
                     <div className="w-32 h-32 rounded-2xl overflow-hidden shadow-lg">
-                      <img 
-                        src={member.image} 
+                      <img
+                        src={member.image}
                         alt={member.name}
                         className="w-full h-full object-cover"
                         loading="lazy"
+                        width="128"
+                        height="128"
                       />
                     </div>
                   </div>

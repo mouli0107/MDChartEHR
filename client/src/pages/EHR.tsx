@@ -8,7 +8,9 @@ import ehrDashboardImage from "@assets/image_1773987891246.png";
 import patientChartImage from "@assets/image_1773988273994.png";
 import dermchartsSlide from "@assets/mdcharts_dermcharts_slide.png";
 import aiMedicalIcon from "@assets/generated_images/ai_medical_charting_icon.png";
+import aiMedicalIconWebp from "@assets/generated_images/ai_medical_charting_icon.webp";
 import aiScribeIcon from "@assets/generated_images/ai_ambient_scribe_icon.png";
+import aiScribeIconWebp from "@assets/generated_images/ai_ambient_scribe_icon.webp";
 
 const features = [
   {
@@ -111,11 +113,13 @@ export default function EHRPage() {
               className="relative"
             >
               <div className="relative rounded-2xl overflow-hidden shadow-xl">
-                <img 
-                  src={dermchartsSlide} 
-                  alt="MD Charts EHR specialty platforms" 
+                <img
+                  src={dermchartsSlide}
+                  alt="MD Charts EHR specialty platforms"
                   className="w-full h-auto"
                   loading="lazy"
+                  width="600"
+                  height="282"
                 />
               </div>
             </motion.div>
@@ -152,7 +156,10 @@ export default function EHRPage() {
 
               {/* AI Callout */}
               <div className="flex items-start gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
-                <img src={aiScribeIcon} alt="AI Ambient Scribe" className="h-14 w-14 rounded-lg object-cover flex-shrink-0" />
+                <picture>
+                  <source srcSet={aiScribeIconWebp} type="image/webp" />
+                  <img src={aiScribeIcon} alt="AI Ambient Scribe" className="h-14 w-14 rounded-lg object-cover flex-shrink-0" width="56" height="56" />
+                </picture>
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
                     <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -177,11 +184,13 @@ export default function EHRPage() {
               className="relative"
             >
               <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-white">
-                <img 
-                  src={ehrDashboardImage} 
-                  alt="MD Charts EHR Dashboard showing unsigned items management" 
+                <img
+                  src={ehrDashboardImage}
+                  alt="MD Charts EHR Dashboard showing unsigned items management"
                   className="w-full h-auto block"
                   loading="lazy"
+                  width="1413"
+                  height="815"
                 />
               </div>
             </motion.div>
@@ -201,11 +210,13 @@ export default function EHRPage() {
               className="relative"
             >
               <div className="relative rounded-lg overflow-hidden shadow-2xl bg-white">
-                <img 
-                  src={patientChartImage} 
-                  alt="MD Charts Patient Chart with comprehensive medical history" 
+                <img
+                  src={patientChartImage}
+                  alt="MD Charts Patient Chart with comprehensive medical history"
                   className="w-full h-auto block"
                   loading="lazy"
+                  width="1902"
+                  height="972"
                 />
               </div>
             </motion.div>

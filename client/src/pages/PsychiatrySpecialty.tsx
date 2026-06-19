@@ -119,7 +119,7 @@ export default function PsychiatrySpecialty() {
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <div className="absolute -inset-6 bg-gradient-to-br from-teal-200/30 to-cyan-200/30 rounded-3xl blur-2xl" />
-                <img src={psychiatryHeroImage} alt="Psychiatrist patient consultation" className="rounded-2xl shadow-xl w-full relative z-10 border-4 border-white" loading="lazy" />
+                <img src={psychiatryHeroImage} alt="Psychiatrist patient consultation" className="rounded-2xl shadow-xl w-full relative z-10 border-4 border-white" loading="lazy" width="1408" height="768" />
               </div>
             </div>
           </div>

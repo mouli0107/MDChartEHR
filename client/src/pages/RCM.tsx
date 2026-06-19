@@ -6,7 +6,11 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ContactModal } from "@/components/ContactModal";
 import rcmImage from "@assets/generated_images/abstract_medical_financial_growth_chart.png";
+import rcmImageWebp from "@assets/generated_images/abstract_medical_financial_growth_chart.webp";
+import rcmImageWebp480 from "@assets/generated_images/abstract_medical_financial_growth_chart_480w.webp";
+import rcmImageWebp960 from "@assets/generated_images/abstract_medical_financial_growth_chart_960w.webp";
 import trizettoBadge from "@assets/generated_images/trizetto_provider_solutions_integration_badge.png";
+import trizettoBadgeWebp from "@assets/generated_images/trizetto_provider_solutions_integration_badge.webp";
 
 export default function RCMPage() {
   const [modalState, setModalState] = useState<{
@@ -40,7 +44,10 @@ export default function RCMPage() {
               {/* Highlighted TriZetto Integration */}
               <div className="flex items-center gap-3 mb-6 w-fit">
                  <div className="h-8 w-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
-                   <img src={trizettoBadge} alt="TriZetto" className="w-full h-full object-cover" loading="lazy" />
+                   <picture>
+                     <source srcSet={trizettoBadgeWebp} type="image/webp" />
+                     <img src={trizettoBadge} alt="TriZetto" className="w-full h-full object-cover" loading="lazy" width="32" height="32" />
+                   </picture>
                  </div>
                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
                    Premier Clearinghouse Integration: <span className="text-blue-600">TriZetto Provider Solutions</span>
@@ -96,12 +103,17 @@ export default function RCMPage() {
                    </div>
                    <div className="text-[10px] font-mono text-slate-400 ml-2">rcm_dashboard_v4.2.exe</div>
                  </div>
-                 <img 
-                  src={rcmImage} 
-                  alt="RCM Dashboard Analytics" 
+                 <picture>
+                   <source srcSet={`${rcmImageWebp480} 480w, ${rcmImageWebp960} 960w, ${rcmImageWebp} 1408w`} sizes="(max-width: 1024px) 100vw, 50vw" type="image/webp" />
+                   <img
+                  src={rcmImage}
+                  alt="RCM Dashboard Analytics"
                   className="w-full h-auto object-cover"
                   loading="lazy"
+                  width="1408"
+                  height="768"
                 />
+                 </picture>
                 
                 {/* Overlay Metrics */}
                 <div className="absolute bottom-4 left-4 right-4 grid grid-cols-3 gap-2">
