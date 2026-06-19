@@ -90,7 +90,7 @@ function GlobalContactButton() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-[110px] right-4 z-[99999] flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-semibold shadow-lg hover:opacity-90 transition-opacity"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[99999] flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-semibold shadow-lg hover:opacity-90 transition-opacity"
         style={{ background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)" }}
         aria-label="Contact Us"
         data-testid="button-floating-contact"
