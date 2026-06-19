@@ -88,7 +88,7 @@ export default function Telehealth() {
             </div>
             
             <div className="order-first lg:order-last">
-              <img src={telehealthHeroImage} alt="Telehealth video consultation" className="rounded-2xl shadow-2xl w-full" loading="lazy" />
+              <img src={telehealthHeroImage} alt="Telehealth video consultation" className="rounded-2xl shadow-2xl w-full" loading="lazy" width="1408" height="768" />
             </div>
           </div>
         </div>

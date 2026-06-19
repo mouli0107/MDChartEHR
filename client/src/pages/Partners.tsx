@@ -116,11 +116,13 @@ export default function Partners() {
               >
                 <div className="flex items-start gap-6">
                   <div className="w-32 h-20 flex-shrink-0 flex items-center justify-center bg-slate-50 rounded-xl p-3 group-hover:bg-white group-hover:shadow-sm transition-all">
-                    <img 
-                      src={partner.logo} 
-                      alt={partner.name} 
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
                       className="w-full h-full object-contain"
                       loading="lazy"
+                      width="128"
+                      height="80"
                     />
                   </div>
                   <div className="flex-1">

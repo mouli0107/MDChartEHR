@@ -88,7 +88,7 @@ export default function MobileApp() {
             </div>
             
             <div className="order-first lg:order-last">
-              <img src={mobileAppHeroImage} alt="Mobile EHR app usage" className="rounded-2xl shadow-2xl w-full" loading="lazy" />
+              <img src={mobileAppHeroImage} alt="Mobile EHR app usage" className="rounded-2xl shadow-2xl w-full" loading="lazy" width="1408" height="768" />
             </div>
           </div>
         </div>

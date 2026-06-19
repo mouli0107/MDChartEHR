@@ -136,7 +136,7 @@ export default function NeurologySpecialty() {
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <div className="absolute -inset-4 bg-slate-500/20 rounded-3xl blur-xl" />
-                <img src={neurologyHeroImage} alt="Neurologist analyzing brain scan" className="rounded-2xl shadow-2xl w-full relative z-10 ring-2 ring-slate-600/30" loading="lazy" />
+                <img src={neurologyHeroImage} alt="Neurologist analyzing brain scan" className="rounded-2xl shadow-2xl w-full relative z-10 ring-2 ring-slate-600/30" loading="lazy" width="1408" height="768" />
               </div>
             </div>
           </div>

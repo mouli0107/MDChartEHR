@@ -75,7 +75,7 @@ export default function GastroenterologySpecialty() {
             <div className="order-2 lg:order-1 flex justify-center lg:justify-start">
               <div className="relative">
                 <div className="absolute -inset-4 bg-emerald-500/10 rounded-3xl blur-xl" />
-                <img src={gastroHeroImage} alt="Gastroenterologist reviewing scan" className="rounded-2xl shadow-2xl w-full relative z-10 border-4 border-white" loading="lazy" />
+                <img src={gastroHeroImage} alt="Gastroenterologist reviewing scan" className="rounded-2xl shadow-2xl w-full relative z-10 border-4 border-white" loading="lazy" width="1408" height="768" />
               </div>
             </div>
             

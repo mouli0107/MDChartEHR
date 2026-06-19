@@ -70,7 +70,7 @@ export function RCMSection() {
              className="relative"
           >
             <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
-              <img src={rcmImage} alt="Financial Analytics" className="w-full h-auto" loading="lazy" />
+              <img src={rcmImage} alt="Financial Analytics" className="w-full h-auto" loading="lazy" width="1408" height="768" />
             </div>
           </motion.div>
         </div>

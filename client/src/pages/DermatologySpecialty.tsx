@@ -394,7 +394,7 @@ export default function DermatologySpecialty() {
                   ))}
                 </div>
                 <div className="rounded-2xl overflow-hidden shadow-xl">
-                  <img src={drFoxStyleImage} alt="Medical dermatology workflow" className="w-full h-auto" loading="lazy" />
+                  <img src={drFoxStyleImage} alt="Medical dermatology workflow" className="w-full h-auto" loading="lazy" width="1408" height="768" />
                 </div>
               </div>
             </TabsContent>
@@ -412,7 +412,7 @@ export default function DermatologySpecialty() {
                   ))}
                 </div>
                 <div className="rounded-2xl overflow-hidden shadow-xl">
-                  <img src={laserTreatmentImage} alt="Surgical dermatology workflow" className="w-full h-auto" loading="lazy" />
+                  <img src={laserTreatmentImage} alt="Surgical dermatology workflow" className="w-full h-auto" loading="lazy" width="1408" height="768" />
                 </div>
               </div>
             </TabsContent>
@@ -430,7 +430,7 @@ export default function DermatologySpecialty() {
                   ))}
                 </div>
                 <div className="rounded-2xl overflow-hidden shadow-xl">
-                  <img src={happyPatientImage} alt="Cosmetic dermatology workflow" className="w-full h-auto" loading="lazy" />
+                  <img src={happyPatientImage} alt="Cosmetic dermatology workflow" className="w-full h-auto" loading="lazy" width="1408" height="768" />
                 </div>
               </div>
             </TabsContent>
@@ -463,11 +463,13 @@ export default function DermatologySpecialty() {
                   key={index}
                   className="relative group overflow-hidden rounded-xl shadow-lg aspect-square"
                 >
-                  <img 
-                    src={image.src} 
+                  <img
+                    src={image.src}
                     alt={image.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     loading="lazy"
+                    width="400"
+                    height="400"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-3">
@@ -490,11 +492,13 @@ export default function DermatologySpecialty() {
                   key={index}
                   className="relative group overflow-hidden rounded-xl shadow-lg aspect-square"
                 >
-                  <img 
-                    src={image.src} 
+                  <img
+                    src={image.src}
                     alt={image.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     loading="lazy"
+                    width="400"
+                    height="400"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-3">

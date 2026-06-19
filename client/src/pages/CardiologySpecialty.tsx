@@ -159,11 +159,13 @@ export default function CardiologySpecialty() {
             transition={{ duration: 1 }}
             className="h-full"
           >
-            <img 
-              src={heroTeamImage} 
-              alt="Cardiology team" 
+            <img
+              src={heroTeamImage}
+              alt="Cardiology team"
               className="w-full h-full object-cover min-h-[500px] lg:min-h-screen"
               loading="lazy"
+              width="1280"
+              height="896"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 to-transparent lg:from-slate-900/30"></div>
             

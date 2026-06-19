@@ -86,7 +86,7 @@ export default function EPrescribing() {
             </div>
             
             <div className="flex justify-center lg:justify-end">
-              <img src={eprescribingHeroImage} alt="e-Prescribing on tablet device" className="rounded-2xl shadow-2xl w-full" loading="lazy" />
+              <img src={eprescribingHeroImage} alt="e-Prescribing on tablet device" className="rounded-2xl shadow-2xl w-full" loading="lazy" width="1408" height="768" />
             </div>
           </div>
         </div>

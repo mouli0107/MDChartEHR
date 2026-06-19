@@ -20,7 +20,7 @@ export function ComplianceSection() {
              <div className="absolute -inset-4 bg-blue-100/50 rounded-full blur-3xl -z-10" />
              
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-100 bg-white">
-              <img src={shieldImage} alt="HIPAA Compliance Security" className="w-full h-auto p-8 bg-slate-50" loading="lazy" />
+              <img src={shieldImage} alt="HIPAA Compliance Security" className="w-full h-auto p-8 bg-slate-50" loading="lazy" width="1408" height="768" />
             </div>
             
             {/* Floating Badges */}

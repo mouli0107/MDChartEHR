@@ -111,7 +111,7 @@ export default function ENTSpecialty() {
             </div>
             
             <div className="flex justify-center lg:justify-end">
-              <img src={entHeroImage} alt="ENT doctor ear examination" className="rounded-2xl shadow-2xl w-full ring-4 ring-white" loading="lazy" />
+              <img src={entHeroImage} alt="ENT doctor ear examination" className="rounded-2xl shadow-2xl w-full ring-4 ring-white" loading="lazy" width="1408" height="768" />
             </div>
           </div>
         </div>

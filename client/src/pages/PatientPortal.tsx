@@ -88,7 +88,7 @@ export default function PatientPortal() {
             </div>
             
             <div className="flex justify-center lg:justify-end">
-              <img src={patientPortalHeroImage} alt="Patient portal on devices" className="rounded-2xl shadow-2xl w-full" loading="lazy" />
+              <img src={patientPortalHeroImage} alt="Patient portal on devices" className="rounded-2xl shadow-2xl w-full" loading="lazy" width="1408" height="768" />
             </div>
           </div>
         </div>
