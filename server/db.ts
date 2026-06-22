@@ -149,6 +149,12 @@ Patients are not the problem. Friction is. Remove the friction, and the money fo
       '5 min read',
       '/assets/generated_images/patient_payment_reception.png',
     ]);
+    // Patch image on the post if it was already inserted without one
+    await pool.query(`
+      UPDATE blog_posts
+      SET image = '/assets/generated_images/patient_payment_reception.png'
+      WHERE slug = 'patient-collections-reduce-friction' AND (image IS NULL OR image = '')
+    `);
     console.log("[db] migrations completed successfully");
   } catch (err) {
     // Log but don't crash — migration may have already run
