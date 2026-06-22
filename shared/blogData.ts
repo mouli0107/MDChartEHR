@@ -1829,6 +1829,7 @@ Patients are not the problem. Friction is. Remove the friction, and the money fo
     author: "MDCharts RCM Team",
     date: "June 2026",
     readTime: "5 min read",
+    image: "/assets/generated_images/patient_payment_reception.png",
   },
 ];
 
