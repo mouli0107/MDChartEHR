@@ -83,8 +83,8 @@ export async function runMigrations() {
     `);
     // Insert new blog posts that may not exist yet (safe upsert — skips if slug already present)
     await pool.query(`
-      INSERT INTO blog_posts (slug, title, excerpt, content, category, category_label, author, published_at, read_time, published)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true)
+      INSERT INTO blog_posts (slug, title, excerpt, content, category, category_label, author, published_at, read_time, image, published)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, true)
       ON CONFLICT (slug) DO NOTHING
     `, [
       'patient-collections-reduce-friction',
@@ -147,6 +147,7 @@ Patients are not the problem. Friction is. Remove the friction, and the money fo
       'MDCharts RCM Team',
       'June 2026',
       '5 min read',
+      '/assets/generated_images/patient_payment_reception.png',
     ]);
     console.log("[db] migrations completed successfully");
   } catch (err) {
