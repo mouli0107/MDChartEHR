@@ -209,10 +209,6 @@ export default function Home() {
                   </div>
                 ))}
               </motion.div>
-            
-            {/* New homepage content */}
-            
-            
 
           </div>
         </div>
@@ -243,11 +239,7 @@ export default function Home() {
             <p className="text-lg text-slate-600 mx-auto">
               With HIPAA-compliant EMR features and cloud EMR software, we give practices secure access to important information while supporting flexible daily operations. Our medical coding, as well as EHR and billing software, helps reduce disconnected processes, improve day-to-day efficiency, and create a more complete practice management experience.
             </p>
-            
-            {/* New homepage content */}
-            
-            
-            
+                        
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
@@ -296,10 +288,6 @@ export default function Home() {
               <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
                MD Charts make it easy for your healthcare organization to optimize its documentation, become more efficient, and manage its finances effectively. Contact us now for a free demonstration!
               </motion.p>
-            
-            
-            {/* New homepage content */}
-            
             
           </div>
         </div>
