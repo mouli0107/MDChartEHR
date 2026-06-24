@@ -536,11 +536,37 @@ export default function Home() {
 
       <ComplianceSection />
       <BlogSection />
-      
+
+<section class="py-20 bg-white border-b border-slate-100">
+<div class="container mx-auto px-4 md:px-6">
+<h2 className="text-3xl md:text-5xl font-bold text-black mb-6 tracking-tight">Frequently Asked Questions</h2>
+<details style="padding: 10px">
+  <summary style="font-weight: bold; cursor: pointer">What features are included in MD Charts’ EHR and billing software?</summary>
+  <p style="padding-top: 10px">MD Charts provides an integrated EHR and billing software solution designed to streamline clinical and administrative workflows. Features include electronic medical records, appointment scheduling, medical billing, practice management tools, patient charting, e-prescribing, and reporting capabilities.</p>
+</details>
+<details style="padding: 10px">
+  <summary style="font-weight: bold; cursor: pointer">Does MD Charts provide a HIPAA-compliant EMR solution?</summary>
+  <p style="padding-top: 10px">Yes. MD Charts offers a HIPAA-compliant EMR designed to help healthcare practices securely manage patient records and protected health information. The system includes security measures, user access controls, and electronic documentation tools that support compliance requirements while helping providers maintain accurate and accessible patient records.</p>
+</details>
+<details style="padding: 10px">
+  <summary style="font-weight: bold; cursor: pointer">Do you offer specialty-specific solutions such as dermatology EHR software and OBGYN EMR software?</summary>
+  <p style="padding-top: 10px">Yes, we provide specialty-focused solutions, including dermatology EHR and OBGYN EMR software. These systems support specialty-specific workflows, documentation requirements, patient charting, and treatment management, helping providers improve efficiency while maintaining detailed and organized patient records.</p>
+</details>
+<details style="padding: 10px">
+  <summary style="font-weight: bold; cursor: pointer">How does the medical coding software help improve billing accuracy?</summary>
+  <p style="padding-top: 10px">We include medical coding software designed to support accurate documentation and claim submission processes. By helping providers capture appropriate coding information and integrate billing workflows with patient records, the software can help reduce administrative errors, improve reimbursement efficiency, and simplify practice management tasks.</p>
+</details>
+<details style="padding: 10px">
+  <summary style="font-weight: bold; cursor: pointer">How do I get started with MD Charts? </summary>
+  <p style="padding-top: 10px">Getting started is simple. Contact MD Charts to schedule a consultation or product demonstration. Our team will discuss your practice’s needs, review available EHR and billing software options, explain implementation and training processes, and help determine the best solution for your specialty and workflow requirements.</p>
+</details>
+</div>
+</section>
+
       {/* CTA Section */}
       <section className="py-24 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-        
+
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">
             Still have questions or want to book a demo?
