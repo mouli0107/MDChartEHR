@@ -165,51 +165,7 @@ export default function Home() {
               ))}
             </motion.div>
             
-            
-            {/* New homepage content */}
-            
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-            
-            <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
-                Build a Smarter Practice with Medical Coding, EHR, and Billing Software
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-               At MD Charts, we help medical practices simplify daily work with intuitive, specialty-focused technology. Our platform brings charting, scheduling, documentation, coding, and medical billing together in one connected experience, so providers can spend less time clicking and more time caring for patients.
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-               Whether a practice needs dermatology EMR, OBGYN EMR, or flexible EMR software for a growing team, our solutions are designed to support real clinical workflows with clarity, speed, and confidence.
-              </motion.p>
-              
-               <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
-                A Better Way to Manage Clinical Workflows
-              </motion.h2>
-              
-               <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-              We build our services for practices seeking a reliable <a href= "https://mdchartsehr.com/ehr" title= "EHR System" style="text-decoration: underline">EHR system</a> that avoids unnecessary complexity. From patient records to task management, our technologies help teams organize, decrease administrative stress, and improve office communication.
-              </motion.p>
-              
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-              Our system supports:
-              </motion.p>
-              
-              <motion.div variants={fadeInUp} className="space-y-4">
-                {[
-                  "Streamlined charting and documentation",
-                  "Integrated coding and billing workflows",
-                  "Specialty-specific templates and tools",
-                  "Secure access for busy, modern practices",
-                  "Practical support for providers and staff",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3" data-testid={`welcome-feature-${i}`}>
-                    <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-medium">{item}</span>
-                  </div>
-                ))}
-              </motion.div>
-
+           
           </div>
         </div>
       </section>
@@ -226,19 +182,7 @@ export default function Home() {
               With so many EHR systems available, here's what sets MD Charts apart
             </p>
             
-           
-            {/* New homepage content */}
-            
-            <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-            <p className="text-lg text-slate-600 mx-auto">
-              Every practice needs software that feels practical, secure, and easy to use. Every specialty works differently, which is why we offer dedicated solutions such as dermatology EHR and EMR software tools that help practices manage images, notes, visits, and documentation more efficiently. Our <a href= "https://mdchartsehr.com/specialties/obgyn" title="OBGYN EMR">OBGYN EMR solution</a> also supports the unique needs of women’s health practices with workflow-friendly functionality. For teams searching for reliable EHR support nearby, we offer a smart, scalable solution that can fit the way providers already work.
-            </p>
-            <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-            <p className="text-lg text-slate-600 mx-auto">
-              With HIPAA-compliant EMR features and cloud EMR software, we give practices secure access to important information while supporting flexible daily operations. Our medical coding, as well as EHR and billing software, helps reduce disconnected processes, improve day-to-day efficiency, and create a more complete practice management experience.
-            </p>
+          
                         
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -273,21 +217,6 @@ export default function Home() {
                 Learn More <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
-            
-            {/* New homepage content */}
-            
-            <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
-                Give Your Practice the Tools to Run Better!
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-               MD Charts make it easy for your healthcare organization to optimize its documentation, become more efficient, and manage its finances effectively. Contact us now for a free demonstration!
-              </motion.p>
             
           </div>
         </div>
@@ -524,32 +453,6 @@ export default function Home() {
 
       <ComplianceSection />
       <BlogSection />
-
-<section class="py-20 bg-white border-b border-slate-100">
-<div class="container mx-auto px-4 md:px-6">
-<h2 className="text-3xl md:text-5xl font-bold text-black mb-6 tracking-tight">Frequently Asked Questions</h2>
-<details style="padding: 10px">
-  <summary style="font-weight: bold; cursor: pointer">What features are included in MD Charts’ EHR and billing software?</summary>
-  <p style="padding-top: 10px">MD Charts provides an integrated EHR and billing software solution designed to streamline clinical and administrative workflows. Features include electronic medical records, appointment scheduling, medical billing, practice management tools, patient charting, e-prescribing, and reporting capabilities.</p>
-</details>
-<details style="padding: 10px">
-  <summary style="font-weight: bold; cursor: pointer">Does MD Charts provide a HIPAA-compliant EMR solution?</summary>
-  <p style="padding-top: 10px">Yes. MD Charts offers a HIPAA-compliant EMR designed to help healthcare practices securely manage patient records and protected health information. The system includes security measures, user access controls, and electronic documentation tools that support compliance requirements while helping providers maintain accurate and accessible patient records.</p>
-</details>
-<details style="padding: 10px">
-  <summary style="font-weight: bold; cursor: pointer">Do you offer specialty-specific solutions such as dermatology EHR software and OBGYN EMR software?</summary>
-  <p style="padding-top: 10px">Yes, we provide specialty-focused solutions, including dermatology EHR and OBGYN EMR software. These systems support specialty-specific workflows, documentation requirements, patient charting, and treatment management, helping providers improve efficiency while maintaining detailed and organized patient records.</p>
-</details>
-<details style="padding: 10px">
-  <summary style="font-weight: bold; cursor: pointer">How does the medical coding software help improve billing accuracy?</summary>
-  <p style="padding-top: 10px">We include medical coding software designed to support accurate documentation and claim submission processes. By helping providers capture appropriate coding information and integrate billing workflows with patient records, the software can help reduce administrative errors, improve reimbursement efficiency, and simplify practice management tasks.</p>
-</details>
-<details style="padding: 10px">
-  <summary style="font-weight: bold; cursor: pointer">How do I get started with MD Charts? </summary>
-  <p style="padding-top: 10px">Getting started is simple. Contact MD Charts to schedule a consultation or product demonstration. Our team will discuss your practice’s needs, review available EHR and billing software options, explain implementation and training processes, and help determine the best solution for your specialty and workflow requirements.</p>
-</details>
-</div>
-</section>
 
       {/* CTA Section */}
       <section className="py-24 bg-primary relative overflow-hidden">
