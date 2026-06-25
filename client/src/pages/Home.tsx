@@ -166,7 +166,7 @@ export default function Home() {
             </motion.div>
 
 
-            {/* New homepage content */}
+            {/* New homepage content */} 
 
             <motion.h2 className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">Build a Smarter Practice with Medical Coding, EHR, and Billing Software</motion.h2>
 
