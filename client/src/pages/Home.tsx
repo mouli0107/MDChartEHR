@@ -164,6 +164,48 @@ export default function Home() {
                 </div>
               ))}
             </motion.div>
+
+
+            {/* New homepage content */}
+
+           <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
+                Build a Smarter Practice with Medical Coding, EHR, and Billing Software
+              </motion.h2>
+              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
+               At MD Charts, we help medical practices simplify daily work with intuitive, specialty-focused technology. Our platform brings charting, scheduling, documentation, coding, and medical billing together in one connected experience, so providers can spend less time clicking and more time caring for patients.
+              </motion.p>
+              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
+               Whether a practice needs dermatology EMR, OBGYN EMR, or flexible EMR software for a growing team, our solutions are designed to support real clinical workflows with clarity, speed, and confidence.
+              </motion.p>
+
+               <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
+                A Better Way to Manage Clinical Workflows
+              </motion.h2>
+
+               <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
+              We build our services for practices seeking a reliable <a href= "https://mdchartsehr.com/ehr" title= "EHR System" style="text-decoration: underline">EHR system</a> that avoids unnecessary complexity. From patient records to task management, our technologies help teams organize, decrease administrative stress, and improve office communication.
+              </motion.p>
+
+              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
+              Our system supports:
+              </motion.p>
+
+              <motion.div variants={fadeInUp} className="space-y-4">
+                {[
+                  "Streamlined charting and documentation",
+                  "Integrated coding and billing workflows",
+                  "Specialty-specific templates and tools",
+                  "Secure access for busy, modern practices",
+                  "Practical support for providers and staff",
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3" data-testid={`welcome-feature-${i}`}>
+                    <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-slate-700 font-medium">{item}</span>
+                  </div>
+                ))}
+              </motion.div>
+
+
             
            
           </div>
