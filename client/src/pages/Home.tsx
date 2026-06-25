@@ -164,38 +164,22 @@ export default function Home() {
                 </div>
               ))}
             </motion.div>
-            
-            
+
+
             {/* New homepage content */}
-            
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-            
-            <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
-                Build a Smarter Practice with Medical Coding, EHR, and Billing Software
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-               At MD Charts, we help medical practices simplify daily work with intuitive, specialty-focused technology. Our platform brings charting, scheduling, documentation, coding, and medical billing together in one connected experience, so providers can spend less time clicking and more time caring for patients.
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-               Whether a practice needs dermatology EMR, OBGYN EMR, or flexible EMR software for a growing team, our solutions are designed to support real clinical workflows with clarity, speed, and confidence.
-              </motion.p>
-              
-               <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
-                A Better Way to Manage Clinical Workflows
-              </motion.h2>
-              
-               <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-              We build our services for practices seeking a reliable <a href= "https://mdchartsehr.com/ehr" title= "EHR System" style="text-decoration: underline">EHR system</a> that avoids unnecessary complexity. From patient records to task management, our technologies help teams organize, decrease administrative stress, and improve office communication.
-              </motion.p>
-              
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-              Our system supports:
-              </motion.p>
-              
-              <motion.div variants={fadeInUp} className="space-y-4">
+
+            <h2>Build a Smarter Practice with Medical Coding, EHR, and Billing Software</h2>
+
+            <p>At MD Charts, we help medical practices simplify daily work with intuitive, specialty-focused technology. Our platform brings charting, scheduling, documentation, coding, and medical billing together in one connected experience, so providers can spend less time clicking and more time caring for patients.</p>
+<p>Whether a practice needs dermatology EMR, OBGYN EMR, or flexible EMR software for a growing team, our solutions are designed to support real clinical workflows with clarity, speed, and confidence.</p>
+
+<h2>A Better Way to Manage Clinical Workflows</h2>
+
+<p>We build our services for practices seeking a reliable <a href="https://mdchartsehr.com/ehr" title="EHR System">EHR system</a> that avoids unnecessary complexity. From patient records to task management, our technologies help teams organize, decrease administrative stress, and improve office communication.</p>
+
+<p>Our system supports:</p>
+
+  <motion.div variants={fadeInUp} className="space-y-4">
                 {[
                   "Streamlined charting and documentation",
                   "Integrated coding and billing workflows",
@@ -209,11 +193,10 @@ export default function Home() {
                   </div>
                 ))}
               </motion.div>
-            
-            {/* New homepage content */}
-            
-            
 
+
+
+           
           </div>
         </div>
       </section>
@@ -230,24 +213,8 @@ export default function Home() {
               With so many EHR systems available, here's what sets MD Charts apart
             </p>
             
-           
-            {/* New homepage content */}
-            
-            <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-            <p className="text-lg text-slate-600 mx-auto">
-              Every practice needs software that feels practical, secure, and easy to use. Every specialty works differently, which is why we offer dedicated solutions such as dermatology EHR and EMR software tools that help practices manage images, notes, visits, and documentation more efficiently. Our <a href= "https://mdchartsehr.com/specialties/obgyn" title="OBGYN EMR">OBGYN EMR solution</a> also supports the unique needs of women’s health practices with workflow-friendly functionality. For teams searching for reliable EHR support nearby, we offer a smart, scalable solution that can fit the way providers already work.
-            </p>
-            <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-            <p className="text-lg text-slate-600 mx-auto">
-              With HIPAA-compliant EMR features and cloud EMR software, we give practices secure access to important information while supporting flexible daily operations. Our medical coding, as well as EHR and billing software, helps reduce disconnected processes, improve day-to-day efficiency, and create a more complete practice management experience.
-            </p>
-            
-            {/* New homepage content */}
-            
-            
-            
+          
+                        
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
@@ -281,25 +248,6 @@ export default function Home() {
                 Learn More <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
-            
-            {/* New homepage content */}
-            
-            <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4">
-                Give Your Practice the Tools to Run Better!
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">&nbsp;
-              </motion.p>
-              <motion.p variants={fadeInUp} className="text-lg text-slate-600 mb-8 leading-relaxed">
-               MD Charts make it easy for your healthcare organization to optimize its documentation, become more efficient, and manage its finances effectively. Contact us now for a free demonstration!
-              </motion.p>
-            
-            
-            {/* New homepage content */}
-            
             
           </div>
         </div>
@@ -470,6 +418,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
+              { quote: "After more than 15 years in urology practice, I've worked with several EMR systems—but MD Charts stands out by a wide margin. The ease of use is exceptional; it fits seamlessly into my daily workflow without slowing me down. Even more impressive is the customer support—responsive, knowledgeable, and genuinely invested in our success. MD Charts has made a meaningful difference in both efficiency and patient care in my practice.", name: "Randy Makovsky", role: "Urologist, 15+ Years in Practice" },
               { quote: "I have been very satisfied user of MD Charts for over 9 years. Program is user friendly for providers, MA's, front desk and billers. Unlike most EHR programs, my providers actually see more patients a day due to the ease of use and customization of the program.", name: "Kerri", role: "Practice Administrator" },
               { quote: "Makes my job so much easier. Reports are there when you need it. Also support team can help with reports of any type.", name: "TJ Barrett", role: "Office Manager, Great Neck OB GYN" },
               { quote: "I highly recommend the team at MD Charts! They have consistently gone above and beyond for us. MD Charts has been extremely knowledgeable, professional, friendly, pleasant, timely, and patient while working with us. Not to mention the fantastic value for the money.", name: "Progressive Medical Group", role: "Multi-Specialty Practice" },
@@ -535,11 +484,11 @@ export default function Home() {
 
       <ComplianceSection />
       <BlogSection />
-      
+
       {/* CTA Section */}
       <section className="py-24 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-        
+
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">
             Still have questions or want to book a demo?
