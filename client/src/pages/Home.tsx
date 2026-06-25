@@ -165,37 +165,6 @@ export default function Home() {
               ))}
             </motion.div>
 
-
-            {/* New homepage content */}
-
-            <h2>Build a Smarter Practice with Medical Coding, EHR, and Billing Software</h2>
-
-            <p>At MD Charts, we help medical practices simplify daily work with intuitive, specialty-focused technology. Our platform brings charting, scheduling, documentation, coding, and medical billing together in one connected experience, so providers can spend less time clicking and more time caring for patients.</p>
-<p>Whether a practice needs dermatology EMR, OBGYN EMR, or flexible EMR software for a growing team, our solutions are designed to support real clinical workflows with clarity, speed, and confidence.</p>
-
-<h2>A Better Way to Manage Clinical Workflows</h2>
-
-<p>We build our services for practices seeking a reliable <a href="https://mdchartsehr.com/ehr" title="EHR System">EHR system</a> that avoids unnecessary complexity. From patient records to task management, our technologies help teams organize, decrease administrative stress, and improve office communication.</p>
-
-<p>Our system supports:</p>
-
-  <motion.div variants={fadeInUp} className="space-y-4">
-                {[
-                  "Streamlined charting and documentation",
-                  "Integrated coding and billing workflows",
-                  "Specialty-specific templates and tools",
-                  "Secure access for busy, modern practices",
-                  "Practical support for providers and staff",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3" data-testid={`welcome-feature-${i}`}>
-                    <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 font-medium">{item}</span>
-                  </div>
-                ))}
-              </motion.div>
-
-
-
            
           </div>
         </div>
