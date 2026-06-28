@@ -165,10 +165,8 @@ export default function Home() {
               ))}
             </motion.div>
           </div>
-
-
-          <p>&nbsp;</p>
-          <h2 class="text-3xl md:text-4xl font-extrabold font-heading text-slate-900 mb-4" style="opacity: 1; transform: none;">Build a Smarter Practice with Medical Coding, EHR, and Billing Software</h2>
+          
+          <h2>Build a Smarter Practice with Medical Coding, EHR, and Billing Software</h2>
 
           
         </div>
