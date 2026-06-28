@@ -166,7 +166,8 @@ export default function Home() {
             </motion.div>
           </div>
           
-          <h2>Build a Smarter Practice with Medical Coding, EHR, and Billing Software</h2>
+          <p>&nbsp;</p>
+          <h2 style="font-family: Plus Jakarta Sans, sans-serif; font-size: 2.25rem; font-weight: 800">Build a Smarter Practice with Medical Coding, EHR, and Billing Software</h2>
 
           
         </div>
