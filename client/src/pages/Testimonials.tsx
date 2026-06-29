@@ -44,6 +44,16 @@ const testimonials = [
     quote: "Implementation was smooth and the training was comprehensive. Our staff was productive from day one.",
     name: "Practice Owner",
     specialty: "OB/GYN Practice"
+  },
+  {
+    quote: "I have been using MD Charts for over a decade, and it has made a tremendous difference in our practice. Its user-friendly design has helped simplify many of our administrative tasks, allowing our team to focus more on patient care and less on paperwork. One thing I especially appreciate is MD Charts' commitment to listening to its clients and continuously improving the system based on feedback. The reports provide meaningful insights that help us manage our practice more effectively, and the support team has always been outstanding — responsive, knowledgeable, and helpful whenever we need assistance.",
+    name: "Pamela Brandy",
+    specialty: "Senior Operations Manager, GNOB"
+  },
+  {
+    quote: "As a medical assistant, I find MD Charts easy to navigate. Whether I'm preparing charts, entering patient information, or helping providers during visits, everything is easy to locate and use. It helps me stay organized throughout the day.",
+    name: "Brenda Figueroa",
+    specialty: "Senior Medical Assistant"
   }
 ];
 

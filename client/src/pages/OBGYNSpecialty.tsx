@@ -424,10 +424,11 @@ export default function OBGYNSpecialty() {
                 ))}
               </div>
               <p className="text-slate-600 mb-6 leading-relaxed italic text-lg">
-                "OBGYN Charts lets me spend less time on the computer and more time with my patients."
+                "I have been using MD Charts for over a decade, and it has made a tremendous difference in our practice. Its user-friendly design has helped simplify many of our administrative tasks, allowing our team to focus more on patient care and less on paperwork. The reports provide meaningful insights and the support team has always been outstanding — responsive, knowledgeable, and helpful whenever we need assistance."
               </p>
               <div>
-                <div className="font-bold text-slate-900">Jason Applebaum, MD</div>
+                <div className="font-bold text-slate-900">Pamela Brandy</div>
+                <div className="text-sm text-slate-500">Senior Operations Manager, GNOB</div>
               </div>
             </motion.div>
 
@@ -444,11 +445,11 @@ export default function OBGYNSpecialty() {
                 ))}
               </div>
               <p className="text-slate-600 mb-6 leading-relaxed italic text-lg">
-                "With advanced KPI Reporting, I get the pulse of my practice in a heartbeat."
+                "As a medical assistant, I find MD Charts easy to navigate. Whether I'm preparing charts, entering patient information, or helping providers during visits, everything is easy to locate and use. It helps me stay organized throughout the day."
               </p>
               <div>
-                <div className="font-bold text-slate-900">TJ Barrett</div>
-                <div className="text-sm text-slate-500">Administrator</div>
+                <div className="font-bold text-slate-900">Brenda Figueroa</div>
+                <div className="text-sm text-slate-500">Senior Medical Assistant</div>
               </div>
             </motion.div>
           </div>
