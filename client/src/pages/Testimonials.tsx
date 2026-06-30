@@ -54,6 +54,11 @@ const testimonials = [
     quote: "As a medical assistant, I find MD Charts easy to navigate. Whether I'm preparing charts, entering patient information, or helping providers during visits, everything is easy to locate and use. It helps me stay organized throughout the day.",
     name: "Brenda Figueroa",
     specialty: "Senior Medical Assistant"
+  },
+  {
+    quote: "I've been using MD Charts for quite some time, and it has worked well for my practice. I like that I can customize my notes to fit the way I document. Having important patient information easy to find helps me review records quickly and stay prepared during visits.",
+    name: "Terry Rifkin, MD",
+    specialty: "OB/GYN"
   }
 ];
 
