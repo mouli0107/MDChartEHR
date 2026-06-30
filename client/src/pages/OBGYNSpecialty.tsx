@@ -410,7 +410,7 @@ export default function OBGYNSpecialty() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -450,6 +450,27 @@ export default function OBGYNSpecialty() {
               <div>
                 <div className="font-bold text-slate-900">Brenda Figueroa</div>
                 <div className="text-sm text-slate-500">Senior Medical Assistant</div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+              className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm"
+            >
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <p className="text-slate-600 mb-6 leading-relaxed italic text-lg">
+                "I've been using MD Charts for quite some time, and it has worked well for my practice. I like that I can customize my notes to fit the way I document. Having important patient information easy to find helps me review records quickly and stay prepared during visits."
+              </p>
+              <div>
+                <div className="font-bold text-slate-900">Terry Rifkin, MD</div>
+                <div className="text-sm text-slate-500">OB/GYN</div>
               </div>
             </motion.div>
           </div>
