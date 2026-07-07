@@ -86,10 +86,10 @@ const stats = [
 ];
 
 const testimonial = {
-  quote: "CardioCharts has completely transformed how we document. The ECG integration saves our team significant time every day. The cardiac-specific templates understand exactly how cardiologists think and work.",
-  author: "Dr. James Mitchell, MD, FACC",
-  role: "Director of Cardiology",
-  practice: "HeartCare Associates, New York"
+  quote: "For the first time in my career, I truly feel that I have my finger on the financial pulse of my practice. The MD Charts RCM team is knowledgeable, responsive, and a pleasure to work with. Their attention to detail has given me tremendous confidence that my billing is being managed the right way. The AI Coding assistant has already identified coding opportunities that I believe I may have been missing for years. As physicians, we want to spend our time caring for patients not worrying about billing. MD Charts has given me the confidence that both are being handled exceptionally well. I recommend them without hesitation.",
+  author: "Meyer Abittan, M.D., FACC",
+  role: "Cardiologist",
+  practice: "MD Charts RCM Client"
 };
 
 export default function CardiologySpecialty() {

@@ -59,6 +59,11 @@ const testimonials = [
     quote: "I've been using MD Charts for quite some time, and it has worked well for my practice. I like that I can customize my notes to fit the way I document. Having important patient information easy to find helps me review records quickly and stay prepared during visits.",
     name: "Terry Rifkin, MD",
     specialty: "OB/GYN"
+  },
+  {
+    quote: "I've been using MD Charts as the EMR for my practice for many years, so when they introduced their Revenue Cycle Management services, I didn't hesitate to have them handle my billing as well. After nearly a year, I can honestly say it has been one of the best decisions I've made for my practice. For the first time in my career, I truly feel that I have my finger on the financial pulse of my practice. The MD Charts RCM team is knowledgeable, responsive, and a pleasure to work with. Their attention to detail has given me tremendous confidence that my billing is being managed the right way. Based on what I've experienced so far, I fully expect my practice's revenue to increase by 10–20% year over year. The feature that has impressed me most is the AI Coding assistant — it has already identified coding opportunities that I believe I may have been missing for years. As physicians, we want to spend our time caring for patients not worrying about billing. MD Charts has given me the confidence that both are being handled exceptionally well. I recommend them without hesitation.",
+    name: "Meyer Abittan, M.D., FACC",
+    specialty: "Cardiologist"
   }
 ];
 
