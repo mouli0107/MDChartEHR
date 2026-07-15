@@ -4,6 +4,7 @@ import { X, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -21,13 +22,14 @@ export function ContactModal({ isOpen, onClose, requestType, title }: ContactMod
     company: "",
     message: "",
   });
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const contactMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, requestType }),
+        body: JSON.stringify({ ...data, requestType, turnstileToken }),
       });
       if (!response.ok) throw new Error("Failed to submit request");
       return response.json();
@@ -51,6 +53,10 @@ export function ContactModal({ isOpen, onClose, requestType, title }: ContactMod
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      toast({ title: "Please complete the CAPTCHA", variant: "destructive" });
+      return;
+    }
     contactMutation.mutate(formData);
   };
 
@@ -155,10 +161,17 @@ export function ContactModal({ isOpen, onClose, requestType, title }: ContactMod
                 />
               </div>
 
+              <Turnstile
+                siteKey="0x4AAAAAAD2mqLoPVJ2zPWjK"
+                onSuccess={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken(null)}
+                options={{ theme: "light" }}
+              />
+
               <Button
                 type="submit"
                 className="w-full h-12 text-base font-bold"
-                disabled={contactMutation.isPending}
+                disabled={contactMutation.isPending || !turnstileToken}
                 data-testid="button-submit"
               >
                 {contactMutation.isPending ? (

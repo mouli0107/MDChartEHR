@@ -257,7 +257,20 @@ ${blogEntries}
   // Contact Request API
   app.post("/api/contact", async (req, res) => {
     try {
-      const validated = insertContactRequestSchema.parse(req.body);
+      const { turnstileToken, ...body } = req.body;
+      const secretKey = process.env.TURNSTILE_SECRET_KEY;
+      if (secretKey) {
+        const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ secret: secretKey, response: turnstileToken }),
+        });
+        const verifyData = await verifyRes.json() as { success: boolean };
+        if (!verifyData.success) {
+          return res.status(400).json({ error: "CAPTCHA verification failed. Please try again." });
+        }
+      }
+      const validated = insertContactRequestSchema.parse(body);
       const contactRequest = await storage.createContactRequest(validated);
       
       // Send email notification
