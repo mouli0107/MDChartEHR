@@ -10,6 +10,7 @@ import {
   Calendar, Clock, Video, Check, Shield,
   Phone, Loader2, Send,
 } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -56,6 +57,7 @@ export default function BookDemo() {
     phone: "",
     preferredTime: "",
   });
+  const [cbTurnstileToken, setCbTurnstileToken] = useState<string | null>(null);
 
   const callbackMutation = useMutation({
     mutationFn: async (data: typeof cbForm) => {
@@ -68,6 +70,7 @@ export default function BookDemo() {
           phone: data.phone,
           message: `Preferred callback time: ${data.preferredTime || "Anytime"}`,
           requestType: "Callback Request",
+          turnstileToken: cbTurnstileToken,
         }),
       });
       if (!response.ok) throw new Error("Failed to submit callback request");
@@ -91,6 +94,10 @@ export default function BookDemo() {
 
   const handleCallbackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!cbTurnstileToken) {
+      toast({ title: "Please complete the CAPTCHA", variant: "destructive" });
+      return;
+    }
     callbackMutation.mutate(cbForm);
   };
 
@@ -320,10 +327,17 @@ export default function BookDemo() {
                         </select>
                       </div>
 
+                      <Turnstile
+                        siteKey="0x4AAAAAAD2mqLoPVJ2zPWjK"
+                        onSuccess={(token) => setCbTurnstileToken(token)}
+                        onExpire={() => setCbTurnstileToken(null)}
+                        options={{ theme: "light" }}
+                      />
+
                       <Button
                         type="submit"
                         className="w-full h-12 text-base font-bold"
-                        disabled={callbackMutation.isPending}
+                        disabled={callbackMutation.isPending || !cbTurnstileToken}
                         data-testid="button-request-callback"
                       >
                         {callbackMutation.isPending ? (

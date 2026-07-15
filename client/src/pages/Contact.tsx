@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@assets/generated_images/medical_team_welcoming_patients.png";
 import heroImageWebp from "@assets/generated_images/medical_team_welcoming_patients.webp";
@@ -29,6 +30,7 @@ const usStates = [
 export default function Contact() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -41,6 +43,10 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      toast({ title: "Please complete the CAPTCHA", variant: "destructive" });
+      return;
+    }
     setIsSubmitting(true);
 
     try {
@@ -56,6 +62,7 @@ export default function Contact() {
             : formData.state || null,
           requestType: "General Inquiry",
           message: formData.message,
+          turnstileToken,
         }),
       });
 
@@ -295,11 +302,18 @@ export default function Contact() {
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
-                  size="lg" 
+                <Turnstile
+                  siteKey="0x4AAAAAAD2mqLoPVJ2zPWjK"
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken(null)}
+                  options={{ theme: "light" }}
+                />
+
+                <Button
+                  type="submit"
+                  size="lg"
                   className="w-full bg-primary hover:bg-primary/90"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !turnstileToken}
                   data-testid="button-submit-contact"
                 >
                   {isSubmitting ? (
