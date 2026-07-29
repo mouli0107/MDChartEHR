@@ -81,6 +81,38 @@ export async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS trial_enrollments (
+        id SERIAL PRIMARY KEY,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
+        role TEXT NOT NULL,
+        practice_name TEXT NOT NULL,
+        specialty TEXT NOT NULL,
+        street TEXT NOT NULL,
+        suite TEXT,
+        city TEXT NOT NULL,
+        state TEXT NOT NULL,
+        zip TEXT NOT NULL,
+        office_phone TEXT NOT NULL,
+        cell_phone TEXT NOT NULL,
+        email TEXT NOT NULL,
+        mfa_method TEXT NOT NULL,
+        billing_type TEXT,
+        insurance_processing TEXT,
+        encounters_per_month TEXT,
+        selected_addons TEXT,
+        lab_integration TEXT,
+        lab_names TEXT,
+        data_migration TEXT,
+        migration_source TEXT,
+        migration_ehr_name TEXT,
+        providers TEXT,
+        id_verification_method TEXT,
+        status TEXT NOT NULL DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL
+      );
+    `);
     // Insert new blog posts that may not exist yet (safe upsert — skips if slug already present)
     await pool.query(`
       INSERT INTO blog_posts (slug, title, excerpt, content, category, category_label, author, published_at, read_time, image, published)

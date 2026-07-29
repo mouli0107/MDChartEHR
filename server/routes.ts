@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageViewSchema, insertNotificationEmailSchema } from "@shared/schema";
+import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageViewSchema, insertNotificationEmailSchema, insertTrialEnrollmentSchema } from "@shared/schema";
 import { z } from "zod";
 import { sendContactEmail, sendWhitePaperDownloadEmail } from "./resend";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
@@ -666,6 +666,40 @@ ${blogEntries}
       res.json({ success: true });
     } catch (err) {
       res.status(500).json({ error: "Failed to delete redirect" });
+    }
+  });
+
+  // ── Trial Enrollments ─────────────────────────────────────────────────────
+  app.post("/api/trial", async (req, res) => {
+    try {
+      const { turnstileToken, ...body } = req.body;
+      const secretKey = process.env.TURNSTILE_SECRET_KEY;
+      if (secretKey && turnstileToken) {
+        const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ secret: secretKey, response: turnstileToken }),
+        });
+        const verifyData = await verifyRes.json() as { success: boolean };
+        if (!verifyData.success) {
+          return res.status(400).json({ error: "CAPTCHA verification failed. Please try again." });
+        }
+      }
+      const validated = insertTrialEnrollmentSchema.parse(body);
+      const enrollment = await storage.createTrialEnrollment(validated);
+      res.status(201).json(enrollment);
+    } catch (err: any) {
+      console.error("Trial enrollment error:", err);
+      res.status(400).json({ error: err?.message || "Failed to submit enrollment" });
+    }
+  });
+
+  app.get("/api/admin/trials", isAuthenticated, async (_req, res) => {
+    try {
+      const trials = await storage.getAllTrialEnrollments();
+      res.json(trials);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch trial enrollments" });
     }
   });
 

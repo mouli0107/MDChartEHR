@@ -146,3 +146,43 @@ export const redirects = pgTable("redirects", {
 export const insertRedirectSchema = createInsertSchema(redirects).omit({ id: true, createdAt: true });
 export type InsertRedirect = z.infer<typeof insertRedirectSchema>;
 export type Redirect = typeof redirects.$inferSelect;
+
+export const trialEnrollments = pgTable("trial_enrollments", {
+  id: serial("id").primaryKey(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  role: text("role").notNull(),
+  practiceName: text("practice_name").notNull(),
+  specialty: text("specialty").notNull(),
+  street: text("street").notNull(),
+  suite: text("suite"),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  zip: text("zip").notNull(),
+  officePhone: text("office_phone").notNull(),
+  cellPhone: text("cell_phone").notNull(),
+  email: text("email").notNull(),
+  mfaMethod: text("mfa_method").notNull(),
+  billingType: text("billing_type"),
+  insuranceProcessing: text("insurance_processing"),
+  encountersPerMonth: text("encounters_per_month"),
+  selectedAddons: text("selected_addons"),
+  labIntegration: text("lab_integration"),
+  labNames: text("lab_names"),
+  dataMigration: text("data_migration"),
+  migrationSource: text("migration_source"),
+  migrationEhrName: text("migration_ehr_name"),
+  providers: text("providers"),
+  idVerificationMethod: text("id_verification_method"),
+  status: text("status").default("pending").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertTrialEnrollmentSchema = createInsertSchema(trialEnrollments).omit({
+  id: true,
+  createdAt: true,
+  status: true,
+});
+
+export type InsertTrialEnrollment = z.infer<typeof insertTrialEnrollmentSchema>;
+export type TrialEnrollment = typeof trialEnrollments.$inferSelect;
