@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactRequestSchema, insertWhitePaperDownloadSchema, insertPageViewSchema, insertNotificationEmailSchema, insertTrialEnrollmentSchema } from "@shared/schema";
@@ -9,6 +9,8 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import express from "express";
+import crypto from "crypto";
+import rateLimit from "express-rate-limit";
 import { refreshSeoCache } from "./seoCache";
 // Lazy-load geoip-lite after server starts to avoid blocking Node.js startup.
 // Wait 4 minutes so the background tar extraction of node_modules finishes first.
@@ -66,6 +68,40 @@ const SITE_PAGES_FOR_SITEMAP = [
 
 // Social media / SEO bot user-agents that need server-side meta tags
 const BOT_USER_AGENTS = /facebookexternalhit|twitterbot|linkedinbot|whatsapp|slackbot|telegrambot|discordbot|googlebot|bingbot|applebot/i;
+
+// ── API v1 rate limiter — 100 req/min per IP ──────────────────────────────────
+const apiV1Limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests. Please slow down and try again." },
+});
+
+// ── Bearer token auth middleware ───────────────────────────────────────────────
+async function bearerAuth(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Missing or invalid Authorization header. Expected: Bearer <token>" });
+    return;
+  }
+  const token = authHeader.slice(7).trim();
+  const hash = crypto.createHash("sha256").update(token).digest("hex");
+  const key = await storage.getApiKeyByHash(hash);
+  if (!key || !key.isActive) {
+    res.status(401).json({ error: "Invalid or revoked API key." });
+    return;
+  }
+  if (key.allowedIp) {
+    const clientIp = (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() || req.socket.remoteAddress || "";
+    if (clientIp !== key.allowedIp) {
+      res.status(403).json({ error: `Request from IP ${clientIp} is not allowed for this key.` });
+      return;
+    }
+  }
+  storage.updateApiKeyLastUsed(key.id).catch(() => {});
+  next();
+}
 
 export async function registerRoutes(
   httpServer: Server,
@@ -700,6 +736,68 @@ ${blogEntries}
       res.json(trials);
     } catch (err) {
       res.status(500).json({ error: "Failed to fetch trial enrollments" });
+    }
+  });
+
+  // ── Public API v1 — bearer token + rate limited ───────────────────────────
+  // GET /api/v1/enrollments?page=1&limit=50&specialty=&status=&from=&to=
+  app.get("/api/v1/enrollments", apiV1Limiter, bearerAuth, async (req, res) => {
+    try {
+      const page  = Math.max(1, parseInt(req.query.page  as string) || 1);
+      const limit = Math.min(200, Math.max(1, parseInt(req.query.limit as string) || 50));
+      const specialty = req.query.specialty as string | undefined;
+      const status    = req.query.status    as string | undefined;
+      const from  = req.query.from ? new Date(req.query.from as string) : undefined;
+      const to    = req.query.to   ? new Date(req.query.to   as string) : undefined;
+
+      if (from && isNaN(from.getTime())) { res.status(400).json({ error: "Invalid 'from' date." }); return; }
+      if (to   && isNaN(to.getTime()))   { res.status(400).json({ error: "Invalid 'to' date."   }); return; }
+
+      const { data, total } = await storage.getTrialEnrollmentsFiltered({ page, limit, specialty, status, from, to });
+      res.json({
+        data,
+        pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      });
+    } catch (err) {
+      console.error("API v1 enrollments error:", err);
+      res.status(500).json({ error: "Failed to fetch enrollments." });
+    }
+  });
+
+  // ── Admin: API key management ─────────────────────────────────────────────
+  // GET /api/admin/api-keys — list all keys (no token values, only prefix)
+  app.get("/api/admin/api-keys", isAuthenticated, async (_req, res) => {
+    try {
+      const keys = await storage.getAllApiKeys();
+      res.json(keys);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch API keys." });
+    }
+  });
+
+  // POST /api/admin/api-keys — generate a new key; returns full token once
+  app.post("/api/admin/api-keys", isAuthenticated, async (req, res) => {
+    try {
+      const { name, allowedIp } = req.body;
+      if (!name?.trim()) { res.status(400).json({ error: "Key name is required." }); return; }
+      const rawToken   = "sk_live_" + crypto.randomBytes(32).toString("hex");
+      const tokenHash  = crypto.createHash("sha256").update(rawToken).digest("hex");
+      const tokenPrefix = rawToken.slice(0, 16) + "...";
+      const key = await storage.createApiKey(name.trim(), tokenHash, tokenPrefix, allowedIp?.trim() || undefined);
+      // Return the full token exactly once — it is not stored and cannot be retrieved again
+      res.status(201).json({ ...key, token: rawToken });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to create API key." });
+    }
+  });
+
+  // DELETE /api/admin/api-keys/:id — revoke a key
+  app.delete("/api/admin/api-keys/:id", isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteApiKey(parseInt(req.params.id));
+      res.json({ success: true });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to revoke API key." });
     }
   });
 

@@ -1,4 +1,4 @@
-import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, redirects, trialEnrollments, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo, type Redirect, type InsertRedirect, type TrialEnrollment, type InsertTrialEnrollment } from "@shared/schema";
+import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, redirects, trialEnrollments, apiKeys, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo, type Redirect, type InsertRedirect, type TrialEnrollment, type InsertTrialEnrollment, type ApiKey } from "@shared/schema";
 import { db } from "./db";
 import { desc, sql, gte, lte, count, eq, and, isNotNull } from "drizzle-orm";
 
@@ -42,6 +42,16 @@ export interface IStorage {
   // Trial Enrollments
   createTrialEnrollment(data: InsertTrialEnrollment): Promise<TrialEnrollment>;
   getAllTrialEnrollments(): Promise<TrialEnrollment[]>;
+  getTrialEnrollmentsFiltered(params: {
+    page: number; limit: number;
+    specialty?: string; status?: string; from?: Date; to?: Date;
+  }): Promise<{ data: TrialEnrollment[]; total: number }>;
+  // API Keys
+  createApiKey(name: string, tokenHash: string, tokenPrefix: string, allowedIp?: string): Promise<ApiKey>;
+  getAllApiKeys(): Promise<ApiKey[]>;
+  getApiKeyByHash(tokenHash: string): Promise<ApiKey | null>;
+  deleteApiKey(id: number): Promise<void>;
+  updateApiKeyLastUsed(id: number): Promise<void>;
   getPageViewStats(): Promise<{
     totalViews: number;
     todayViews: number;
@@ -293,6 +303,49 @@ export class DatabaseStorage implements IStorage {
 
   async getAllTrialEnrollments(): Promise<TrialEnrollment[]> {
     return db.select().from(trialEnrollments).orderBy(desc(trialEnrollments.createdAt));
+  }
+
+  async getTrialEnrollmentsFiltered(params: {
+    page: number; limit: number;
+    specialty?: string; status?: string; from?: Date; to?: Date;
+  }): Promise<{ data: TrialEnrollment[]; total: number }> {
+    const conditions = [];
+    if (params.specialty) conditions.push(eq(trialEnrollments.specialty, params.specialty));
+    if (params.status)    conditions.push(eq(trialEnrollments.status, params.status));
+    if (params.from)      conditions.push(gte(trialEnrollments.createdAt, params.from));
+    if (params.to) {
+      const end = new Date(params.to); end.setHours(23, 59, 59, 999);
+      conditions.push(lte(trialEnrollments.createdAt, end));
+    }
+    const where = conditions.length > 0 ? and(...conditions) : undefined;
+    const [{ total }] = await db.select({ total: count() }).from(trialEnrollments).where(where);
+    const data = await db.select().from(trialEnrollments).where(where)
+      .orderBy(desc(trialEnrollments.createdAt))
+      .limit(params.limit)
+      .offset((params.page - 1) * params.limit);
+    return { data, total };
+  }
+
+  async createApiKey(name: string, tokenHash: string, tokenPrefix: string, allowedIp?: string): Promise<ApiKey> {
+    const [key] = await db.insert(apiKeys).values({ name, tokenHash, tokenPrefix, allowedIp: allowedIp || null }).returning();
+    return key;
+  }
+
+  async getAllApiKeys(): Promise<ApiKey[]> {
+    return db.select().from(apiKeys).orderBy(desc(apiKeys.createdAt));
+  }
+
+  async getApiKeyByHash(tokenHash: string): Promise<ApiKey | null> {
+    const [key] = await db.select().from(apiKeys).where(eq(apiKeys.tokenHash, tokenHash));
+    return key ?? null;
+  }
+
+  async deleteApiKey(id: number): Promise<void> {
+    await db.delete(apiKeys).where(eq(apiKeys.id, id));
+  }
+
+  async updateApiKeyLastUsed(id: number): Promise<void> {
+    await db.update(apiKeys).set({ lastUsedAt: new Date() }).where(eq(apiKeys.id, id));
   }
 }
 

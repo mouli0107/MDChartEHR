@@ -82,6 +82,18 @@ export async function runMigrations() {
       );
     `);
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS api_keys (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        token_hash TEXT NOT NULL UNIQUE,
+        token_prefix TEXT NOT NULL,
+        allowed_ip TEXT,
+        is_active BOOLEAN NOT NULL DEFAULT true,
+        last_used_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL
+      );
+    `);
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS trial_enrollments (
         id SERIAL PRIMARY KEY,
         first_name TEXT NOT NULL,

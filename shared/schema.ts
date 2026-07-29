@@ -186,3 +186,16 @@ export const insertTrialEnrollmentSchema = createInsertSchema(trialEnrollments).
 
 export type InsertTrialEnrollment = z.infer<typeof insertTrialEnrollmentSchema>;
 export type TrialEnrollment = typeof trialEnrollments.$inferSelect;
+
+export const apiKeys = pgTable("api_keys", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  tokenPrefix: text("token_prefix").notNull(),
+  allowedIp: text("allowed_ip"),
+  isActive: boolean("is_active").default(true).notNull(),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type ApiKey = typeof apiKeys.$inferSelect;
