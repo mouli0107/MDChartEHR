@@ -15,7 +15,7 @@ import {
 import {
   Users, FileText, ArrowLeft, Search, Download, Mail, MapPin, Calendar, LogIn, Loader2,
   BarChart3, Eye, Monitor, Globe, Clock, Smartphone, Laptop, Tablet, RefreshCw, Settings, Plus, Trash2,
-  BookOpen, Tag, Link2, Save, X, Edit2, ChevronDown, ChevronUp, SearchCheck, Upload, ImageIcon, Info
+  BookOpen, Tag, Link2, Save, X, Edit2, ChevronDown, ChevronUp, SearchCheck, Upload, ImageIcon, Info, Zap
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/use-auth";
@@ -92,6 +92,37 @@ interface PageSeoEntry {
   focusKeyword?: string | null;
   canonicalUrl?: string | null;
   updatedAt?: string;
+}
+
+interface TrialEnrollment {
+  id: number;
+  firstName: string;
+  lastName: string;
+  role: string;
+  practiceName: string;
+  specialty: string;
+  street: string;
+  suite: string | null;
+  city: string;
+  state: string;
+  zip: string;
+  officePhone: string;
+  cellPhone: string;
+  email: string;
+  mfaMethod: string;
+  billingType: string | null;
+  insuranceProcessing: string | null;
+  encountersPerMonth: string | null;
+  selectedAddons: string | null;
+  labIntegration: string | null;
+  labNames: string | null;
+  dataMigration: string | null;
+  migrationSource: string | null;
+  migrationEhrName: string | null;
+  providers: string | null;
+  idVerificationMethod: string | null;
+  status: string;
+  createdAt: string;
 }
 
 const SITE_PAGES = [
@@ -267,7 +298,9 @@ export default function AdminLeads() {
   const [downloads, setDownloads] = useState<WhitePaperDownload[]>([]);
   const [contacts, setContacts] = useState<ContactRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects" | "report">("downloads");
+  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects" | "report" | "trials">("downloads");
+  const [trials, setTrials] = useState<TrialEnrollment[]>([]);
+  const [trialsLoading, setTrialsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pageStats, setPageStats] = useState<PageViewStats | null>(null);
   const [recentViews, setRecentViews] = useState<RecentPageView[]>([]);
@@ -329,6 +362,18 @@ export default function AdminLeads() {
   const [redirectCode, setRedirectCode] = useState<301 | 302>(301);
   const [redirectSaving, setRedirectSaving] = useState(false);
   const [redirectError, setRedirectError] = useState("");
+
+  const fetchTrials = async () => {
+    setTrialsLoading(true);
+    try {
+      const res = await fetch("/api/admin/trials");
+      if (res.ok) setTrials(await res.json());
+    } catch (err) {
+      console.error("Error fetching trial enrollments:", err);
+    } finally {
+      setTrialsLoading(false);
+    }
+  };
 
   const fetchCalendlyUrl = async () => {
     try {
@@ -904,6 +949,22 @@ export default function AdminLeads() {
                 <Download className="h-4 w-4 mr-2" />
                 Analytics Report
               </Button>
+              <Button
+                variant={activeTab === "trials" ? "default" : "outline"}
+                onClick={() => { setActiveTab("trials"); fetchTrials(); }}
+                data-testid="tab-trials"
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Free Trials ({trials.length})
+              </Button>
+            </div>
+            <div>
+              <a href="/free-trial" target="_blank" rel="noopener noreferrer">
+                <Button className="bg-[#0B9DD9] hover:bg-[#1AAFCA] text-white font-semibold">
+                  <Zap className="h-4 w-4 mr-2" />
+                  + New Free Trial
+                </Button>
+              </a>
             </div>
             
             <div className="flex gap-2">
@@ -2010,6 +2071,82 @@ export default function AdminLeads() {
                 </p>
               </div>
             </div>
+          ) : activeTab === "trials" ? (
+            trialsLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : trials.length === 0 ? (
+              <div className="text-center py-20 border-2 border-dashed rounded-xl">
+                <Zap className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-slate-600 mb-2">No trial enrollments yet</h3>
+                <p className="text-slate-500 mb-4">Free trial sign-ups will appear here</p>
+                <a href="/free-trial" target="_blank" rel="noopener noreferrer">
+                  <Button className="bg-[#0B9DD9] hover:bg-[#1AAFCA] text-white">
+                    <Zap className="h-4 w-4 mr-2" /> Open Trial Wizard
+                  </Button>
+                </a>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-slate-900">Free Trial Enrollments ({trials.length})</h2>
+                  <Button variant="outline" size="sm" onClick={fetchTrials}>
+                    <RefreshCw className="h-4 w-4 mr-2" /> Refresh
+                  </Button>
+                </div>
+                <div className="rounded-lg border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Practice</TableHead>
+                        <TableHead>Specialty</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Location</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {trials.map((t) => (
+                        <TableRow key={t.id}>
+                          <TableCell className="font-medium">{t.firstName} {t.lastName}</TableCell>
+                          <TableCell className="max-w-[160px] truncate">{t.practiceName}</TableCell>
+                          <TableCell>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#E5F5FC] text-[#0B9DD9] text-xs font-medium">
+                              {t.specialty}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-sm text-slate-600">{t.role}</TableCell>
+                          <TableCell>
+                            <a href={`mailto:${t.email}`} className="text-primary hover:underline flex items-center gap-1 text-sm">
+                              <Mail className="h-3 w-3" />{t.email}
+                            </a>
+                          </TableCell>
+                          <TableCell className="text-sm text-slate-600">{t.cellPhone}</TableCell>
+                          <TableCell className="text-sm text-slate-600">{t.city}, {t.state}</TableCell>
+                          <TableCell>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                              ${t.status === "pending" ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>
+                              {t.status}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 text-sm text-slate-500">
+                              <Calendar className="h-3 w-3" />
+                              {formatDate(t.createdAt)}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            )
           ) : activeTab === "downloads" ? (
             filteredDownloads.length === 0 ? (
               <div className="text-center py-20">

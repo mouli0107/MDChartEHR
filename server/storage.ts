@@ -1,4 +1,4 @@
-import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, redirects, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo, type Redirect, type InsertRedirect } from "@shared/schema";
+import { contactRequests, whitePaperDownloads, pageViews, notificationEmails, siteSettings, blogPosts, pageSeo, redirects, trialEnrollments, type ContactRequest, type InsertContactRequest, type WhitePaperDownload, type InsertWhitePaperDownload, type PageView, type InsertPageView, type NotificationEmail, type InsertNotificationEmail, type BlogPost, type InsertBlogPost, type PageSeo, type InsertPageSeo, type Redirect, type InsertRedirect, type TrialEnrollment, type InsertTrialEnrollment } from "@shared/schema";
 import { db } from "./db";
 import { desc, sql, gte, lte, count, eq, and, isNotNull } from "drizzle-orm";
 
@@ -39,6 +39,9 @@ export interface IStorage {
   createRedirect(data: InsertRedirect): Promise<Redirect>;
   deleteRedirect(id: number): Promise<void>;
   getRedirectMap(): Promise<Map<string, { toPath: string; statusCode: number }>>;
+  // Trial Enrollments
+  createTrialEnrollment(data: InsertTrialEnrollment): Promise<TrialEnrollment>;
+  getAllTrialEnrollments(): Promise<TrialEnrollment[]>;
   getPageViewStats(): Promise<{
     totalViews: number;
     todayViews: number;
@@ -281,6 +284,15 @@ export class DatabaseStorage implements IStorage {
       map.set(row.fromPath, { toPath: row.toPath, statusCode: row.statusCode });
     }
     return map;
+  }
+
+  async createTrialEnrollment(data: InsertTrialEnrollment): Promise<TrialEnrollment> {
+    const [enrollment] = await db.insert(trialEnrollments).values(data).returning();
+    return enrollment;
+  }
+
+  async getAllTrialEnrollments(): Promise<TrialEnrollment[]> {
+    return db.select().from(trialEnrollments).orderBy(desc(trialEnrollments.createdAt));
   }
 }
 

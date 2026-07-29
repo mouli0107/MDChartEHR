@@ -67,6 +67,7 @@ const SecurityPage              = lazy(() => import("@/pages/Security"));
 const AdminLeadsPage            = lazy(() => import("@/pages/AdminLeads"));
 const AdminLoginPage            = lazy(() => import("@/pages/AdminLogin"));
 const AdminAnalyticsPage        = lazy(() => import("@/pages/AdminAnalytics"));
+const FreeTrialPage             = lazy(() => import("@/pages/FreeTrial"));
 
 // Minimal loading state shown while a page chunk is being fetched.
 // Matches the site background so there's no jarring flash.
@@ -83,7 +84,7 @@ function GlobalContactButton() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
-  const hideOn = ["/admin", "/contact", "/book-demo"];
+  const hideOn = ["/admin", "/contact", "/book-demo", "/free-trial"];
   if (hideOn.some((p) => location.startsWith(p))) return null;
 
   return (
@@ -185,6 +186,7 @@ function Router() {
           <Route path="/admin/login" component={AdminLoginPage} />
           <Route path="/admin/leads" component={AdminLeadsPage} />
           <Route path="/admin/analytics" component={AdminAnalyticsPage} />
+          <Route path="/free-trial" component={FreeTrialPage} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>
