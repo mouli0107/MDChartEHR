@@ -15,7 +15,8 @@ import {
 import {
   Users, FileText, ArrowLeft, Search, Download, Mail, MapPin, Calendar, LogIn, Loader2,
   BarChart3, Eye, Monitor, Globe, Clock, Smartphone, Laptop, Tablet, RefreshCw, Settings, Plus, Trash2,
-  BookOpen, Tag, Link2, Save, X, Edit2, ChevronDown, ChevronUp, SearchCheck, Upload, ImageIcon, Info, Zap
+  BookOpen, Tag, Link2, Save, X, Edit2, ChevronDown, ChevronUp, SearchCheck, Upload, ImageIcon, Info, Zap,
+  KeyRound, Copy, ShieldCheck, ShieldOff
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/use-auth";
@@ -92,6 +93,17 @@ interface PageSeoEntry {
   focusKeyword?: string | null;
   canonicalUrl?: string | null;
   updatedAt?: string;
+}
+
+interface ApiKeyEntry {
+  id: number;
+  name: string;
+  tokenPrefix: string;
+  allowedIp: string | null;
+  isActive: boolean;
+  lastUsedAt: string | null;
+  createdAt: string;
+  token?: string; // only present immediately after creation
 }
 
 interface TrialEnrollment {
@@ -298,9 +310,17 @@ export default function AdminLeads() {
   const [downloads, setDownloads] = useState<WhitePaperDownload[]>([]);
   const [contacts, setContacts] = useState<ContactRequest[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects" | "report" | "trials">("downloads");
+  const [activeTab, setActiveTab] = useState<"downloads" | "contacts" | "analytics" | "settings" | "blog" | "seo" | "redirects" | "report" | "trials" | "apikeys">("downloads");
   const [trials, setTrials] = useState<TrialEnrollment[]>([]);
   const [trialsLoading, setTrialsLoading] = useState(false);
+  // API Keys state
+  const [apiKeysList, setApiKeysList] = useState<ApiKeyEntry[]>([]);
+  const [apiKeysLoading, setApiKeysLoading] = useState(false);
+  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyIp, setNewKeyIp] = useState("");
+  const [generatingKey, setGeneratingKey] = useState(false);
+  const [revealedToken, setRevealedToken] = useState<{ id: number; token: string } | null>(null);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pageStats, setPageStats] = useState<PageViewStats | null>(null);
   const [recentViews, setRecentViews] = useState<RecentPageView[]>([]);
@@ -373,6 +393,58 @@ export default function AdminLeads() {
     } finally {
       setTrialsLoading(false);
     }
+  };
+
+  const fetchApiKeys = async () => {
+    setApiKeysLoading(true);
+    try {
+      const res = await fetch("/api/admin/api-keys");
+      if (res.ok) setApiKeysList(await res.json());
+    } catch (err) {
+      console.error("Error fetching API keys:", err);
+    } finally {
+      setApiKeysLoading(false);
+    }
+  };
+
+  const generateApiKey = async () => {
+    if (!newKeyName.trim()) return;
+    setGeneratingKey(true);
+    try {
+      const res = await fetch("/api/admin/api-keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newKeyName.trim(), allowedIp: newKeyIp.trim() || undefined }),
+      });
+      if (res.ok) {
+        const key: ApiKeyEntry = await res.json();
+        setRevealedToken({ id: key.id, token: key.token! });
+        setNewKeyName("");
+        setNewKeyIp("");
+        await fetchApiKeys();
+      }
+    } catch (err) {
+      console.error("Error generating API key:", err);
+    } finally {
+      setGeneratingKey(false);
+    }
+  };
+
+  const revokeApiKey = async (id: number) => {
+    if (!confirm("Revoke this API key? Any system using it will immediately lose access.")) return;
+    try {
+      await fetch(`/api/admin/api-keys/${id}`, { method: "DELETE" });
+      setRevealedToken(prev => prev?.id === id ? null : prev);
+      await fetchApiKeys();
+    } catch (err) {
+      console.error("Error revoking API key:", err);
+    }
+  };
+
+  const copyToken = (id: number, token: string) => {
+    navigator.clipboard.writeText(token);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   const fetchCalendlyUrl = async () => {
@@ -956,6 +1028,14 @@ export default function AdminLeads() {
               >
                 <Zap className="h-4 w-4 mr-2" />
                 Free Trials ({trials.length})
+              </Button>
+              <Button
+                variant={activeTab === "apikeys" ? "default" : "outline"}
+                onClick={() => { setActiveTab("apikeys"); fetchApiKeys(); }}
+                data-testid="tab-apikeys"
+              >
+                <KeyRound className="h-4 w-4 mr-2" />
+                API Keys
               </Button>
             </div>
             <div>
@@ -2070,6 +2150,131 @@ export default function AdminLeads() {
                   Self-contained HTML file — open in any browser. Includes traffic charts, top pages, device breakdown, city data and more.
                 </p>
               </div>
+            </div>
+          ) : activeTab === "apikeys" ? (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">API Keys</h2>
+                  <p className="text-sm text-slate-500 mt-1">
+                    Bearer token access to <code className="bg-slate-100 px-1 rounded text-xs">GET /api/v1/enrollments</code> — tokens are hashed (SHA-256) and shown only once.
+                  </p>
+                </div>
+              </div>
+
+              {/* Revealed token banner */}
+              {revealedToken && (
+                <div className="mb-6 bg-emerald-50 border border-emerald-300 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
+                    <p className="text-sm font-semibold text-emerald-800">New API key created — copy it now. It will not be shown again.</p>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white border border-emerald-200 rounded-lg px-3 py-2 font-mono text-sm break-all">
+                    <span className="flex-1 text-slate-800 select-all">{revealedToken.token}</span>
+                    <button
+                      onClick={() => copyToken(revealedToken.id, revealedToken.token)}
+                      className="shrink-0 text-emerald-600 hover:text-emerald-800 transition-colors"
+                      title="Copy token"
+                    >
+                      {copiedId === revealedToken.id ? <ShieldCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <p className="text-xs text-emerald-600 mt-2">
+                    Usage: <code className="bg-emerald-100 px-1 rounded">Authorization: Bearer {revealedToken.token.slice(0, 20)}...</code>
+                  </p>
+                </div>
+              )}
+
+              {/* Generate new key */}
+              <div className="bg-white border rounded-xl p-5 mb-6">
+                <h3 className="font-semibold text-slate-800 mb-4">Generate New API Key</h3>
+                <div className="grid md:grid-cols-3 gap-3 items-end">
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-1 block">Key Name *</label>
+                    <Input value={newKeyName} onChange={e => setNewKeyName(e.target.value)} placeholder="e.g. Epic Integration" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-600 mb-1 block">IP Allowlist <span className="text-slate-400">(optional)</span></label>
+                    <Input value={newKeyIp} onChange={e => setNewKeyIp(e.target.value)} placeholder="e.g. 203.0.113.42" className="font-mono text-sm" />
+                  </div>
+                  <Button onClick={generateApiKey} disabled={generatingKey || !newKeyName.trim()} className="bg-[#0B9DD9] hover:bg-[#1AAFCA] text-white">
+                    {generatingKey ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Generating…</> : <><Plus className="h-4 w-4 mr-2" />Generate Key</>}
+                  </Button>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 rounded-lg text-xs text-blue-700">
+                  <strong>Security:</strong> Tokens are 64-byte cryptographically random strings prefixed with <code>sk_live_</code>. Only the SHA-256 hash is stored — the plain token is shown once and never retrievable again. Optionally restrict to a single IP for maximum security.
+                </div>
+              </div>
+
+              {/* Endpoint reference */}
+              <div className="bg-slate-50 border rounded-xl p-4 mb-6 text-sm">
+                <p className="font-semibold text-slate-700 mb-2">Endpoint reference</p>
+                <code className="block bg-white border rounded p-2 text-xs text-slate-700 mb-2">GET https://mdchartsehr.com/api/v1/enrollments</code>
+                <div className="grid grid-cols-2 gap-2 text-xs text-slate-600">
+                  {[
+                    ["Authorization", "Bearer sk_live_…"],
+                    ["?page", "1 (default)"],
+                    ["?limit", "50 (max 200)"],
+                    ["?specialty", "Cardiology, OB/GYN, …"],
+                    ["?status", "pending / active"],
+                    ["?from / ?to", "YYYY-MM-DD"],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex gap-2">
+                      <code className="text-[#0B9DD9] font-mono">{k}</code>
+                      <span className="text-slate-400">{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Keys list */}
+              {apiKeysLoading ? (
+                <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+              ) : apiKeysList.length === 0 ? (
+                <div className="text-center py-20 border-2 border-dashed rounded-xl">
+                  <KeyRound className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-600 mb-2">No API keys yet</h3>
+                  <p className="text-slate-500">Generate your first key above to enable EMR integrations.</p>
+                </div>
+              ) : (
+                <div className="bg-white border rounded-xl overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Token</TableHead>
+                        <TableHead>IP Restriction</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Last Used</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {apiKeysList.map(k => (
+                        <TableRow key={k.id}>
+                          <TableCell className="font-medium">{k.name}</TableCell>
+                          <TableCell className="font-mono text-sm text-slate-500">{k.tokenPrefix}</TableCell>
+                          <TableCell className="text-sm text-slate-500">{k.allowedIp || <span className="text-slate-300">Any IP</span>}</TableCell>
+                          <TableCell>
+                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${k.isActive ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
+                              {k.isActive ? <ShieldCheck className="h-3 w-3" /> : <ShieldOff className="h-3 w-3" />}
+                              {k.isActive ? "Active" : "Revoked"}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-sm text-slate-400">{k.lastUsedAt ? formatDate(k.lastUsedAt) : "Never"}</TableCell>
+                          <TableCell className="text-sm text-slate-400">{formatDate(k.createdAt)}</TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="sm" onClick={() => revokeApiKey(k.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
+                              <Trash2 className="h-4 w-4 mr-1" /> Revoke
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </div>
           ) : activeTab === "trials" ? (
             trialsLoading ? (
