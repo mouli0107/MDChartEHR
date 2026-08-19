@@ -133,7 +133,7 @@ export function Navbar() {
       <div className="bg-slate-900 text-slate-300 text-[11px] font-medium py-1.5 border-b border-slate-800 hidden md:block">
         <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
           <div className="flex items-center gap-6">
-            <Link href="/contact" className="flex items-center gap-1.5 hover:text-white transition-colors"><Phone className="h-3 w-3 text-primary" /> (516) 684-9521</Link>
+            <a href="tel:5166849521" className="flex items-center gap-1.5 hover:text-white transition-colors"><Phone className="h-3 w-3 text-primary" /> (516) 684-9521</a>
             <Link href="/contact" className="flex items-center gap-1.5 hover:text-white transition-colors"><Mail className="h-3 w-3 text-primary" /> info@mdchartsehr.com</Link>
             <span className="flex items-center gap-1.5"><Clock className="h-3 w-3 text-emerald-500" /> Support Status: Online</span>
           </div>
